@@ -30,10 +30,12 @@ func GetClusterSecrets(secretStore fi.SecretStore, keyStore fi.CAStore) (*Cluste
 	}
 	clusterCaCert := ""
 	clusterCaKey := ""
-	c, k, err := keyStore.FindPrimaryKeypair(fi.CertificateIDCA)
+	ks, err := keyStore.FindKeyset(context.Background(), fi.CertificateIDCA)
 	if err != nil {
 		return nil, err
 	}
+	c := ks.Primary.Certificate
+	k := ks.Primary.PrivateKey
 	if c != nil {
 		clusterCaCert, err = c.AsString()
 		if err != nil {
@@ -46,6 +48,7 @@ func GetClusterSecrets(secretStore fi.SecretStore, keyStore fi.CAStore) (*Cluste
 			return nil, err
 		}
 	}
+
 	if dockerConfig == "" && clusterCaCert == "" && clusterCaKey == "" {
 		return nil, nil
 	}
