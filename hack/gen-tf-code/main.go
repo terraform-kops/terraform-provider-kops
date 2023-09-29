@@ -342,7 +342,9 @@ func main() {
 		generate(kops.DCGMExporterConfig{}),
 		generate(kops.LoadBalancerSpec{}),
 		// 1.28
-		generate(kops.ConfigStoreSpec{}),
+		generate(kops.ConfigStoreSpec{},
+			computed("Base"),
+		),
 		generate(kops.InstanceRootVolumeSpec{}),
 		generate(kops.OIDCAuthenticationSpec{}),
 	)

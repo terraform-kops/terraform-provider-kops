@@ -11,7 +11,7 @@ var _ = Schema
 func ResourceConfigStoreSpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"base":     OptionalString(),
+			"base":     OptionalComputedString(),
 			"keypairs": OptionalString(),
 			"secrets":  OptionalString(),
 		},

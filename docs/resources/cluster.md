@@ -211,7 +211,7 @@ ConfigStoreSpec configures the stores that nodes use to get their configuration.
 
 The following arguments are supported:
 
-- `base` - (Optional) - String - Base is the VFS path where we store configuration for the cluster<br />This might be different than the location where the cluster spec itself is stored,<br />both because this must be accessible to the cluster,<br />and because it might be on a different cloud or storage system (etcd vs S3).
+- `base` - (Optional) - (Computed) - String - Base is the VFS path where we store configuration for the cluster<br />This might be different than the location where the cluster spec itself is stored,<br />both because this must be accessible to the cluster,<br />and because it might be on a different cloud or storage system (etcd vs S3).
 - `keypairs` - (Optional) - String - Keypairs is the VFS path to where certificates and corresponding private keys are stored.
 - `secrets` - (Optional) - String - Secrets is the VFS path to where secrets are stored.
 
