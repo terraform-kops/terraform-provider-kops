@@ -13,6 +13,7 @@ func DataSourceAuthenticationSpec() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"kopeio": ComputedStruct(DataSourceKopeioAuthenticationSpec()),
 			"aws":    ComputedStruct(DataSourceAWSAuthenticationSpec()),
+			"oidc":   ComputedStruct(DataSourceOIDCAuthenticationSpec()),
 		},
 	}
 
@@ -60,6 +61,24 @@ func ExpandDataSourceAuthenticationSpec(in map[string]interface{}) kops.Authenti
 				}(in))
 			}(in)
 		}(in["aws"]),
+		OIDC: func(in interface{}) *kops.OIDCAuthenticationSpec {
+			return func(in interface{}) *kops.OIDCAuthenticationSpec {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in kops.OIDCAuthenticationSpec) *kops.OIDCAuthenticationSpec {
+					return &in
+				}(func(in interface{}) kops.OIDCAuthenticationSpec {
+					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+						return ExpandDataSourceOIDCAuthenticationSpec(in[0].(map[string]interface{}))
+					}
+					return kops.OIDCAuthenticationSpec{}
+				}(in))
+			}(in)
+		}(in["oidc"]),
 	}
 }
 
@@ -88,6 +107,18 @@ func FlattenDataSourceAuthenticationSpecInto(in kops.AuthenticationSpec, out map
 			}(*in)
 		}(in)
 	}(in.AWS)
+	out["oidc"] = func(in *kops.OIDCAuthenticationSpec) interface{} {
+		return func(in *kops.OIDCAuthenticationSpec) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in kops.OIDCAuthenticationSpec) interface{} {
+				return func(in kops.OIDCAuthenticationSpec) []interface{} {
+					return []interface{}{FlattenDataSourceOIDCAuthenticationSpec(in)}
+				}(in)
+			}(*in)
+		}(in)
+	}(in.OIDC)
 }
 
 func FlattenDataSourceAuthenticationSpec(in kops.AuthenticationSpec) map[string]interface{} {

@@ -59,13 +59,7 @@ The following arguments are supported:
 - `autoscale` - (Computed) - Bool - Autoscale determines if autoscaling will be enabled for this instance group if cluster autoscaler is enabled.
 - `autoscale_priority` - (Computed) - Int - AutoscalePriority determines the InstanceGroup priority for scaling when cluster autoscaler uses the priority expander.
 - `machine_type` - (Computed) - String - MachineType is the instance class.
-- `root_volume_size` - (Computed) - Int - RootVolumeSize is the size of the EBS root volume to use, in GB.
-- `root_volume_type` - (Computed) - String - RootVolumeType is the type of the EBS root volume to use (e.g. gp2).
-- `root_volume_iops` - (Computed) - Int - RootVolumeIOPS is the provisioned IOPS when the volume type is io1, io2 or gp3 (AWS only).
-- `root_volume_throughput` - (Computed) - Int - RootVolumeThroughput is the volume throughput in MBps when the volume type is gp3 (AWS only).
-- `root_volume_optimization` - (Computed) - Bool - RootVolumeOptimization enables EBS optimization for an instance.
-- `root_volume_encryption` - (Computed) - Bool - RootVolumeEncryption enables EBS root volume encryption for an instance.
-- `root_volume_encryption_key` - (Computed) - String - RootVolumeEncryptionKey provides the key identifier for root volume encryption.
+- `root_volume` - (Computed) - [instance_root_volume_spec](#instance_root_volume_spec) - RootVolume specifies options for the instances' root volumes.
 - `volumes` - (Computed) - List([volume_spec](#volume_spec)) - Volumes is a collection of additional volumes to create for instances within this instance group.
 - `volume_mounts` - (Computed) - List([volume_mount_spec](#volume_mount_spec)) - VolumeMounts a collection of volume mounts.
 - `subnets` - (Computed) - List(String) - Subnets is the names of the Subnets (as specified in the Cluster) where machines in this instance group should be placed.
@@ -109,6 +103,22 @@ The following arguments are supported:
 - `name` - (Required) - String - Name defines the instance group name.
 
 ## Nested resources
+
+### instance_root_volume_spec
+
+InstanceRootVolumeSpec specifies options for an instance's root volume.
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `size` - (Computed) - Int - Size is the size of the EBS root volume to use, in GB.
+- `type` - (Computed) - String - Type is the type of the EBS root volume to use (for example gp2).
+- `iops` - (Computed) - Int - IOPS is the provisioned IOPS when the volume type is io1, io2 or gp3 (AWS only).
+- `throughput` - (Computed) - Int - Throughput is the volume throughput in MBps when the volume type is gp3 (AWS only).
+- `optimization` - (Computed) - Bool - Optimization enables EBS optimization for an instance.
+- `encryption` - (Computed) - Bool - Encryption enables EBS root volume encryption for an instance.
+- `encryption_key` - (Computed) - String - EncryptionKey provides the key identifier for root volume encryption.
 
 ### volume_spec
 
@@ -209,6 +219,7 @@ The following arguments are supported:
 - `pod_manifest_path` - (Computed) - String - config is the path to the config file or directory of files.
 - `hostname_override` - (Computed) - String - HostnameOverride is the hostname used to identify the kubelet instead of the actual hostname.
 - `pod_infra_container_image` - (Computed) - String - PodInfraContainerImage is the image whose network/ipc containers in each pod will use.
+- `seccomp_default` - (Computed) - Bool - SeccompDefault enables the use of `RuntimeDefault` as the default seccomp profile for all workloads.
 - `seccomp_profile_root` - (Computed) - String - SeccompProfileRoot is the directory path for seccomp profiles.
 - `allow_privileged` - (Computed) - Bool - AllowPrivileged enables containers to request privileged mode (defaults to false).
 - `enable_debugging_handlers` - (Computed) - Bool - EnableDebuggingHandlers enables server endpoints for log collection and local running of containers and commands.
@@ -281,8 +292,10 @@ The following arguments are supported:
 - `container_log_max_files` - (Computed) - Int - ContainerLogMaxFiles is the maximum number of container log files that can be present for a container. The number must be >= 2.
 - `enable_cadvisor_json_endpoints` - (Computed) - Bool - EnableCadvisorJsonEndpoints enables cAdvisor json `/spec` and `/stats/*` endpoints. Defaults to False.
 - `pod_pids_limit` - (Computed) - Int - PodPidsLimit is the maximum number of pids in any pod.
+- `experimental_allocatable_ignore_eviction` - (Computed) - Bool - ExperimentalAllocatableIgnoreEviction enables ignoring Hard Eviction Thresholds while calculating Node Allocatable.
 - `shutdown_grace_period` - (Computed) - Duration - ShutdownGracePeriod specifies the total duration that the node should delay the shutdown by.<br />Default: 30s.
 - `shutdown_grace_period_critical_pods` - (Computed) - Duration - ShutdownGracePeriodCriticalPods specifies the duration used to terminate critical pods during a node shutdown.<br />Default: 10s.
+- `memory_swap_behavior` - (Computed) - String - MemorySwapBehavior defines how swap is used by container workloads.<br />Supported values: LimitedSwap, "UnlimitedSwap.
 
 ### mixed_instances_policy_spec
 
@@ -403,6 +416,7 @@ The following arguments are supported:
 - `version` - (Computed) - String - Version used to pick the containerd package.
 - `nvidia_gpu` - (Computed) - [nvidia_gpu_config](#nvidia_gpu_config) - NvidiaGPU configures the Nvidia GPU runtime.
 - `runc` - (Computed) - [runc](#runc) - Runc configures the runc runtime.
+- `se_linux_enabled` - (Computed) - Bool - SelinuxEnabled enables SELinux support.
 
 ### packages_config
 

@@ -10,23 +10,23 @@ import (
 
 var _ = Schema
 
-func ResourceAssets() *schema.Resource {
+func DataSourceAssetsSpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"container_registry": OptionalString(),
-			"file_repository":    OptionalString(),
-			"container_proxy":    OptionalString(),
+			"container_registry": ComputedString(),
+			"file_repository":    ComputedString(),
+			"container_proxy":    ComputedString(),
 		},
 	}
 
 	return res
 }
 
-func ExpandResourceAssets(in map[string]interface{}) kops.Assets {
+func ExpandDataSourceAssetsSpec(in map[string]interface{}) kops.AssetsSpec {
 	if in == nil {
-		panic("expand Assets failure, in is nil")
+		panic("expand AssetsSpec failure, in is nil")
 	}
-	return kops.Assets{
+	return kops.AssetsSpec{
 		ContainerRegistry: func(in interface{}) *string {
 			if in == nil {
 				return nil
@@ -87,7 +87,7 @@ func ExpandResourceAssets(in map[string]interface{}) kops.Assets {
 	}
 }
 
-func FlattenResourceAssetsInto(in kops.Assets, out map[string]interface{}) {
+func FlattenDataSourceAssetsSpecInto(in kops.AssetsSpec, out map[string]interface{}) {
 	out["container_registry"] = func(in *string) interface{} {
 		return func(in *string) interface{} {
 			if in == nil {
@@ -120,8 +120,8 @@ func FlattenResourceAssetsInto(in kops.Assets, out map[string]interface{}) {
 	}(in.ContainerProxy)
 }
 
-func FlattenResourceAssets(in kops.Assets) map[string]interface{} {
+func FlattenDataSourceAssetsSpec(in kops.AssetsSpec) map[string]interface{} {
 	out := map[string]interface{}{}
-	FlattenResourceAssetsInto(in, out)
+	FlattenDataSourceAssetsSpecInto(in, out)
 	return out
 }

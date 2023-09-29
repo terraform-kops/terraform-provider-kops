@@ -25,6 +25,7 @@ func TestExpandDataSourceClusterAutoscalerConfig(t *testing.T) {
 					"expander":                         "",
 					"balance_similar_node_groups":      nil,
 					"aws_use_static_instance_list":     nil,
+					"ignore_daemon_sets_utilization":   nil,
 					"scale_down_utilization_threshold": nil,
 					"skip_nodes_with_system_pods":      nil,
 					"skip_nodes_with_local_storage":    nil,
@@ -61,6 +62,7 @@ func TestFlattenDataSourceClusterAutoscalerConfigInto(t *testing.T) {
 		"expander":                         "",
 		"balance_similar_node_groups":      nil,
 		"aws_use_static_instance_list":     nil,
+		"ignore_daemon_sets_utilization":   nil,
 		"scale_down_utilization_threshold": nil,
 		"skip_nodes_with_system_pods":      nil,
 		"skip_nodes_with_local_storage":    nil,
@@ -131,6 +133,17 @@ func TestFlattenDataSourceClusterAutoscalerConfigInto(t *testing.T) {
 				in: func() kops.ClusterAutoscalerConfig {
 					subject := kops.ClusterAutoscalerConfig{}
 					subject.AWSUseStaticInstanceList = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "IgnoreDaemonSetsUtilization - default",
+			args: args{
+				in: func() kops.ClusterAutoscalerConfig {
+					subject := kops.ClusterAutoscalerConfig{}
+					subject.IgnoreDaemonSetsUtilization = nil
 					return subject
 				}(),
 			},
@@ -319,6 +332,7 @@ func TestFlattenDataSourceClusterAutoscalerConfig(t *testing.T) {
 		"expander":                         "",
 		"balance_similar_node_groups":      nil,
 		"aws_use_static_instance_list":     nil,
+		"ignore_daemon_sets_utilization":   nil,
 		"scale_down_utilization_threshold": nil,
 		"skip_nodes_with_system_pods":      nil,
 		"skip_nodes_with_local_storage":    nil,
@@ -389,6 +403,17 @@ func TestFlattenDataSourceClusterAutoscalerConfig(t *testing.T) {
 				in: func() kops.ClusterAutoscalerConfig {
 					subject := kops.ClusterAutoscalerConfig{}
 					subject.AWSUseStaticInstanceList = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "IgnoreDaemonSetsUtilization - default",
+			args: args{
+				in: func() kops.ClusterAutoscalerConfig {
+					subject := kops.ClusterAutoscalerConfig{}
+					subject.IgnoreDaemonSetsUtilization = nil
 					return subject
 				}(),
 			},

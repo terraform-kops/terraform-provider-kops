@@ -46,7 +46,7 @@ func TestExpandDataSourceNetworkingSpec(t *testing.T) {
 					"amazon_vpc":               nil,
 					"cilium":                   nil,
 					"lyft_vpc":                 nil,
-					"gce":                      nil,
+					"gcp":                      nil,
 				},
 			},
 			want: _default,
@@ -89,7 +89,7 @@ func TestFlattenDataSourceNetworkingSpecInto(t *testing.T) {
 		"amazon_vpc":               nil,
 		"cilium":                   nil,
 		"lyft_vpc":                 nil,
-		"gce":                      nil,
+		"gcp":                      nil,
 	}
 	type args struct {
 		in kops.NetworkingSpec
@@ -382,11 +382,11 @@ func TestFlattenDataSourceNetworkingSpecInto(t *testing.T) {
 			want: _default,
 		},
 		{
-			name: "GCE - default",
+			name: "Gcp - default",
 			args: args{
 				in: func() kops.NetworkingSpec {
 					subject := kops.NetworkingSpec{}
-					subject.GCE = nil
+					subject.GCP = nil
 					return subject
 				}(),
 			},
@@ -431,7 +431,7 @@ func TestFlattenDataSourceNetworkingSpec(t *testing.T) {
 		"amazon_vpc":               nil,
 		"cilium":                   nil,
 		"lyft_vpc":                 nil,
-		"gce":                      nil,
+		"gcp":                      nil,
 	}
 	type args struct {
 		in kops.NetworkingSpec
@@ -724,11 +724,11 @@ func TestFlattenDataSourceNetworkingSpec(t *testing.T) {
 			want: _default,
 		},
 		{
-			name: "GCE - default",
+			name: "Gcp - default",
 			args: args{
 				in: func() kops.NetworkingSpec {
 					subject := kops.NetworkingSpec{}
-					subject.GCE = nil
+					subject.GCP = nil
 					return subject
 				}(),
 			},

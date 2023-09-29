@@ -17,6 +17,7 @@ func ResourceOpenstackBlockStorageConfig() *schema.Resource {
 			"ignore_az":                   OptionalBool(),
 			"override_az":                 OptionalString(),
 			"ignore_volume_micro_version": OptionalBool(),
+			"metrics_enabled":             OptionalBool(),
 			"create_storage_class":        OptionalBool(),
 			"csi_plugin_image":            OptionalString(),
 			"csi_topology_support":        OptionalBool(),
@@ -108,6 +109,25 @@ func ExpandResourceOpenstackBlockStorageConfig(in map[string]interface{}) kops.O
 				}(bool(ExpandBool(in)))
 			}(in)
 		}(in["ignore_volume_micro_version"]),
+		MetricsEnabled: func(in interface{}) *bool {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
+		}(in["metrics_enabled"]),
 		CreateStorageClass: func(in interface{}) *bool {
 			if in == nil {
 				return nil
@@ -196,6 +216,16 @@ func FlattenResourceOpenstackBlockStorageConfigInto(in kops.OpenstackBlockStorag
 			}(*in)
 		}(in)
 	}(in.IgnoreVolumeMicroVersion)
+	out["metrics_enabled"] = func(in *bool) interface{} {
+		return func(in *bool) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in bool) interface{} {
+				return FlattenBool(bool(in))
+			}(*in)
+		}(in)
+	}(in.MetricsEnabled)
 	out["create_storage_class"] = func(in *bool) interface{} {
 		return func(in *bool) interface{} {
 			if in == nil {

@@ -75,139 +75,24 @@ func ExpandResourceInstanceGroupSpec(in map[string]interface{}) kops.InstanceGro
 		MachineType: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["machine_type"]),
-		RootVolumeSize: func(in interface{}) *int32 {
-			if in == nil {
-				return nil
-			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
-			}
-			return func(in interface{}) *int32 {
+		RootVolume: func(in interface{}) *kops.InstanceRootVolumeSpec {
+			return func(in interface{}) *kops.InstanceRootVolumeSpec {
 				if in == nil {
 					return nil
 				}
 				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
 					return nil
 				}
-				return func(in int32) *int32 {
+				return func(in kops.InstanceRootVolumeSpec) *kops.InstanceRootVolumeSpec {
 					return &in
-				}(int32(ExpandInt(in)))
+				}(func(in interface{}) kops.InstanceRootVolumeSpec {
+					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+						return ExpandResourceInstanceRootVolumeSpec(in[0].(map[string]interface{}))
+					}
+					return kops.InstanceRootVolumeSpec{}
+				}(in))
 			}(in)
-		}(in["root_volume_size"]),
-		RootVolumeType: func(in interface{}) *string {
-			if in == nil {
-				return nil
-			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
-			}
-			return func(in interface{}) *string {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in string) *string {
-					return &in
-				}(string(ExpandString(in)))
-			}(in)
-		}(in["root_volume_type"]),
-		RootVolumeIOPS: func(in interface{}) *int32 {
-			if in == nil {
-				return nil
-			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
-			}
-			return func(in interface{}) *int32 {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in int32) *int32 {
-					return &in
-				}(int32(ExpandInt(in)))
-			}(in)
-		}(in["root_volume_iops"]),
-		RootVolumeThroughput: func(in interface{}) *int32 {
-			if in == nil {
-				return nil
-			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
-			}
-			return func(in interface{}) *int32 {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in int32) *int32 {
-					return &in
-				}(int32(ExpandInt(in)))
-			}(in)
-		}(in["root_volume_throughput"]),
-		RootVolumeOptimization: func(in interface{}) *bool {
-			if in == nil {
-				return nil
-			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
-			}
-			return func(in interface{}) *bool {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in bool) *bool {
-					return &in
-				}(bool(ExpandBool(in)))
-			}(in)
-		}(in["root_volume_optimization"]),
-		RootVolumeEncryption: func(in interface{}) *bool {
-			if in == nil {
-				return nil
-			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
-			}
-			return func(in interface{}) *bool {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in bool) *bool {
-					return &in
-				}(bool(ExpandBool(in)))
-			}(in)
-		}(in["root_volume_encryption"]),
-		RootVolumeEncryptionKey: func(in interface{}) *string {
-			if in == nil {
-				return nil
-			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
-			}
-			return func(in interface{}) *string {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in string) *string {
-					return &in
-				}(string(ExpandString(in)))
-			}(in)
-		}(in["root_volume_encryption_key"]),
+		}(in["root_volume"]),
 		Volumes: func(in interface{}) []kops.VolumeSpec {
 			return func(in interface{}) []kops.VolumeSpec {
 				if in == nil {
@@ -870,76 +755,18 @@ func FlattenResourceInstanceGroupSpecInto(in kops.InstanceGroupSpec, out map[str
 	out["machine_type"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.MachineType)
-	out["root_volume_size"] = func(in *int32) interface{} {
-		return func(in *int32) interface{} {
+	out["root_volume"] = func(in *kops.InstanceRootVolumeSpec) interface{} {
+		return func(in *kops.InstanceRootVolumeSpec) interface{} {
 			if in == nil {
 				return nil
 			}
-			return func(in int32) interface{} {
-				return FlattenInt(int(in))
+			return func(in kops.InstanceRootVolumeSpec) interface{} {
+				return func(in kops.InstanceRootVolumeSpec) []interface{} {
+					return []interface{}{FlattenResourceInstanceRootVolumeSpec(in)}
+				}(in)
 			}(*in)
 		}(in)
-	}(in.RootVolumeSize)
-	out["root_volume_type"] = func(in *string) interface{} {
-		return func(in *string) interface{} {
-			if in == nil {
-				return nil
-			}
-			return func(in string) interface{} {
-				return FlattenString(string(in))
-			}(*in)
-		}(in)
-	}(in.RootVolumeType)
-	out["root_volume_iops"] = func(in *int32) interface{} {
-		return func(in *int32) interface{} {
-			if in == nil {
-				return nil
-			}
-			return func(in int32) interface{} {
-				return FlattenInt(int(in))
-			}(*in)
-		}(in)
-	}(in.RootVolumeIOPS)
-	out["root_volume_throughput"] = func(in *int32) interface{} {
-		return func(in *int32) interface{} {
-			if in == nil {
-				return nil
-			}
-			return func(in int32) interface{} {
-				return FlattenInt(int(in))
-			}(*in)
-		}(in)
-	}(in.RootVolumeThroughput)
-	out["root_volume_optimization"] = func(in *bool) interface{} {
-		return func(in *bool) interface{} {
-			if in == nil {
-				return nil
-			}
-			return func(in bool) interface{} {
-				return FlattenBool(bool(in))
-			}(*in)
-		}(in)
-	}(in.RootVolumeOptimization)
-	out["root_volume_encryption"] = func(in *bool) interface{} {
-		return func(in *bool) interface{} {
-			if in == nil {
-				return nil
-			}
-			return func(in bool) interface{} {
-				return FlattenBool(bool(in))
-			}(*in)
-		}(in)
-	}(in.RootVolumeEncryption)
-	out["root_volume_encryption_key"] = func(in *string) interface{} {
-		return func(in *string) interface{} {
-			if in == nil {
-				return nil
-			}
-			return func(in string) interface{} {
-				return FlattenString(string(in))
-			}(*in)
-		}(in)
-	}(in.RootVolumeEncryptionKey)
+	}(in.RootVolume)
 	out["volumes"] = func(in []kops.VolumeSpec) interface{} {
 		return func(in []kops.VolumeSpec) []interface{} {
 			var out []interface{}

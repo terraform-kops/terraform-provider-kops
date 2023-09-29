@@ -11,7 +11,10 @@ var _ = Schema
 func DataSourceKarpenterConfig() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"enabled": ComputedBool(),
+			"enabled":      ComputedBool(),
+			"log_encoding": ComputedString(),
+			"log_level":    ComputedString(),
+			"image":        ComputedString(),
 		},
 	}
 
@@ -26,6 +29,15 @@ func ExpandDataSourceKarpenterConfig(in map[string]interface{}) kops.KarpenterCo
 		Enabled: func(in interface{}) bool {
 			return bool(ExpandBool(in))
 		}(in["enabled"]),
+		LogEncoding: func(in interface{}) string {
+			return string(ExpandString(in))
+		}(in["log_encoding"]),
+		LogLevel: func(in interface{}) string {
+			return string(ExpandString(in))
+		}(in["log_level"]),
+		Image: func(in interface{}) string {
+			return string(ExpandString(in))
+		}(in["image"]),
 	}
 }
 
@@ -33,6 +45,15 @@ func FlattenDataSourceKarpenterConfigInto(in kops.KarpenterConfig, out map[strin
 	out["enabled"] = func(in bool) interface{} {
 		return FlattenBool(bool(in))
 	}(in.Enabled)
+	out["log_encoding"] = func(in string) interface{} {
+		return FlattenString(string(in))
+	}(in.LogEncoding)
+	out["log_level"] = func(in string) interface{} {
+		return FlattenString(string(in))
+	}(in.LogLevel)
+	out["image"] = func(in string) interface{} {
+		return FlattenString(string(in))
+	}(in.Image)
 }
 
 func FlattenDataSourceKarpenterConfig(in kops.KarpenterConfig) map[string]interface{} {

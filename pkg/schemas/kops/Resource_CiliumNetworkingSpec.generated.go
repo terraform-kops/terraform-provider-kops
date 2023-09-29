@@ -14,6 +14,7 @@ var _ = Schema
 func ResourceCiliumNetworkingSpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
+			"registry":                          OptionalString(),
 			"version":                           OptionalString(),
 			"memory_request":                    OptionalQuantity(),
 			"cpu_request":                       OptionalQuantity(),
@@ -48,6 +49,7 @@ func ResourceCiliumNetworkingSpec() *schema.Resource {
 			"preallocate_bpf_maps":              RequiredBool(),
 			"sidecar_istio_proxy_image":         OptionalString(),
 			"cluster_name":                      OptionalString(),
+			"cluster_id":                        OptionalInt(),
 			"to_fqdns_dns_reject_response_code": OptionalString(),
 			"to_fqdns_enable_poller":            OptionalBool(),
 			"ipam":                              OptionalString(),
@@ -57,6 +59,7 @@ func ResourceCiliumNetworkingSpec() *schema.Resource {
 			"enable_node_port":                  OptionalBool(),
 			"etcd_managed":                      OptionalBool(),
 			"enable_remote_node_identity":       RequiredBool(),
+			"enable_unreachable_routes":         OptionalBool(),
 			"hubble":                            OptionalStruct(ResourceHubbleSpec()),
 			"disable_cnp_status_updates":        OptionalBool(),
 			"enable_service_topology":           OptionalBool(),
@@ -71,6 +74,9 @@ func ExpandResourceCiliumNetworkingSpec(in map[string]interface{}) kops.CiliumNe
 		panic("expand CiliumNetworkingSpec failure, in is nil")
 	}
 	return kops.CiliumNetworkingSpec{
+		Registry: func(in interface{}) string {
+			return string(ExpandString(in))
+		}(in["registry"]),
 		Version: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["version"]),
@@ -306,6 +312,9 @@ func ExpandResourceCiliumNetworkingSpec(in map[string]interface{}) kops.CiliumNe
 		ClusterName: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["cluster_name"]),
+		ClusterID: func(in interface{}) uint8 {
+			return uint8(ExpandInt(in))
+		}(in["cluster_id"]),
 		ToFQDNsDNSRejectResponseCode: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["to_fqdns_dns_reject_response_code"]),
@@ -359,6 +368,25 @@ func ExpandResourceCiliumNetworkingSpec(in map[string]interface{}) kops.CiliumNe
 				}(bool(ExpandBool(in)))
 			}(in)
 		}(in["enable_remote_node_identity"]),
+		EnableUnreachableRoutes: func(in interface{}) *bool {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
+		}(in["enable_unreachable_routes"]),
 		Hubble: func(in interface{}) *kops.HubbleSpec {
 			return func(in interface{}) *kops.HubbleSpec {
 				if in == nil {
@@ -403,6 +431,9 @@ func ExpandResourceCiliumNetworkingSpec(in map[string]interface{}) kops.CiliumNe
 }
 
 func FlattenResourceCiliumNetworkingSpecInto(in kops.CiliumNetworkingSpec, out map[string]interface{}) {
+	out["registry"] = func(in string) interface{} {
+		return FlattenString(string(in))
+	}(in.Registry)
 	out["version"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.Version)
@@ -571,6 +602,9 @@ func FlattenResourceCiliumNetworkingSpecInto(in kops.CiliumNetworkingSpec, out m
 	out["cluster_name"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.ClusterName)
+	out["cluster_id"] = func(in uint8) interface{} {
+		return FlattenInt(int(in))
+	}(in.ClusterID)
 	out["to_fqdns_dns_reject_response_code"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.ToFQDNsDNSRejectResponseCode)
@@ -612,6 +646,16 @@ func FlattenResourceCiliumNetworkingSpecInto(in kops.CiliumNetworkingSpec, out m
 			}(*in)
 		}(in)
 	}(in.EnableRemoteNodeIdentity)
+	out["enable_unreachable_routes"] = func(in *bool) interface{} {
+		return func(in *bool) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in bool) interface{} {
+				return FlattenBool(bool(in))
+			}(*in)
+		}(in)
+	}(in.EnableUnreachableRoutes)
 	out["hubble"] = func(in *kops.HubbleSpec) interface{} {
 		return func(in *kops.HubbleSpec) interface{} {
 			if in == nil {

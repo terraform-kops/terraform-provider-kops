@@ -52,13 +52,10 @@ resource "kops_cluster" "cluster" {
 The following arguments are supported:
 - `channel` - (Computed) - String - The Channel we are following.
 - `addons` - (Computed) - List([addon_spec](#addon_spec)) - Additional addons that should be installed on the cluster.
-- `config_base` - (Computed) - String - ConfigBase is the path where we store configuration for the cluster<br />This might be different than the location where the cluster spec itself is stored,<br />both because this must be accessible to the cluster,<br />and because it might be on a different cloud or storage system (etcd vs S3).
+- `config_store` - (Computed) - [config_store_spec](#config_store_spec) - ConfigStore configures the stores that nodes use to get their configuration.
 - `cloud_provider` - (Computed) - [cloud_provider_spec](#cloud_provider_spec) - CloudProvider configures the cloud provider to use.
 - `container_runtime` - (Computed) - String - Container runtime to use for Kubernetes.
 - `kubernetes_version` - (Computed) - String - The version of kubernetes to install (optional, and can be a "spec" like stable).
-- `secret_store` - (Computed) - String - SecretStore is the VFS path to where secrets are stored.
-- `key_store` - (Computed) - String - KeyStore is the VFS path to where SSL keys and certificates are stored.
-- `config_store` - (Computed) - String - ConfigStore is the VFS path to where the configuration (Cluster, InstanceGroups etc) is stored.
 - `dns_zone` - (Computed) - String - DNSZone is the DNS zone we should use when configuring DNS<br />This is because some clouds let us define a managed zone foo.bar, and then have<br />kubernetes.dev.foo.bar, without needing to define dev.foo.bar as a hosted zone.<br />DNSZone will probably be a suffix of the MasterPublicName.<br />Note that DNSZone can either by the host name of the zone (containing dots),<br />or can be an identifier for the zone.
 - `cluster_dns_domain` - (Computed) - String - ClusterDNSDomain is the suffix we use for internal DNS names (normally cluster.local).
 - `ssh_access` - (Computed) - List(String) - SSHAccess is a list of the CIDRs that can access SSH.
@@ -92,7 +89,7 @@ The following arguments are supported:
 - `node_authorization` - (Computed) - [node_authorization_spec](#node_authorization_spec) - NodeAuthorization defined the custom node authorization configuration.
 - `cloud_labels` - (Computed) - Map(String) - CloudLabels defines additional tags or labels on cloud provider resources.
 - `hooks` - (Computed) - List([hook_spec](#hook_spec)) - Hooks for custom actions e.g. on first installation.
-- `assets` - (Computed) - [assets](#assets) - Assets is alternative locations for files and containers; the API under construction, will remove this comment once this API is fully functional.
+- `assets` - (Computed) - [assets_spec](#assets_spec) - Assets is alternative locations for files and containers; the API under construction, will remove this comment once this API is fully functional.
 - `iam` - (Computed) - [iam_spec](#iam_spec) - IAM field adds control over the IAM security policies applied to resources.
 - `encryption_config` - (Computed) - Bool - EncryptionConfig controls if encryption is enabled.
 - `use_host_certificates` - (Computed) - Bool - UseHostCertificates will mount /etc/ssl/certs to inside needed containers.<br />This is needed if some APIs do have self-signed certs.
@@ -119,6 +116,18 @@ AddonSpec defines an addon that we want to install in the cluster.
 The following arguments are supported:
 
 - `manifest` - (Computed) - String - Manifest is a path to the manifest that defines the addon.
+
+### config_store_spec
+
+ConfigStoreSpec configures the stores that nodes use to get their configuration.
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `base` - (Computed) - String - Base is the VFS path where we store configuration for the cluster<br />This might be different than the location where the cluster spec itself is stored,<br />both because this must be accessible to the cluster,<br />and because it might be on a different cloud or storage system (etcd vs S3).
+- `keypairs` - (Computed) - String - Keypairs is the VFS path to where certificates and corresponding private keys are stored.
+- `secrets` - (Computed) - String - Secrets is the VFS path to where secrets are stored.
 
 ### cloud_provider_spec
 
@@ -149,6 +158,12 @@ The following arguments are supported:
 - `load_balancer_controller` - (Computed) - [load_balancer_controller_spec](#load_balancer_controller_spec) - LoadbalancerController determines the Load Balancer Controller configuration.
 - `pod_identity_webhook` - (Computed) - [pod_identity_webhook_spec](#pod_identity_webhook_spec) - PodIdentityWebhook determines the EKS Pod Identity Webhook configuration.
 - `warm_pool` - (Computed) - [warm_pool_spec](#warm_pool_spec) - WarmPool defines the default warm pool settings for instance groups.
+- `node_ip_families` - (Computed) - List(String) - NodeIPFamilies control the IP families reported for each node.
+- `disable_security_group_ingress` - (Computed) - Bool - DisableSecurityGroupIngress disables the Cloud Controller Manager's creation<br />of an AWS Security Group for each load balancer provisioned for a Service.
+- `elb_security_group` - (Computed) - String - ElbSecurityGroup specifies an existing AWS Security group for the Cloud Controller<br />Manager to assign to each ELB provisioned for a Service, instead of creating<br />one per ELB.
+- `spotinst_product` - (Computed) - String - Spotinst cloud-config specs.
+- `spotinst_orientation` - (Computed) - String
+- `binaries_location` - (Computed) - String - BinariesLocation is the location of the AWS cloud provider binaries.
 
 ### ebs_csi_driver_spec
 
@@ -251,6 +266,9 @@ The following arguments are supported:
 
 - `project` - (Computed) - String - Project is the cloud project we should use.
 - `service_account` - (Computed) - String - ServiceAccount specifies the service account with which the GCE VM runs.
+- `multizone` - (Computed) - Bool
+- `node_tags` - (Computed) - String
+- `node_instance_prefix` - (Computed) - String
 - `pd_csi_driver` - (Computed) - [pd_csi_driver](#pd_csi_driver) - PDCSIDriver is the config for the PD CSI driver.
 
 ### pd_csi_driver
@@ -304,6 +322,7 @@ The following arguments are supported:
 - `manage_sec_groups` - (Computed) - Bool
 - `enable_ingress_hostname` - (Computed) - Bool
 - `ingress_hostname_suffix` - (Computed) - String
+- `flavor_id` - (Computed) - String
 
 ### openstack_monitor
 
@@ -340,6 +359,7 @@ The following arguments are supported:
 - `ignore_az` - (Computed) - Bool
 - `override_az` - (Computed) - String
 - `ignore_volume_micro_version` - (Computed) - Bool
+- `metrics_enabled` - (Computed) - Bool
 - `create_storage_class` - (Computed) - Bool - CreateStorageClass provisions a default class for the Cinder plugin.
 - `csi_plugin_image` - (Computed) - String
 - `csi_topology_support` - (Computed) - Bool
@@ -357,6 +377,7 @@ The following arguments are supported:
 - `ipv6_support_disabled` - (Computed) - Bool
 - `public_network_names` - (Computed) - List(String)
 - `internal_network_names` - (Computed) - List(String)
+- `address_sort_order` - (Computed) - String
 
 ### openstack_metadata
 
@@ -449,7 +470,9 @@ The following arguments are supported:
 - `image` - (Computed) - String - Image is the etcd manager image to use.
 - `env` - (Computed) - List([env_var](#env_var)) - Env allows users to pass in env variables to the etcd-manager container.<br />Variables starting with ETCD_ will be further passed down to the etcd process.<br />This allows etcd setting to be overwriten. No config validation is done.<br />A list of etcd config ENV vars can be found at https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/configuration.md.
 - `backup_interval` - (Computed) - Duration - BackupInterval which is used for backups. The default is 15 minutes.
+- `backup_retention_days` - (Computed) - Int - BackupRetentionDays which is used for backups. The default is 90 days.
 - `discovery_poll_interval` - (Computed) - Duration - DiscoveryPollInterval which is used for discovering other cluster members. The default is 60 seconds.
+- `listen_metrics_ur_ls` - (Computed) - List(String) - ListenMetricsURLs is the list of URLs to listen on that will respond to both the /metrics and /health endpoints.
 - `log_level` - (Computed) - Int - LogLevel allows the klog library verbose log level to be set for etcd-manager. The default is 6.<br />https://github.com/google/glog#verbose-logging.
 
 ### env_var
@@ -482,6 +505,7 @@ The following arguments are supported:
 - `version` - (Computed) - String - Version used to pick the containerd package.
 - `nvidia_gpu` - (Computed) - [nvidia_gpu_config](#nvidia_gpu_config) - NvidiaGPU configures the Nvidia GPU runtime.
 - `runc` - (Computed) - [runc](#runc) - Runc configures the runc runtime.
+- `se_linux_enabled` - (Computed) - Bool - SelinuxEnabled enables SELinux support.
 
 ### packages_config
 
@@ -715,7 +739,7 @@ A label selector requirement is a selector that contains values, a key, and an o
 
 The following arguments are supported:
 
-- `key` - (Computed) - String - key is the label key that the selector applies to.<br />+patchMergeKey=key<br />+patchStrategy=merge.
+- `key` - (Computed) - String - key is the label key that the selector applies to.
 - `operator` - (Computed) - String - operator represents a key's relationship to a set of values.<br />Valid operators are In, NotIn, Exists and DoesNotExist.
 - `values` - (Computed) - List(String) - values is an array of string values. If the operator is In or NotIn,<br />the values array must be non-empty. If the operator is Exists or DoesNotExist,<br />the values array must be empty. This array is replaced during a strategic<br />merge patch.<br />+optional.
 
@@ -751,6 +775,7 @@ The following arguments are supported:
 
 - `enabled` - (Computed) - Bool - Enabled activates the node-local-dns addon.
 - `external_core_file` - (Computed) - String - ExternalCoreFile is used to provide a complete NodeLocalDNS CoreFile by the user - ignores other provided flags which modify the CoreFile.
+- `additional_config` - (Computed) - String - AdditionalConfig is used to provide additional config for node local dns by the user - it will include the original CoreFile made by kOps.
 - `image` - (Computed) - String - Image overrides the default docker image used for node-local-dns addon.
 - `local_ip` - (Computed) - String - Local listen IP address. It can be any IP in the 169.254.20.0/16 space or any other IP address that can be guaranteed to not collide with any existing IP.
 - `forward_to_kube_dns` - (Computed) - Bool - If enabled, nodelocal dns will use kubedns as a default upstream.
@@ -929,6 +954,8 @@ The following arguments are supported:
 - `authorization_kubeconfig` - (Computed) - String - AuthorizationKubeconfig is the path to an Authorization Kubeconfig.
 - `authorization_always_allow_paths` - (Computed) - List(String) - AuthorizationAlwaysAllowPaths is the list of HTTP paths to skip during authorization.
 - `external_cloud_volume_plugin` - (Computed) - String - ExternalCloudVolumePlugin is a fallback mechanism that allows a legacy, in-tree cloudprovider to be used for volume plugins<br />even when an external cloud controller manager is being used.  This can be used instead of installing CSI.  The value should<br />be the same as is used for the --cloud-provider flag, i.e. "aws".
+- `endpoint_updates_batch_period` - (Computed) - Duration - The length of endpoint updates batching period. Processing of pod changes will be delayed by this duration<br />to join them with potential upcoming updates and reduce the overall number of endpoints updates.<br />Larger number = higher endpoint programming latency, but lower number of endpoints revision generated.
+- `endpoint_slice_updates_batch_period` - (Computed) - Duration - The length of endpoint slice updates batching period. Processing of pod changes will be delayed by this duration<br />to join them with potential upcoming updates and reduce the overall number of endpoints updates.<br />Larger number = higher endpoint programming latency, but lower number of endpoints revision generated.
 - `enable_profiling` - (Computed) - Bool - EnableProfiling enables profiling via web interface host:port/debug/pprof/.
 - `enable_leader_migration` - (Computed) - Bool - EnableLeaderMigration enables controller leader migration.
 
@@ -1051,6 +1078,7 @@ The following arguments are supported:
 - `pod_manifest_path` - (Computed) - String - config is the path to the config file or directory of files.
 - `hostname_override` - (Computed) - String - HostnameOverride is the hostname used to identify the kubelet instead of the actual hostname.
 - `pod_infra_container_image` - (Computed) - String - PodInfraContainerImage is the image whose network/ipc containers in each pod will use.
+- `seccomp_default` - (Computed) - Bool - SeccompDefault enables the use of `RuntimeDefault` as the default seccomp profile for all workloads.
 - `seccomp_profile_root` - (Computed) - String - SeccompProfileRoot is the directory path for seccomp profiles.
 - `allow_privileged` - (Computed) - Bool - AllowPrivileged enables containers to request privileged mode (defaults to false).
 - `enable_debugging_handlers` - (Computed) - Bool - EnableDebuggingHandlers enables server endpoints for log collection and local running of containers and commands.
@@ -1123,8 +1151,10 @@ The following arguments are supported:
 - `container_log_max_files` - (Computed) - Int - ContainerLogMaxFiles is the maximum number of container log files that can be present for a container. The number must be >= 2.
 - `enable_cadvisor_json_endpoints` - (Computed) - Bool - EnableCadvisorJsonEndpoints enables cAdvisor json `/spec` and `/stats/*` endpoints. Defaults to False.
 - `pod_pids_limit` - (Computed) - Int - PodPidsLimit is the maximum number of pids in any pod.
+- `experimental_allocatable_ignore_eviction` - (Computed) - Bool - ExperimentalAllocatableIgnoreEviction enables ignoring Hard Eviction Thresholds while calculating Node Allocatable.
 - `shutdown_grace_period` - (Computed) - Duration - ShutdownGracePeriod specifies the total duration that the node should delay the shutdown by.<br />Default: 30s.
 - `shutdown_grace_period_critical_pods` - (Computed) - Duration - ShutdownGracePeriodCriticalPods specifies the duration used to terminate critical pods during a node shutdown.<br />Default: 10s.
+- `memory_swap_behavior` - (Computed) - String - MemorySwapBehavior defines how swap is used by container workloads.<br />Supported values: LimitedSwap, "UnlimitedSwap.
 
 ### cloud_configuration
 
@@ -1135,14 +1165,6 @@ CloudConfiguration defines the cloud provider configuration.
 The following arguments are supported:
 
 - `manage_storage_classes` - (Computed) - Bool([Nullable](#nullable-arguments)) - ManageStorageClasses specifies whether kOps should create and maintain a set of<br />StorageClasses, one of which it nominates as the default class for the cluster.
-- `multizone` - (Computed) - Bool - GCE cloud-config options.
-- `node_tags` - (Computed) - String
-- `node_instance_prefix` - (Computed) - String
-- `node_ip_families` - (Computed) - List(String) - NodeIPFamilies controls the IP families reported for each node (AWS only).
-- `disable_security_group_ingress` - (Computed) - Bool - AWS cloud-config options.
-- `elb_security_group` - (Computed) - String
-- `spotinst_product` - (Computed) - String - Spotinst cloud-config specs.
-- `spotinst_orientation` - (Computed) - String
 
 ### external_dns_config
 
@@ -1241,7 +1263,7 @@ The following arguments are supported:
 - `amazon_vpc` - (Computed) - [amazon_vpc_networking_spec](#amazon_vpc_networking_spec)
 - `cilium` - (Computed) - [cilium_networking_spec](#cilium_networking_spec)
 - `lyft_vpc` - (Computed) - [lyft_vpc_networking_spec](#lyft_vpc_networking_spec)
-- `gce` - (Computed) - [gce_networking_spec](#gce_networking_spec)
+- `gcp` - (Computed) - [gcp_networking_spec](#gcp_networking_spec)
 
 ### cluster_subnet_spec
 
@@ -1277,8 +1299,6 @@ The following arguments are supported:
 
 The following arguments are supported:
 
-- `control_plane` - (Computed) - String - ControlPlane specifies the environment for launching the control plane nodes. (public, private).
-- `nodes` - (Computed) - String - Nodes specifies the environment for launching the worker nodes. (public, private).
 - `bastion` - (Computed) - [bastion_spec](#bastion_spec) - Bastion provide an external facing point of entry into a network<br />containing private network instances. This host can provide a single<br />point of fortification or audit and can be started and stopped to enable<br />or disable inbound SSH communication from the Internet. Some call the bastion<br />the "jump server".
 - `dns` - (Computed) - String - DNS specifies the environment for hosted DNS zones. (Public, Private, None).
 
@@ -1486,6 +1506,7 @@ CiliumNetworkingSpec declares that we want Cilium networking.
 
 The following arguments are supported:
 
+- `registry` - (Computed) - String - Registry overrides the default Cilium container registry (quay.io).
 - `version` - (Computed) - String - Version is the version of the Cilium agent and the Cilium Operator.
 - `memory_request` - (Computed) - Quantity - MemoryRequest memory request of Cilium agent + operator container. (default: 128Mi).
 - `cpu_request` - (Computed) - Quantity - CPURequest CPU request of Cilium agent + operator container. (default: 25m).
@@ -1520,6 +1541,7 @@ The following arguments are supported:
 - `preallocate_bpf_maps` - (Computed) - Bool - PreallocateBPFMaps reduces the per-packet latency at the expense of up-front memory allocation.<br />Default: true.
 - `sidecar_istio_proxy_image` - (Computed) - String - SidecarIstioProxyImage is the regular expression matching compatible Istio sidecar istio-proxy<br />container image names.<br />Default: cilium/istio_proxy.
 - `cluster_name` - (Computed) - String - ClusterName is the name of the cluster. It is only relevant when building a mesh of clusters.
+- `cluster_id` - (Computed) - Int - ClusterID is the ID of the cluster. It is only relevant when building a mesh of clusters.<br />Must be a number between 1 and 255.
 - `to_fqdns_dns_reject_response_code` - (Computed) - String - ToFQDNsDNSRejectResponseCode sets the DNS response code for rejecting DNS requests.<br />Possible values are "nameError" or "refused".<br />Default: refused.
 - `to_fqdns_enable_poller` - (Computed) - Bool - ToFQDNsEnablePoller replaces the DNS proxy-based implementation of FQDN policies<br />with the less powerful legacy implementation.<br />Default: false.
 - `ipam` - (Computed) - String - IPAM specifies the IP address allocation mode to use.<br />Possible values are "crd" and "eni".<br />"eni" will use AWS native networking for pods. Eni requires masquerade to be set to false.<br />"crd" will use CRDs for controlling IP address management.<br />"hostscope" will use hostscope IPAM mode.<br />"kubernetes" will use addersing based on node pod CIDR.<br />Default: "kubernetes".
@@ -1529,6 +1551,7 @@ The following arguments are supported:
 - `enable_node_port` - (Computed) - Bool - EnableNodePort replaces kube-proxy with Cilium's BPF implementation.<br />Requires spec.kubeProxy.enabled be set to false.<br />Default: false.
 - `etcd_managed` - (Computed) - Bool - EtcdManagd installs an additional etcd cluster that is used for Cilium state change.<br />The cluster is operated by cilium-etcd-operator.<br />Default: false.
 - `enable_remote_node_identity` - (Computed) - Bool - EnableRemoteNodeIdentity enables the remote-node-identity.<br />Default: true.
+- `enable_unreachable_routes` - (Computed) - Bool - EnableUnreachableRoutes enables unreachable routes on pod deletion.<br />Default: false.
 - `hubble` - (Computed) - [hubble_spec](#hubble_spec) - Hubble configures the Hubble service on the Cilium agent.
 - `disable_cnp_status_updates` - (Computed) - Bool - DisableCNPStatusUpdates determines if CNP NodeStatus updates will be sent to the Kubernetes api-server.
 - `enable_service_topology` - (Computed) - Bool - EnableServiceTopology determine if cilium should use topology aware hints.
@@ -1554,9 +1577,9 @@ The following arguments are supported:
 
 - `subnet_tags` - (Computed) - Map(String)
 
-### gce_networking_spec
+### gcp_networking_spec
 
-GCENetworkingSpec is the specification of GCE's native networking mode, using IP aliases.
+GCPNetworkingSpec is the specification of GCP's native networking mode, using IP aliases.
 
 
 This resource has no attributes.
@@ -1630,6 +1653,7 @@ The following arguments are supported:
 
 - `kopeio` - (Computed) - [kopeio_authentication_spec](#kopeio_authentication_spec)
 - `aws` - (Computed) - [aws_authentication_spec](#aws_authentication_spec)
+- `oidc` - (Computed) - [oidc_authentication_spec](#oidc_authentication_spec)
 
 ### kopeio_authentication_spec
 
@@ -1660,6 +1684,20 @@ The following arguments are supported:
 - `arn` - (Computed) - String - Arn of the IAM User or IAM Role to be allowed to authenticate.
 - `username` - (Computed) - String - Username that Kubernetes will see the user as.
 - `groups` - (Computed) - List(String) - Groups to be attached to your users/roles.
+
+### oidc_authentication_spec
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `username_claim` - (Computed) - String - UsernameClaim is the OpenID claim to use as the username.<br />Note that claims other than the default ('sub') are not guaranteed to be<br />unique and immutable.
+- `username_prefix` - (Computed) - String - UsernamePrefix is the prefix prepended to username claims to prevent<br />clashes with existing names (such as 'system:' users).
+- `groups_claims` - (Computed) - List(String) - GroupsClaims are the names of the custom OpenID Connect claims for<br />specifying user groups (optional).
+- `groups_prefix` - (Computed) - String - GroupsPrefix is the prefix prepended to group claims to prevent<br />clashes with existing names (such as 'system:' groups).
+- `issuer_url` - (Computed) - String - IssuerURL is the URL of the OpenID issuer. Only the HTTPS scheme will<br />be accepted.<br />If set, will be used to verify the OIDC JSON Web Token (JWT).
+- `client_id` - (Computed) - String - ClientID is the client ID for the OpenID Connect client. Must be set<br />if issuerURL is set.
+- `required_claims` - (Computed) - Map(String) - RequiredClaims are key/value pairs that describe required claims in the ID Token.<br />If set, the claims are verified to be present in the ID Token with corresponding values.
 
 ### authorization_spec
 
@@ -1736,9 +1774,9 @@ The following arguments are supported:
 - `command` - (Computed) - List(String) - Command is the command supplied to the above image.
 - `environment` - (Computed) - Map(String) - Environment is a map of environment variables added to the hook.
 
-### assets
+### assets_spec
 
-Assets defines the privately hosted assets.
+AssetsSpec defines the privately hosted assets.
 
 #### Argument Reference
 
@@ -1805,12 +1843,13 @@ The following arguments are supported:
 
 - `enabled` - (Computed) - Bool - Enabled enables the cluster autoscaler.<br />Default: false.
 - `expander` - (Computed) - String - Expander determines the strategy for which instance group gets expanded.<br />Supported values: least-waste, most-pods, random, price, priority.<br />The price expander is only supported on GCE.<br />By default, kOps will generate the priority expander ConfigMap based on the `autoscale` and `autoscalePriority` fields in the InstanceGroup specs.<br />Default: least-waste.
-- `balance_similar_node_groups` - (Computed) - Bool - BalanceSimilarNodeGroups makes cluster autoscaler treat similar node groups as one.<br />Default: false.
+- `balance_similar_node_groups` - (Computed) - Bool - BalanceSimilarNodeGroups makes the cluster autoscaler treat similar node groups as one.<br />Default: false.
 - `aws_use_static_instance_list` - (Computed) - Bool - AWSUseStaticInstanceList makes cluster autoscaler to use statically defined set of AWS EC2 Instance List.<br />Default: false.
+- `ignore_daemon_sets_utilization` - (Computed) - Bool - IgnoreDaemonSetsUtilization causes the cluster autoscaler to ignore DaemonSet-managed pods when calculating resource utilization for scaling down.<br />Default: false.
 - `scale_down_utilization_threshold` - (Computed) - String - ScaleDownUtilizationThreshold determines the utilization threshold for node scale-down.<br />Default: 0.5.
-- `skip_nodes_with_system_pods` - (Computed) - Bool - SkipNodesWithSystemPods makes cluster autoscaler skip scale-down of nodes with non-DaemonSet pods in the kube-system namespace.<br />Default: true.
-- `skip_nodes_with_local_storage` - (Computed) - Bool - SkipNodesWithLocalStorage makes cluster autoscaler skip scale-down of nodes with local storage.<br />Default: true.
-- `new_pod_scale_up_delay` - (Computed) - String - NewPodScaleUpDelay causes cluster autoscaler to ignore unschedulable pods until they are a certain "age", regardless of the scan-interval<br />Default: 0s.
+- `skip_nodes_with_system_pods` - (Computed) - Bool - SkipNodesWithSystemPods makes the cluster autoscaler skip scale-down of nodes with non-DaemonSet pods in the kube-system namespace.<br />Default: true.
+- `skip_nodes_with_local_storage` - (Computed) - Bool - SkipNodesWithLocalStorage makes the cluster autoscaler skip scale-down of nodes with local storage.<br />Default: true.
+- `new_pod_scale_up_delay` - (Computed) - String - NewPodScaleUpDelay causes the cluster autoscaler to ignore unschedulable pods until they are a certain "age", regardless of the scan-interval<br />Default: 0s.
 - `scale_down_delay_after_add` - (Computed) - String - ScaleDownDelayAfterAdd determines the time after scale up that scale down evaluation resumes<br />Default: 10m0s.
 - `scale_down_unneeded_time` - (Computed) - String - scaleDownUnneededTime determines the time a node should be unneeded before it is eligible for scale down<br />Default: 10m0s.
 - `scale_down_unready_time` - (Computed) - String - ScaleDownUnreadyTime determines the time an unready node should be unneeded before it is eligible for scale down<br />Default: 20m0s.
@@ -1853,6 +1892,9 @@ The following arguments are supported:
 The following arguments are supported:
 
 - `enabled` - (Computed) - Bool
+- `log_encoding` - (Computed) - String
+- `log_level` - (Computed) - String
+- `image` - (Computed) - String
 
 ### cluster_secrets
 

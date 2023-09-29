@@ -21,7 +21,10 @@ func TestExpandResourceKarpenterConfig(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
-					"enabled": false,
+					"enabled":      false,
+					"log_encoding": "",
+					"log_level":    "",
+					"image":        "",
 				},
 			},
 			want: _default,
@@ -39,7 +42,10 @@ func TestExpandResourceKarpenterConfig(t *testing.T) {
 
 func TestFlattenResourceKarpenterConfigInto(t *testing.T) {
 	_default := map[string]interface{}{
-		"enabled": false,
+		"enabled":      false,
+		"log_encoding": "",
+		"log_level":    "",
+		"image":        "",
 	}
 	type args struct {
 		in kops.KarpenterConfig
@@ -67,6 +73,39 @@ func TestFlattenResourceKarpenterConfigInto(t *testing.T) {
 			},
 			want: _default,
 		},
+		{
+			name: "LogEncoding - default",
+			args: args{
+				in: func() kops.KarpenterConfig {
+					subject := kops.KarpenterConfig{}
+					subject.LogEncoding = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "LogLevel - default",
+			args: args{
+				in: func() kops.KarpenterConfig {
+					subject := kops.KarpenterConfig{}
+					subject.LogLevel = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "Image - default",
+			args: args{
+				in: func() kops.KarpenterConfig {
+					subject := kops.KarpenterConfig{}
+					subject.Image = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -81,7 +120,10 @@ func TestFlattenResourceKarpenterConfigInto(t *testing.T) {
 
 func TestFlattenResourceKarpenterConfig(t *testing.T) {
 	_default := map[string]interface{}{
-		"enabled": false,
+		"enabled":      false,
+		"log_encoding": "",
+		"log_level":    "",
+		"image":        "",
 	}
 	type args struct {
 		in kops.KarpenterConfig
@@ -104,6 +146,39 @@ func TestFlattenResourceKarpenterConfig(t *testing.T) {
 				in: func() kops.KarpenterConfig {
 					subject := kops.KarpenterConfig{}
 					subject.Enabled = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "LogEncoding - default",
+			args: args{
+				in: func() kops.KarpenterConfig {
+					subject := kops.KarpenterConfig{}
+					subject.LogEncoding = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "LogLevel - default",
+			args: args{
+				in: func() kops.KarpenterConfig {
+					subject := kops.KarpenterConfig{}
+					subject.LogLevel = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "Image - default",
+			args: args{
+				in: func() kops.KarpenterConfig {
+					subject := kops.KarpenterConfig{}
+					subject.Image = ""
 					return subject
 				}(),
 			},

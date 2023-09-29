@@ -25,6 +25,7 @@ func ResourceContainerdConfig() *schema.Resource {
 			"version":          OptionalString(),
 			"nvidia_gpu":       OptionalStruct(ResourceNvidiaGPUConfig()),
 			"runc":             OptionalStruct(ResourceRunc()),
+			"se_linux_enabled": OptionalBool(),
 		},
 	}
 
@@ -239,6 +240,9 @@ func ExpandResourceContainerdConfig(in map[string]interface{}) kops.ContainerdCo
 				}(in))
 			}(in)
 		}(in["runc"]),
+		SeLinuxEnabled: func(in interface{}) bool {
+			return bool(ExpandBool(in))
+		}(in["se_linux_enabled"]),
 	}
 }
 
@@ -371,6 +375,9 @@ func FlattenResourceContainerdConfigInto(in kops.ContainerdConfig, out map[strin
 			}(*in)
 		}(in)
 	}(in.Runc)
+	out["se_linux_enabled"] = func(in bool) interface{} {
+		return FlattenBool(bool(in))
+	}(in.SeLinuxEnabled)
 }
 
 func FlattenResourceContainerdConfig(in kops.ContainerdConfig) map[string]interface{} {

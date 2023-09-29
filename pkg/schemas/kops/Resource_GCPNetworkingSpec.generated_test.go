@@ -7,15 +7,15 @@ import (
 	"k8s.io/kops/pkg/apis/kops"
 )
 
-func TestExpandDataSourceGCENetworkingSpec(t *testing.T) {
-	_default := kops.GCENetworkingSpec{}
+func TestExpandResourceGCPNetworkingSpec(t *testing.T) {
+	_default := kops.GCPNetworkingSpec{}
 	type args struct {
 		in map[string]interface{}
 	}
 	tests := []struct {
 		name string
 		args args
-		want kops.GCENetworkingSpec
+		want kops.GCPNetworkingSpec
 	}{
 		{
 			name: "default",
@@ -27,18 +27,18 @@ func TestExpandDataSourceGCENetworkingSpec(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ExpandDataSourceGCENetworkingSpec(tt.args.in)
+			got := ExpandResourceGCPNetworkingSpec(tt.args.in)
 			if diff := cmp.Diff(tt.want, got); diff != "" {
-				t.Errorf("ExpandDataSourceGCENetworkingSpec() mismatch (-want +got):\n%s", diff)
+				t.Errorf("ExpandResourceGCPNetworkingSpec() mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}
 }
 
-func TestFlattenDataSourceGCENetworkingSpecInto(t *testing.T) {
+func TestFlattenResourceGCPNetworkingSpecInto(t *testing.T) {
 	_default := map[string]interface{}{}
 	type args struct {
-		in kops.GCENetworkingSpec
+		in kops.GCPNetworkingSpec
 	}
 	tests := []struct {
 		name string
@@ -48,7 +48,7 @@ func TestFlattenDataSourceGCENetworkingSpecInto(t *testing.T) {
 		{
 			name: "default",
 			args: args{
-				in: kops.GCENetworkingSpec{},
+				in: kops.GCPNetworkingSpec{},
 			},
 			want: _default,
 		},
@@ -56,18 +56,18 @@ func TestFlattenDataSourceGCENetworkingSpecInto(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := map[string]interface{}{}
-			FlattenDataSourceGCENetworkingSpecInto(tt.args.in, got)
+			FlattenResourceGCPNetworkingSpecInto(tt.args.in, got)
 			if diff := cmp.Diff(tt.want, got); diff != "" {
-				t.Errorf("FlattenDataSourceGCENetworkingSpec() mismatch (-want +got):\n%s", diff)
+				t.Errorf("FlattenResourceGCPNetworkingSpec() mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}
 }
 
-func TestFlattenDataSourceGCENetworkingSpec(t *testing.T) {
+func TestFlattenResourceGCPNetworkingSpec(t *testing.T) {
 	_default := map[string]interface{}{}
 	type args struct {
-		in kops.GCENetworkingSpec
+		in kops.GCPNetworkingSpec
 	}
 	tests := []struct {
 		name string
@@ -77,16 +77,16 @@ func TestFlattenDataSourceGCENetworkingSpec(t *testing.T) {
 		{
 			name: "default",
 			args: args{
-				in: kops.GCENetworkingSpec{},
+				in: kops.GCPNetworkingSpec{},
 			},
 			want: _default,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := FlattenDataSourceGCENetworkingSpec(tt.args.in)
+			got := FlattenResourceGCPNetworkingSpec(tt.args.in)
 			if diff := cmp.Diff(tt.want, got); diff != "" {
-				t.Errorf("FlattenDataSourceGCENetworkingSpec() mismatch (-want +got):\n%s", diff)
+				t.Errorf("FlattenResourceGCPNetworkingSpec() mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}

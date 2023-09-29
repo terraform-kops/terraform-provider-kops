@@ -137,7 +137,7 @@ func main() {
 			exclude("GossipConfig", "DNSControllerGossipConfig", "Target"),
 			rename("EtcdClusters", "EtcdCluster"),
 			required("CloudProvider", "EtcdClusters", "Networking"),
-			computed("ConfigBase", "IAM"),
+			computed("IAM"),
 		),
 		generate(kops.InstanceMetadataOptions{}),
 		generate(kops.NodeTerminationHandlerSpec{},
@@ -223,7 +223,7 @@ func main() {
 			computed("CIDR"),
 		),
 		generate(kops.TopologySpec{},
-			required("ControlPlane", "Nodes", "DNS"),
+			required("DNS"),
 		),
 		generate(kops.BastionSpec{},
 			required("PublicName"),
@@ -341,6 +341,10 @@ func main() {
 		generate(kops.APISpec{}),
 		generate(kops.DCGMExporterConfig{}),
 		generate(kops.LoadBalancerSpec{}),
+		// 1.28
+		generate(kops.ConfigStoreSpec{}),
+		generate(kops.InstanceRootVolumeSpec{}),
+		generate(kops.OIDCAuthenticationSpec{}),
 	)
 	build(
 		"Config",
@@ -544,5 +548,9 @@ func main() {
 		generate(kops.APISpec{}),
 		generate(kops.DCGMExporterConfig{}),
 		generate(kops.LoadBalancerSpec{}),
+		// 1.28
+		generate(kops.ConfigStoreSpec{}),
+		generate(kops.InstanceRootVolumeSpec{}),
+		generate(kops.OIDCAuthenticationSpec{}),
 	)
 }

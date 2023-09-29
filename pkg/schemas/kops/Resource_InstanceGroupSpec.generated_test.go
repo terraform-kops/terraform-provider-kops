@@ -29,13 +29,7 @@ func TestExpandResourceInstanceGroupSpec(t *testing.T) {
 					"autoscale":                      nil,
 					"autoscale_priority":             0,
 					"machine_type":                   "",
-					"root_volume_size":               nil,
-					"root_volume_type":               nil,
-					"root_volume_iops":               nil,
-					"root_volume_throughput":         nil,
-					"root_volume_optimization":       nil,
-					"root_volume_encryption":         nil,
-					"root_volume_encryption_key":     nil,
+					"root_volume":                    nil,
 					"volumes":                        func() []interface{} { return nil }(),
 					"volume_mounts":                  func() []interface{} { return nil }(),
 					"subnets":                        func() []interface{} { return nil }(),
@@ -98,13 +92,7 @@ func TestFlattenResourceInstanceGroupSpecInto(t *testing.T) {
 		"autoscale":                      nil,
 		"autoscale_priority":             0,
 		"machine_type":                   "",
-		"root_volume_size":               nil,
-		"root_volume_type":               nil,
-		"root_volume_iops":               nil,
-		"root_volume_throughput":         nil,
-		"root_volume_optimization":       nil,
-		"root_volume_encryption":         nil,
-		"root_volume_encryption_key":     nil,
+		"root_volume":                    nil,
 		"volumes":                        func() []interface{} { return nil }(),
 		"volume_mounts":                  func() []interface{} { return nil }(),
 		"subnets":                        func() []interface{} { return nil }(),
@@ -247,77 +235,11 @@ func TestFlattenResourceInstanceGroupSpecInto(t *testing.T) {
 			want: _default,
 		},
 		{
-			name: "RootVolumeSize - default",
+			name: "RootVolume - default",
 			args: args{
 				in: func() kops.InstanceGroupSpec {
 					subject := kops.InstanceGroupSpec{}
-					subject.RootVolumeSize = nil
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "RootVolumeType - default",
-			args: args{
-				in: func() kops.InstanceGroupSpec {
-					subject := kops.InstanceGroupSpec{}
-					subject.RootVolumeType = nil
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "RootVolumeIOPS - default",
-			args: args{
-				in: func() kops.InstanceGroupSpec {
-					subject := kops.InstanceGroupSpec{}
-					subject.RootVolumeIOPS = nil
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "RootVolumeThroughput - default",
-			args: args{
-				in: func() kops.InstanceGroupSpec {
-					subject := kops.InstanceGroupSpec{}
-					subject.RootVolumeThroughput = nil
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "RootVolumeOptimization - default",
-			args: args{
-				in: func() kops.InstanceGroupSpec {
-					subject := kops.InstanceGroupSpec{}
-					subject.RootVolumeOptimization = nil
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "RootVolumeEncryption - default",
-			args: args{
-				in: func() kops.InstanceGroupSpec {
-					subject := kops.InstanceGroupSpec{}
-					subject.RootVolumeEncryption = nil
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "RootVolumeEncryptionKey - default",
-			args: args{
-				in: func() kops.InstanceGroupSpec {
-					subject := kops.InstanceGroupSpec{}
-					subject.RootVolumeEncryptionKey = nil
+					subject.RootVolume = nil
 					return subject
 				}(),
 			},
@@ -752,13 +674,7 @@ func TestFlattenResourceInstanceGroupSpec(t *testing.T) {
 		"autoscale":                      nil,
 		"autoscale_priority":             0,
 		"machine_type":                   "",
-		"root_volume_size":               nil,
-		"root_volume_type":               nil,
-		"root_volume_iops":               nil,
-		"root_volume_throughput":         nil,
-		"root_volume_optimization":       nil,
-		"root_volume_encryption":         nil,
-		"root_volume_encryption_key":     nil,
+		"root_volume":                    nil,
 		"volumes":                        func() []interface{} { return nil }(),
 		"volume_mounts":                  func() []interface{} { return nil }(),
 		"subnets":                        func() []interface{} { return nil }(),
@@ -901,77 +817,11 @@ func TestFlattenResourceInstanceGroupSpec(t *testing.T) {
 			want: _default,
 		},
 		{
-			name: "RootVolumeSize - default",
+			name: "RootVolume - default",
 			args: args{
 				in: func() kops.InstanceGroupSpec {
 					subject := kops.InstanceGroupSpec{}
-					subject.RootVolumeSize = nil
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "RootVolumeType - default",
-			args: args{
-				in: func() kops.InstanceGroupSpec {
-					subject := kops.InstanceGroupSpec{}
-					subject.RootVolumeType = nil
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "RootVolumeIOPS - default",
-			args: args{
-				in: func() kops.InstanceGroupSpec {
-					subject := kops.InstanceGroupSpec{}
-					subject.RootVolumeIOPS = nil
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "RootVolumeThroughput - default",
-			args: args{
-				in: func() kops.InstanceGroupSpec {
-					subject := kops.InstanceGroupSpec{}
-					subject.RootVolumeThroughput = nil
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "RootVolumeOptimization - default",
-			args: args{
-				in: func() kops.InstanceGroupSpec {
-					subject := kops.InstanceGroupSpec{}
-					subject.RootVolumeOptimization = nil
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "RootVolumeEncryption - default",
-			args: args{
-				in: func() kops.InstanceGroupSpec {
-					subject := kops.InstanceGroupSpec{}
-					subject.RootVolumeEncryption = nil
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "RootVolumeEncryptionKey - default",
-			args: args{
-				in: func() kops.InstanceGroupSpec {
-					subject := kops.InstanceGroupSpec{}
-					subject.RootVolumeEncryptionKey = nil
+					subject.RootVolume = nil
 					return subject
 				}(),
 			},

@@ -21,9 +21,12 @@ func TestExpandDataSourceGCESpec(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
-					"project":         "",
-					"service_account": "",
-					"pd_csi_driver":   nil,
+					"project":              "",
+					"service_account":      "",
+					"multizone":            nil,
+					"node_tags":            nil,
+					"node_instance_prefix": nil,
+					"pd_csi_driver":        nil,
 				},
 			},
 			want: _default,
@@ -41,9 +44,12 @@ func TestExpandDataSourceGCESpec(t *testing.T) {
 
 func TestFlattenDataSourceGCESpecInto(t *testing.T) {
 	_default := map[string]interface{}{
-		"project":         "",
-		"service_account": "",
-		"pd_csi_driver":   nil,
+		"project":              "",
+		"service_account":      "",
+		"multizone":            nil,
+		"node_tags":            nil,
+		"node_instance_prefix": nil,
+		"pd_csi_driver":        nil,
 	}
 	type args struct {
 		in kops.GCESpec
@@ -77,6 +83,39 @@ func TestFlattenDataSourceGCESpecInto(t *testing.T) {
 				in: func() kops.GCESpec {
 					subject := kops.GCESpec{}
 					subject.ServiceAccount = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "Multizone - default",
+			args: args{
+				in: func() kops.GCESpec {
+					subject := kops.GCESpec{}
+					subject.Multizone = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NodeTags - default",
+			args: args{
+				in: func() kops.GCESpec {
+					subject := kops.GCESpec{}
+					subject.NodeTags = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NodeInstancePrefix - default",
+			args: args{
+				in: func() kops.GCESpec {
+					subject := kops.GCESpec{}
+					subject.NodeInstancePrefix = nil
 					return subject
 				}(),
 			},
@@ -107,9 +146,12 @@ func TestFlattenDataSourceGCESpecInto(t *testing.T) {
 
 func TestFlattenDataSourceGCESpec(t *testing.T) {
 	_default := map[string]interface{}{
-		"project":         "",
-		"service_account": "",
-		"pd_csi_driver":   nil,
+		"project":              "",
+		"service_account":      "",
+		"multizone":            nil,
+		"node_tags":            nil,
+		"node_instance_prefix": nil,
+		"pd_csi_driver":        nil,
 	}
 	type args struct {
 		in kops.GCESpec
@@ -143,6 +185,39 @@ func TestFlattenDataSourceGCESpec(t *testing.T) {
 				in: func() kops.GCESpec {
 					subject := kops.GCESpec{}
 					subject.ServiceAccount = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "Multizone - default",
+			args: args{
+				in: func() kops.GCESpec {
+					subject := kops.GCESpec{}
+					subject.Multizone = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NodeTags - default",
+			args: args{
+				in: func() kops.GCESpec {
+					subject := kops.GCESpec{}
+					subject.NodeTags = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NodeInstancePrefix - default",
+			args: args{
+				in: func() kops.GCESpec {
+					subject := kops.GCESpec{}
+					subject.NodeInstancePrefix = nil
 					return subject
 				}(),
 			},

@@ -21,6 +21,7 @@ func TestExpandResourceCiliumNetworkingSpec(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
+					"registry":                          "",
 					"version":                           "",
 					"memory_request":                    nil,
 					"cpu_request":                       nil,
@@ -55,6 +56,7 @@ func TestExpandResourceCiliumNetworkingSpec(t *testing.T) {
 					"preallocate_bpf_maps":              false,
 					"sidecar_istio_proxy_image":         "",
 					"cluster_name":                      "",
+					"cluster_id":                        0,
 					"to_fqdns_dns_reject_response_code": "",
 					"to_fqdns_enable_poller":            false,
 					"ipam":                              "",
@@ -64,6 +66,7 @@ func TestExpandResourceCiliumNetworkingSpec(t *testing.T) {
 					"enable_node_port":                  false,
 					"etcd_managed":                      false,
 					"enable_remote_node_identity":       nil,
+					"enable_unreachable_routes":         nil,
 					"hubble":                            nil,
 					"disable_cnp_status_updates":        nil,
 					"enable_service_topology":           false,
@@ -84,6 +87,7 @@ func TestExpandResourceCiliumNetworkingSpec(t *testing.T) {
 
 func TestFlattenResourceCiliumNetworkingSpecInto(t *testing.T) {
 	_default := map[string]interface{}{
+		"registry":                          "",
 		"version":                           "",
 		"memory_request":                    nil,
 		"cpu_request":                       nil,
@@ -118,6 +122,7 @@ func TestFlattenResourceCiliumNetworkingSpecInto(t *testing.T) {
 		"preallocate_bpf_maps":              false,
 		"sidecar_istio_proxy_image":         "",
 		"cluster_name":                      "",
+		"cluster_id":                        0,
 		"to_fqdns_dns_reject_response_code": "",
 		"to_fqdns_enable_poller":            false,
 		"ipam":                              "",
@@ -127,6 +132,7 @@ func TestFlattenResourceCiliumNetworkingSpecInto(t *testing.T) {
 		"enable_node_port":                  false,
 		"etcd_managed":                      false,
 		"enable_remote_node_identity":       nil,
+		"enable_unreachable_routes":         nil,
 		"hubble":                            nil,
 		"disable_cnp_status_updates":        nil,
 		"enable_service_topology":           false,
@@ -143,6 +149,17 @@ func TestFlattenResourceCiliumNetworkingSpecInto(t *testing.T) {
 			name: "default",
 			args: args{
 				in: kops.CiliumNetworkingSpec{},
+			},
+			want: _default,
+		},
+		{
+			name: "Registry - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.Registry = ""
+					return subject
+				}(),
 			},
 			want: _default,
 		},
@@ -521,6 +538,17 @@ func TestFlattenResourceCiliumNetworkingSpecInto(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "ClusterId - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.ClusterID = 0
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "ToFqdnsDnsRejectResponseCode - default",
 			args: args{
 				in: func() kops.CiliumNetworkingSpec {
@@ -614,6 +642,17 @@ func TestFlattenResourceCiliumNetworkingSpecInto(t *testing.T) {
 				in: func() kops.CiliumNetworkingSpec {
 					subject := kops.CiliumNetworkingSpec{}
 					subject.EnableRemoteNodeIdentity = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EnableUnreachableRoutes - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.EnableUnreachableRoutes = nil
 					return subject
 				}(),
 			},
@@ -666,6 +705,7 @@ func TestFlattenResourceCiliumNetworkingSpecInto(t *testing.T) {
 
 func TestFlattenResourceCiliumNetworkingSpec(t *testing.T) {
 	_default := map[string]interface{}{
+		"registry":                          "",
 		"version":                           "",
 		"memory_request":                    nil,
 		"cpu_request":                       nil,
@@ -700,6 +740,7 @@ func TestFlattenResourceCiliumNetworkingSpec(t *testing.T) {
 		"preallocate_bpf_maps":              false,
 		"sidecar_istio_proxy_image":         "",
 		"cluster_name":                      "",
+		"cluster_id":                        0,
 		"to_fqdns_dns_reject_response_code": "",
 		"to_fqdns_enable_poller":            false,
 		"ipam":                              "",
@@ -709,6 +750,7 @@ func TestFlattenResourceCiliumNetworkingSpec(t *testing.T) {
 		"enable_node_port":                  false,
 		"etcd_managed":                      false,
 		"enable_remote_node_identity":       nil,
+		"enable_unreachable_routes":         nil,
 		"hubble":                            nil,
 		"disable_cnp_status_updates":        nil,
 		"enable_service_topology":           false,
@@ -725,6 +767,17 @@ func TestFlattenResourceCiliumNetworkingSpec(t *testing.T) {
 			name: "default",
 			args: args{
 				in: kops.CiliumNetworkingSpec{},
+			},
+			want: _default,
+		},
+		{
+			name: "Registry - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.Registry = ""
+					return subject
+				}(),
 			},
 			want: _default,
 		},
@@ -1103,6 +1156,17 @@ func TestFlattenResourceCiliumNetworkingSpec(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "ClusterId - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.ClusterID = 0
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "ToFqdnsDnsRejectResponseCode - default",
 			args: args{
 				in: func() kops.CiliumNetworkingSpec {
@@ -1196,6 +1260,17 @@ func TestFlattenResourceCiliumNetworkingSpec(t *testing.T) {
 				in: func() kops.CiliumNetworkingSpec {
 					subject := kops.CiliumNetworkingSpec{}
 					subject.EnableRemoteNodeIdentity = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EnableUnreachableRoutes - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.EnableUnreachableRoutes = nil
 					return subject
 				}(),
 			},

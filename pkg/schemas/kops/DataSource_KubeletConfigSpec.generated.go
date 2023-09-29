@@ -14,96 +14,99 @@ var _ = Schema
 func DataSourceKubeletConfigSpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"api_servers":                            ComputedString(),
-			"anonymous_auth":                         Nullable(ComputedBool()),
-			"authorization_mode":                     ComputedString(),
-			"bootstrap_kubeconfig":                   ComputedString(),
-			"client_ca_file":                         ComputedString(),
-			"tls_cert_file":                          ComputedString(),
-			"tls_private_key_file":                   ComputedString(),
-			"tls_cipher_suites":                      ComputedList(String()),
-			"tls_min_version":                        ComputedString(),
-			"kubeconfig_path":                        ComputedString(),
-			"require_kubeconfig":                     ComputedBool(),
-			"log_format":                             ComputedString(),
-			"log_level":                              ComputedInt(),
-			"pod_manifest_path":                      ComputedString(),
-			"hostname_override":                      ComputedString(),
-			"pod_infra_container_image":              ComputedString(),
-			"seccomp_profile_root":                   ComputedString(),
-			"allow_privileged":                       ComputedBool(),
-			"enable_debugging_handlers":              ComputedBool(),
-			"register_node":                          ComputedBool(),
-			"node_status_update_frequency":           ComputedDuration(),
-			"cluster_domain":                         ComputedString(),
-			"cluster_dns":                            ComputedString(),
-			"network_plugin_name":                    ComputedString(),
-			"cloud_provider":                         ComputedString(),
-			"kubelet_cgroups":                        ComputedString(),
-			"runtime_cgroups":                        ComputedString(),
-			"read_only_port":                         ComputedInt(),
-			"system_cgroups":                         ComputedString(),
-			"cgroup_root":                            ComputedString(),
-			"configure_cbr0":                         ComputedBool(),
-			"hairpin_mode":                           ComputedString(),
-			"babysit_daemons":                        ComputedBool(),
-			"max_pods":                               ComputedInt(),
-			"nvidia_gp_us":                           ComputedInt(),
-			"pod_cidr":                               ComputedString(),
-			"resolver_config":                        ComputedString(),
-			"reconcile_cidr":                         ComputedBool(),
-			"register_schedulable":                   ComputedBool(),
-			"serialize_image_pulls":                  ComputedBool(),
-			"node_labels":                            ComputedMap(String()),
-			"non_masquerade_cidr":                    ComputedString(),
-			"enable_custom_metrics":                  ComputedBool(),
-			"network_plugin_mtu":                     ComputedInt(),
-			"image_gc_high_threshold_percent":        ComputedInt(),
-			"image_gc_low_threshold_percent":         ComputedInt(),
-			"image_pull_progress_deadline":           ComputedDuration(),
-			"eviction_hard":                          ComputedString(),
-			"eviction_soft":                          ComputedString(),
-			"eviction_soft_grace_period":             ComputedString(),
-			"eviction_pressure_transition_period":    ComputedDuration(),
-			"eviction_max_pod_grace_period":          ComputedInt(),
-			"eviction_minimum_reclaim":               ComputedString(),
-			"volume_plugin_directory":                ComputedString(),
-			"taints":                                 ComputedList(String()),
-			"feature_gates":                          ComputedMap(String()),
-			"kernel_memcg_notification":              ComputedBool(),
-			"kube_reserved":                          ComputedMap(String()),
-			"kube_reserved_cgroup":                   ComputedString(),
-			"system_reserved":                        ComputedMap(String()),
-			"system_reserved_cgroup":                 ComputedString(),
-			"enforce_node_allocatable":               ComputedString(),
-			"runtime_request_timeout":                ComputedDuration(),
-			"volume_stats_agg_period":                ComputedDuration(),
-			"fail_swap_on":                           ComputedBool(),
-			"experimental_allowed_unsafe_sysctls":    ComputedList(String()),
-			"allowed_unsafe_sysctls":                 ComputedList(String()),
-			"streaming_connection_idle_timeout":      ComputedDuration(),
-			"docker_disable_shared_pid":              ComputedBool(),
-			"root_dir":                               ComputedString(),
-			"authentication_token_webhook":           ComputedBool(),
-			"authentication_token_webhook_cache_ttl": ComputedDuration(),
-			"cpu_cfs_quota":                          Nullable(ComputedBool()),
-			"cpu_cfs_quota_period":                   ComputedDuration(),
-			"cpu_manager_policy":                     ComputedString(),
-			"registry_pull_qps":                      ComputedInt(),
-			"registry_burst":                         ComputedInt(),
-			"topology_manager_policy":                ComputedString(),
-			"rotate_certificates":                    ComputedBool(),
-			"protect_kernel_defaults":                ComputedBool(),
-			"cgroup_driver":                          ComputedString(),
-			"housekeeping_interval":                  ComputedDuration(),
-			"event_qps":                              ComputedInt(),
-			"event_burst":                            ComputedInt(),
-			"container_log_max_size":                 ComputedString(),
-			"container_log_max_files":                ComputedInt(),
-			"enable_cadvisor_json_endpoints":         ComputedBool(),
-			"pod_pids_limit":                         ComputedInt(),
-			"shutdown_grace_period":                  ComputedDuration(),
-			"shutdown_grace_period_critical_pods":    ComputedDuration(),
+			"api_servers":                              ComputedString(),
+			"anonymous_auth":                           Nullable(ComputedBool()),
+			"authorization_mode":                       ComputedString(),
+			"bootstrap_kubeconfig":                     ComputedString(),
+			"client_ca_file":                           ComputedString(),
+			"tls_cert_file":                            ComputedString(),
+			"tls_private_key_file":                     ComputedString(),
+			"tls_cipher_suites":                        ComputedList(String()),
+			"tls_min_version":                          ComputedString(),
+			"kubeconfig_path":                          ComputedString(),
+			"require_kubeconfig":                       ComputedBool(),
+			"log_format":                               ComputedString(),
+			"log_level":                                ComputedInt(),
+			"pod_manifest_path":                        ComputedString(),
+			"hostname_override":                        ComputedString(),
+			"pod_infra_container_image":                ComputedString(),
+			"seccomp_default":                          ComputedBool(),
+			"seccomp_profile_root":                     ComputedString(),
+			"allow_privileged":                         ComputedBool(),
+			"enable_debugging_handlers":                ComputedBool(),
+			"register_node":                            ComputedBool(),
+			"node_status_update_frequency":             ComputedDuration(),
+			"cluster_domain":                           ComputedString(),
+			"cluster_dns":                              ComputedString(),
+			"network_plugin_name":                      ComputedString(),
+			"cloud_provider":                           ComputedString(),
+			"kubelet_cgroups":                          ComputedString(),
+			"runtime_cgroups":                          ComputedString(),
+			"read_only_port":                           ComputedInt(),
+			"system_cgroups":                           ComputedString(),
+			"cgroup_root":                              ComputedString(),
+			"configure_cbr0":                           ComputedBool(),
+			"hairpin_mode":                             ComputedString(),
+			"babysit_daemons":                          ComputedBool(),
+			"max_pods":                                 ComputedInt(),
+			"nvidia_gp_us":                             ComputedInt(),
+			"pod_cidr":                                 ComputedString(),
+			"resolver_config":                          ComputedString(),
+			"reconcile_cidr":                           ComputedBool(),
+			"register_schedulable":                     ComputedBool(),
+			"serialize_image_pulls":                    ComputedBool(),
+			"node_labels":                              ComputedMap(String()),
+			"non_masquerade_cidr":                      ComputedString(),
+			"enable_custom_metrics":                    ComputedBool(),
+			"network_plugin_mtu":                       ComputedInt(),
+			"image_gc_high_threshold_percent":          ComputedInt(),
+			"image_gc_low_threshold_percent":           ComputedInt(),
+			"image_pull_progress_deadline":             ComputedDuration(),
+			"eviction_hard":                            ComputedString(),
+			"eviction_soft":                            ComputedString(),
+			"eviction_soft_grace_period":               ComputedString(),
+			"eviction_pressure_transition_period":      ComputedDuration(),
+			"eviction_max_pod_grace_period":            ComputedInt(),
+			"eviction_minimum_reclaim":                 ComputedString(),
+			"volume_plugin_directory":                  ComputedString(),
+			"taints":                                   ComputedList(String()),
+			"feature_gates":                            ComputedMap(String()),
+			"kernel_memcg_notification":                ComputedBool(),
+			"kube_reserved":                            ComputedMap(String()),
+			"kube_reserved_cgroup":                     ComputedString(),
+			"system_reserved":                          ComputedMap(String()),
+			"system_reserved_cgroup":                   ComputedString(),
+			"enforce_node_allocatable":                 ComputedString(),
+			"runtime_request_timeout":                  ComputedDuration(),
+			"volume_stats_agg_period":                  ComputedDuration(),
+			"fail_swap_on":                             ComputedBool(),
+			"experimental_allowed_unsafe_sysctls":      ComputedList(String()),
+			"allowed_unsafe_sysctls":                   ComputedList(String()),
+			"streaming_connection_idle_timeout":        ComputedDuration(),
+			"docker_disable_shared_pid":                ComputedBool(),
+			"root_dir":                                 ComputedString(),
+			"authentication_token_webhook":             ComputedBool(),
+			"authentication_token_webhook_cache_ttl":   ComputedDuration(),
+			"cpu_cfs_quota":                            Nullable(ComputedBool()),
+			"cpu_cfs_quota_period":                     ComputedDuration(),
+			"cpu_manager_policy":                       ComputedString(),
+			"registry_pull_qps":                        ComputedInt(),
+			"registry_burst":                           ComputedInt(),
+			"topology_manager_policy":                  ComputedString(),
+			"rotate_certificates":                      ComputedBool(),
+			"protect_kernel_defaults":                  ComputedBool(),
+			"cgroup_driver":                            ComputedString(),
+			"housekeeping_interval":                    ComputedDuration(),
+			"event_qps":                                ComputedInt(),
+			"event_burst":                              ComputedInt(),
+			"container_log_max_size":                   ComputedString(),
+			"container_log_max_files":                  ComputedInt(),
+			"enable_cadvisor_json_endpoints":           ComputedBool(),
+			"pod_pids_limit":                           ComputedInt(),
+			"experimental_allocatable_ignore_eviction": ComputedBool(),
+			"shutdown_grace_period":                    ComputedDuration(),
+			"shutdown_grace_period_critical_pods":      ComputedDuration(),
+			"memory_swap_behavior":                     ComputedString(),
 		},
 	}
 
@@ -222,6 +225,25 @@ func ExpandDataSourceKubeletConfigSpec(in map[string]interface{}) kops.KubeletCo
 		PodInfraContainerImage: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["pod_infra_container_image"]),
+		SeccompDefault: func(in interface{}) *bool {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
+		}(in["seccomp_default"]),
 		SeccompProfileRoot: func(in interface{}) *string {
 			if in == nil {
 				return nil
@@ -1195,6 +1217,25 @@ func ExpandDataSourceKubeletConfigSpec(in map[string]interface{}) kops.KubeletCo
 				}(int64(ExpandInt(in)))
 			}(in)
 		}(in["pod_pids_limit"]),
+		ExperimentalAllocatableIgnoreEviction: func(in interface{}) *bool {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
+		}(in["experimental_allocatable_ignore_eviction"]),
 		ShutdownGracePeriod: func(in interface{}) *meta.Duration {
 			if in == nil {
 				return nil
@@ -1233,6 +1274,9 @@ func ExpandDataSourceKubeletConfigSpec(in map[string]interface{}) kops.KubeletCo
 				}(ExpandDuration(in))
 			}(in)
 		}(in["shutdown_grace_period_critical_pods"]),
+		MemorySwapBehavior: func(in interface{}) string {
+			return string(ExpandString(in))
+		}(in["memory_swap_behavior"]),
 	}
 }
 
@@ -1315,6 +1359,16 @@ func FlattenDataSourceKubeletConfigSpecInto(in kops.KubeletConfigSpec, out map[s
 	out["pod_infra_container_image"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.PodInfraContainerImage)
+	out["seccomp_default"] = func(in *bool) interface{} {
+		return func(in *bool) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in bool) interface{} {
+				return FlattenBool(bool(in))
+			}(*in)
+		}(in)
+	}(in.SeccompDefault)
 	out["seccomp_profile_root"] = func(in *string) interface{} {
 		return func(in *string) interface{} {
 			if in == nil {
@@ -1882,6 +1936,16 @@ func FlattenDataSourceKubeletConfigSpecInto(in kops.KubeletConfigSpec, out map[s
 			}(*in)
 		}(in)
 	}(in.PodPidsLimit)
+	out["experimental_allocatable_ignore_eviction"] = func(in *bool) interface{} {
+		return func(in *bool) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in bool) interface{} {
+				return FlattenBool(bool(in))
+			}(*in)
+		}(in)
+	}(in.ExperimentalAllocatableIgnoreEviction)
 	out["shutdown_grace_period"] = func(in *meta.Duration) interface{} {
 		return func(in *meta.Duration) interface{} {
 			if in == nil {
@@ -1902,6 +1966,9 @@ func FlattenDataSourceKubeletConfigSpecInto(in kops.KubeletConfigSpec, out map[s
 			}(*in)
 		}(in)
 	}(in.ShutdownGracePeriodCriticalPods)
+	out["memory_swap_behavior"] = func(in string) interface{} {
+		return FlattenString(string(in))
+	}(in.MemorySwapBehavior)
 }
 
 func FlattenDataSourceKubeletConfigSpec(in kops.KubeletConfigSpec) map[string]interface{} {

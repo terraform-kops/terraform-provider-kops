@@ -17,6 +17,7 @@ func DataSourceOpenstackNetwork() *schema.Resource {
 			"ipv6_support_disabled":   ComputedBool(),
 			"public_network_names":    ComputedList(String()),
 			"internal_network_names":  ComputedList(String()),
+			"address_sort_order":      ComputedString(),
 		},
 	}
 
@@ -113,6 +114,25 @@ func ExpandDataSourceOpenstackNetwork(in map[string]interface{}) kops.OpenstackN
 				return out
 			}(in)
 		}(in["internal_network_names"]),
+		AddressSortOrder: func(in interface{}) *string {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *string {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in string) *string {
+					return &in
+				}(string(ExpandString(in)))
+			}(in)
+		}(in["address_sort_order"]),
 	}
 }
 
@@ -175,6 +195,16 @@ func FlattenDataSourceOpenstackNetworkInto(in kops.OpenstackNetwork, out map[str
 			return out
 		}(in)
 	}(in.InternalNetworkNames)
+	out["address_sort_order"] = func(in *string) interface{} {
+		return func(in *string) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in string) interface{} {
+				return FlattenString(string(in))
+			}(*in)
+		}(in)
+	}(in.AddressSortOrder)
 }
 
 func FlattenDataSourceOpenstackNetwork(in kops.OpenstackNetwork) map[string]interface{} {

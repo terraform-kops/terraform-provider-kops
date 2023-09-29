@@ -17,7 +17,9 @@ func ResourceEtcdManagerSpec() *schema.Resource {
 			"image":                   OptionalString(),
 			"env":                     OptionalList(ResourceEnvVar()),
 			"backup_interval":         OptionalDuration(),
+			"backup_retention_days":   OptionalInt(),
 			"discovery_poll_interval": OptionalDuration(),
+			"listen_metrics_ur_ls":    OptionalList(String()),
 			"log_level":               OptionalInt(),
 		},
 	}
@@ -69,6 +71,25 @@ func ExpandResourceEtcdManagerSpec(in map[string]interface{}) kops.EtcdManagerSp
 				}(ExpandDuration(in))
 			}(in)
 		}(in["backup_interval"]),
+		BackupRetentionDays: func(in interface{}) *uint32 {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *uint32 {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in uint32) *uint32 {
+					return &in
+				}(uint32(ExpandInt(in)))
+			}(in)
+		}(in["backup_retention_days"]),
 		DiscoveryPollInterval: func(in interface{}) *meta.Duration {
 			if in == nil {
 				return nil
@@ -88,6 +109,18 @@ func ExpandResourceEtcdManagerSpec(in map[string]interface{}) kops.EtcdManagerSp
 				}(ExpandDuration(in))
 			}(in)
 		}(in["discovery_poll_interval"]),
+		ListenMetricsURLs: func(in interface{}) []string {
+			return func(in interface{}) []string {
+				if in == nil {
+					return nil
+				}
+				var out []string
+				for _, in := range in.([]interface{}) {
+					out = append(out, string(ExpandString(in)))
+				}
+				return out
+			}(in)
+		}(in["listen_metrics_ur_ls"]),
 		LogLevel: func(in interface{}) *int32 {
 			if in == nil {
 				return nil
@@ -135,6 +168,16 @@ func FlattenResourceEtcdManagerSpecInto(in kops.EtcdManagerSpec, out map[string]
 			}(*in)
 		}(in)
 	}(in.BackupInterval)
+	out["backup_retention_days"] = func(in *uint32) interface{} {
+		return func(in *uint32) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in uint32) interface{} {
+				return FlattenInt(int(in))
+			}(*in)
+		}(in)
+	}(in.BackupRetentionDays)
 	out["discovery_poll_interval"] = func(in *meta.Duration) interface{} {
 		return func(in *meta.Duration) interface{} {
 			if in == nil {
@@ -145,6 +188,15 @@ func FlattenResourceEtcdManagerSpecInto(in kops.EtcdManagerSpec, out map[string]
 			}(*in)
 		}(in)
 	}(in.DiscoveryPollInterval)
+	out["listen_metrics_ur_ls"] = func(in []string) interface{} {
+		return func(in []string) []interface{} {
+			var out []interface{}
+			for _, in := range in {
+				out = append(out, FlattenString(string(in)))
+			}
+			return out
+		}(in)
+	}(in.ListenMetricsURLs)
 	out["log_level"] = func(in *int32) interface{} {
 		return func(in *int32) interface{} {
 			if in == nil {

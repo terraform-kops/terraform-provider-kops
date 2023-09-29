@@ -24,7 +24,9 @@ func TestExpandDataSourceEtcdManagerSpec(t *testing.T) {
 					"image":                   "",
 					"env":                     func() []interface{} { return nil }(),
 					"backup_interval":         nil,
+					"backup_retention_days":   nil,
 					"discovery_poll_interval": nil,
+					"listen_metrics_ur_ls":    func() []interface{} { return nil }(),
 					"log_level":               nil,
 				},
 			},
@@ -46,7 +48,9 @@ func TestFlattenDataSourceEtcdManagerSpecInto(t *testing.T) {
 		"image":                   "",
 		"env":                     func() []interface{} { return nil }(),
 		"backup_interval":         nil,
+		"backup_retention_days":   nil,
 		"discovery_poll_interval": nil,
+		"listen_metrics_ur_ls":    func() []interface{} { return nil }(),
 		"log_level":               nil,
 	}
 	type args struct {
@@ -98,11 +102,33 @@ func TestFlattenDataSourceEtcdManagerSpecInto(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "BackupRetentionDays - default",
+			args: args{
+				in: func() kops.EtcdManagerSpec {
+					subject := kops.EtcdManagerSpec{}
+					subject.BackupRetentionDays = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "DiscoveryPollInterval - default",
 			args: args{
 				in: func() kops.EtcdManagerSpec {
 					subject := kops.EtcdManagerSpec{}
 					subject.DiscoveryPollInterval = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ListenMetricsURLs - default",
+			args: args{
+				in: func() kops.EtcdManagerSpec {
+					subject := kops.EtcdManagerSpec{}
+					subject.ListenMetricsURLs = nil
 					return subject
 				}(),
 			},
@@ -136,7 +162,9 @@ func TestFlattenDataSourceEtcdManagerSpec(t *testing.T) {
 		"image":                   "",
 		"env":                     func() []interface{} { return nil }(),
 		"backup_interval":         nil,
+		"backup_retention_days":   nil,
 		"discovery_poll_interval": nil,
+		"listen_metrics_ur_ls":    func() []interface{} { return nil }(),
 		"log_level":               nil,
 	}
 	type args struct {
@@ -188,11 +216,33 @@ func TestFlattenDataSourceEtcdManagerSpec(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "BackupRetentionDays - default",
+			args: args{
+				in: func() kops.EtcdManagerSpec {
+					subject := kops.EtcdManagerSpec{}
+					subject.BackupRetentionDays = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "DiscoveryPollInterval - default",
 			args: args{
 				in: func() kops.EtcdManagerSpec {
 					subject := kops.EtcdManagerSpec{}
 					subject.DiscoveryPollInterval = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ListenMetricsURLs - default",
+			args: args{
+				in: func() kops.EtcdManagerSpec {
+					subject := kops.EtcdManagerSpec{}
+					subject.ListenMetricsURLs = nil
 					return subject
 				}(),
 			},

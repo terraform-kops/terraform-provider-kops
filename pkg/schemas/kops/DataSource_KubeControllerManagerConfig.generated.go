@@ -66,6 +66,8 @@ func DataSourceKubeControllerManagerConfig() *schema.Resource {
 			"authorization_kubeconfig":                            ComputedString(),
 			"authorization_always_allow_paths":                    ComputedList(String()),
 			"external_cloud_volume_plugin":                        ComputedString(),
+			"endpoint_updates_batch_period":                       ComputedDuration(),
+			"endpoint_slice_updates_batch_period":                 ComputedDuration(),
 			"enable_profiling":                                    ComputedBool(),
 			"enable_leader_migration":                             ComputedBool(),
 		},
@@ -784,6 +786,44 @@ func ExpandDataSourceKubeControllerManagerConfig(in map[string]interface{}) kops
 		ExternalCloudVolumePlugin: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["external_cloud_volume_plugin"]),
+		EndpointUpdatesBatchPeriod: func(in interface{}) *meta.Duration {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *meta.Duration {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in meta.Duration) *meta.Duration {
+					return &in
+				}(ExpandDuration(in))
+			}(in)
+		}(in["endpoint_updates_batch_period"]),
+		EndpointSliceUpdatesBatchPeriod: func(in interface{}) *meta.Duration {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *meta.Duration {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in meta.Duration) *meta.Duration {
+					return &in
+				}(ExpandDuration(in))
+			}(in)
+		}(in["endpoint_slice_updates_batch_period"]),
 		EnableProfiling: func(in interface{}) *bool {
 			if in == nil {
 				return nil
@@ -1232,6 +1272,26 @@ func FlattenDataSourceKubeControllerManagerConfigInto(in kops.KubeControllerMana
 	out["external_cloud_volume_plugin"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.ExternalCloudVolumePlugin)
+	out["endpoint_updates_batch_period"] = func(in *meta.Duration) interface{} {
+		return func(in *meta.Duration) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in meta.Duration) interface{} {
+				return FlattenDuration(in)
+			}(*in)
+		}(in)
+	}(in.EndpointUpdatesBatchPeriod)
+	out["endpoint_slice_updates_batch_period"] = func(in *meta.Duration) interface{} {
+		return func(in *meta.Duration) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in meta.Duration) interface{} {
+				return FlattenDuration(in)
+			}(*in)
+		}(in)
+	}(in.EndpointSliceUpdatesBatchPeriod)
 	out["enable_profiling"] = func(in *bool) interface{} {
 		return func(in *bool) interface{} {
 			if in == nil {
