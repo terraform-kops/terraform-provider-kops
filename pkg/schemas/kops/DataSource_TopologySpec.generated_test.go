@@ -21,10 +21,8 @@ func TestExpandDataSourceTopologySpec(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
-					"control_plane": "",
-					"nodes":         "",
-					"bastion":       nil,
-					"dns":           "",
+					"bastion": nil,
+					"dns":     "",
 				},
 			},
 			want: _default,
@@ -42,10 +40,8 @@ func TestExpandDataSourceTopologySpec(t *testing.T) {
 
 func TestFlattenDataSourceTopologySpecInto(t *testing.T) {
 	_default := map[string]interface{}{
-		"control_plane": "",
-		"nodes":         "",
-		"bastion":       nil,
-		"dns":           "",
+		"bastion": nil,
+		"dns":     "",
 	}
 	type args struct {
 		in kops.TopologySpec
@@ -59,28 +55,6 @@ func TestFlattenDataSourceTopologySpecInto(t *testing.T) {
 			name: "default",
 			args: args{
 				in: kops.TopologySpec{},
-			},
-			want: _default,
-		},
-		{
-			name: "ControlPlane - default",
-			args: args{
-				in: func() kops.TopologySpec {
-					subject := kops.TopologySpec{}
-					subject.ControlPlane = ""
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "Nodes - default",
-			args: args{
-				in: func() kops.TopologySpec {
-					subject := kops.TopologySpec{}
-					subject.Nodes = ""
-					return subject
-				}(),
 			},
 			want: _default,
 		},
@@ -120,10 +94,8 @@ func TestFlattenDataSourceTopologySpecInto(t *testing.T) {
 
 func TestFlattenDataSourceTopologySpec(t *testing.T) {
 	_default := map[string]interface{}{
-		"control_plane": "",
-		"nodes":         "",
-		"bastion":       nil,
-		"dns":           "",
+		"bastion": nil,
+		"dns":     "",
 	}
 	type args struct {
 		in kops.TopologySpec
@@ -137,28 +109,6 @@ func TestFlattenDataSourceTopologySpec(t *testing.T) {
 			name: "default",
 			args: args{
 				in: kops.TopologySpec{},
-			},
-			want: _default,
-		},
-		{
-			name: "ControlPlane - default",
-			args: args{
-				in: func() kops.TopologySpec {
-					subject := kops.TopologySpec{}
-					subject.ControlPlane = ""
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "Nodes - default",
-			args: args{
-				in: func() kops.TopologySpec {
-					subject := kops.TopologySpec{}
-					subject.Nodes = ""
-					return subject
-				}(),
 			},
 			want: _default,
 		},

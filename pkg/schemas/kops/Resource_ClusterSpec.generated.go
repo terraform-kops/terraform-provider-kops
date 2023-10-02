@@ -35,9 +35,14 @@ func ExpandResourceClusterSpec(in map[string]interface{}) kops.ClusterSpec {
 				return out
 			}(in)
 		}(in["addons"]),
-		ConfigBase: func(in interface{}) string {
-			return string(ExpandString(in))
-		}(in["config_base"]),
+		ConfigStore: func(in interface{}) kops.ConfigStoreSpec {
+			return func(in interface{}) kops.ConfigStoreSpec {
+				if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+					return ExpandResourceConfigStoreSpec(in[0].(map[string]interface{}))
+				}
+				return kops.ConfigStoreSpec{}
+			}(in)
+		}(in["config_store"]),
 		CloudProvider: func(in interface{}) kops.CloudProviderSpec {
 			return func(in interface{}) kops.CloudProviderSpec {
 				if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
@@ -52,15 +57,6 @@ func ExpandResourceClusterSpec(in map[string]interface{}) kops.ClusterSpec {
 		KubernetesVersion: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["kubernetes_version"]),
-		SecretStore: func(in interface{}) string {
-			return string(ExpandString(in))
-		}(in["secret_store"]),
-		KeyStore: func(in interface{}) string {
-			return string(ExpandString(in))
-		}(in["key_store"]),
-		ConfigStore: func(in interface{}) string {
-			return string(ExpandString(in))
-		}(in["config_store"]),
 		DNSZone: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["dns_zone"]),
@@ -129,73 +125,53 @@ func ExpandResourceClusterSpec(in map[string]interface{}) kops.ClusterSpec {
 				}(string(ExpandString(in)))
 			}(in)
 		}(in["update_policy"]),
-		ExternalPolicies: func(in interface{}) *map[string][]string {
-			return func(in interface{}) *map[string][]string {
+		ExternalPolicies: func(in interface{}) map[string][]string {
+			return func(in interface{}) map[string][]string {
 				if in == nil {
 					return nil
 				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in map[string][]string) *map[string][]string {
-					return &in
-				}(func(in interface{}) map[string][]string {
-					if in == nil {
-						return nil
-					}
-					if in, ok := in.([]interface{}); ok {
-						if len(in) > 0 {
-							out := map[string][]string{}
-							for _, in := range in {
-								if in, ok := in.(map[string]interface{}); ok {
-									key := ExpandString(in["key"])
-									value := func(in interface{}) []string {
-										return func(in interface{}) []string {
-											if in == nil {
-												return nil
-											}
-											var out []string
-											for _, in := range in.([]interface{}) {
-												out = append(out, string(ExpandString(in)))
-											}
-											return out
-										}(in)
-									}(in["value"])
-									out[key] = value
-								}
+				if in, ok := in.([]interface{}); ok {
+					if len(in) > 0 {
+						out := map[string][]string{}
+						for _, in := range in {
+							if in, ok := in.(map[string]interface{}); ok {
+								key := ExpandString(in["key"])
+								value := func(in interface{}) []string {
+									return func(in interface{}) []string {
+										if in == nil {
+											return nil
+										}
+										var out []string
+										for _, in := range in.([]interface{}) {
+											out = append(out, string(ExpandString(in)))
+										}
+										return out
+									}(in)
+								}(in["value"])
+								out[key] = value
 							}
-							return out
 						}
+						return out
 					}
-					return nil
-				}(in))
+				}
+				return nil
 			}(in)
 		}(in["external_policies"]),
-		AdditionalPolicies: func(in interface{}) *map[string]string {
-			return func(in interface{}) *map[string]string {
+		AdditionalPolicies: func(in interface{}) map[string]string {
+			return func(in interface{}) map[string]string {
 				if in == nil {
 					return nil
 				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in map[string]string) *map[string]string {
-					return &in
-				}(func(in interface{}) map[string]string {
-					if in == nil {
-						return nil
-					}
-					if in, ok := in.(map[string]interface{}); ok {
-						if len(in) > 0 {
-							out := map[string]string{}
-							for key, in := range in {
-								out[key] = string(ExpandString(in))
-							}
-							return out
+				if in, ok := in.(map[string]interface{}); ok {
+					if len(in) > 0 {
+						out := map[string]string{}
+						for key, in := range in {
+							out[key] = string(ExpandString(in))
 						}
+						return out
 					}
-					return nil
-				}(in))
+				}
+				return nil
 			}(in)
 		}(in["additional_policies"]),
 		FileAssets: func(in interface{}) []kops.FileAssetSpec {
@@ -624,21 +600,21 @@ func ExpandResourceClusterSpec(in map[string]interface{}) kops.ClusterSpec {
 				return out
 			}(in)
 		}(in["hooks"]),
-		Assets: func(in interface{}) *kops.Assets {
-			return func(in interface{}) *kops.Assets {
+		Assets: func(in interface{}) *kops.AssetsSpec {
+			return func(in interface{}) *kops.AssetsSpec {
 				if in == nil {
 					return nil
 				}
 				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
 					return nil
 				}
-				return func(in kops.Assets) *kops.Assets {
+				return func(in kops.AssetsSpec) *kops.AssetsSpec {
 					return &in
-				}(func(in interface{}) kops.Assets {
+				}(func(in interface{}) kops.AssetsSpec {
 					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
-						return ExpandResourceAssets(in[0].(map[string]interface{}))
+						return ExpandResourceAssetsSpec(in[0].(map[string]interface{}))
 					}
-					return kops.Assets{}
+					return kops.AssetsSpec{}
 				}(in))
 			}(in)
 		}(in["assets"]),
@@ -818,9 +794,11 @@ func FlattenResourceClusterSpecInto(in kops.ClusterSpec, out map[string]interfac
 			return out
 		}(in)
 	}(in.Addons)
-	out["config_base"] = func(in string) interface{} {
-		return FlattenString(string(in))
-	}(in.ConfigBase)
+	out["config_store"] = func(in kops.ConfigStoreSpec) interface{} {
+		return func(in kops.ConfigStoreSpec) []interface{} {
+			return []interface{}{FlattenResourceConfigStoreSpec(in)}
+		}(in)
+	}(in.ConfigStore)
 	out["cloud_provider"] = func(in kops.CloudProviderSpec) interface{} {
 		return func(in kops.CloudProviderSpec) []interface{} {
 			return []interface{}{FlattenResourceCloudProviderSpec(in)}
@@ -832,15 +810,6 @@ func FlattenResourceClusterSpecInto(in kops.ClusterSpec, out map[string]interfac
 	out["kubernetes_version"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.KubernetesVersion)
-	out["secret_store"] = func(in string) interface{} {
-		return FlattenString(string(in))
-	}(in.SecretStore)
-	out["key_store"] = func(in string) interface{} {
-		return FlattenString(string(in))
-	}(in.KeyStore)
-	out["config_store"] = func(in string) interface{} {
-		return FlattenString(string(in))
-	}(in.ConfigStore)
 	out["dns_zone"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.DNSZone)
@@ -885,59 +854,45 @@ func FlattenResourceClusterSpecInto(in kops.ClusterSpec, out map[string]interfac
 			}(*in)
 		}(in)
 	}(in.UpdatePolicy)
-	out["external_policies"] = func(in *map[string][]string) interface{} {
-		return func(in *map[string][]string) interface{} {
+	out["external_policies"] = func(in map[string][]string) interface{} {
+		return func(in map[string][]string) []interface{} {
 			if in == nil {
 				return nil
 			}
-			return func(in map[string][]string) interface{} {
-				return func(in map[string][]string) []interface{} {
-					if in == nil {
-						return nil
-					}
-					keys := make([]string, 0, len(in))
-					for key := range in {
-						keys = append(keys, key)
-					}
-					sort.SliceStable(keys, func(i, j int) bool {
-						return keys[i] < keys[j]
-					})
-					var out []interface{}
-					for _, key := range keys {
-						in := in[key]
-						out = append(out, map[string]interface{}{
-							"key": key,
-							"value": func(in []string) []interface{} {
-								var out []interface{}
-								for _, in := range in {
-									out = append(out, FlattenString(string(in)))
-								}
-								return out
-							}(in),
-						})
-					}
-					return out
-				}(in)
-			}(*in)
+			keys := make([]string, 0, len(in))
+			for key := range in {
+				keys = append(keys, key)
+			}
+			sort.SliceStable(keys, func(i, j int) bool {
+				return keys[i] < keys[j]
+			})
+			var out []interface{}
+			for _, key := range keys {
+				in := in[key]
+				out = append(out, map[string]interface{}{
+					"key": key,
+					"value": func(in []string) []interface{} {
+						var out []interface{}
+						for _, in := range in {
+							out = append(out, FlattenString(string(in)))
+						}
+						return out
+					}(in),
+				})
+			}
+			return out
 		}(in)
 	}(in.ExternalPolicies)
-	out["additional_policies"] = func(in *map[string]string) interface{} {
-		return func(in *map[string]string) interface{} {
+	out["additional_policies"] = func(in map[string]string) interface{} {
+		return func(in map[string]string) map[string]interface{} {
 			if in == nil {
 				return nil
 			}
-			return func(in map[string]string) interface{} {
-				return func(in map[string]string) map[string]interface{} {
-					if in == nil {
-						return nil
-					}
-					out := map[string]interface{}{}
-					for key, in := range in {
-						out[key] = FlattenString(string(in))
-					}
-					return out
-				}(in)
-			}(*in)
+			out := map[string]interface{}{}
+			for key, in := range in {
+				out[key] = FlattenString(string(in))
+			}
+			return out
 		}(in)
 	}(in.AdditionalPolicies)
 	out["file_assets"] = func(in []kops.FileAssetSpec) interface{} {
@@ -1223,14 +1178,14 @@ func FlattenResourceClusterSpecInto(in kops.ClusterSpec, out map[string]interfac
 			return out
 		}(in)
 	}(in.Hooks)
-	out["assets"] = func(in *kops.Assets) interface{} {
-		return func(in *kops.Assets) interface{} {
+	out["assets"] = func(in *kops.AssetsSpec) interface{} {
+		return func(in *kops.AssetsSpec) interface{} {
 			if in == nil {
 				return nil
 			}
-			return func(in kops.Assets) interface{} {
-				return func(in kops.Assets) []interface{} {
-					return []interface{}{FlattenResourceAssets(in)}
+			return func(in kops.AssetsSpec) interface{} {
+				return func(in kops.AssetsSpec) []interface{} {
+					return []interface{}{FlattenResourceAssetsSpec(in)}
 				}(in)
 			}(*in)
 		}(in)

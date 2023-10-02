@@ -11,10 +11,8 @@ var _ = Schema
 func DataSourceTopologySpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"control_plane": ComputedString(),
-			"nodes":         ComputedString(),
-			"bastion":       ComputedStruct(DataSourceBastionSpec()),
-			"dns":           ComputedString(),
+			"bastion": ComputedStruct(DataSourceBastionSpec()),
+			"dns":     ComputedString(),
 		},
 	}
 
@@ -26,12 +24,6 @@ func ExpandDataSourceTopologySpec(in map[string]interface{}) kops.TopologySpec {
 		panic("expand TopologySpec failure, in is nil")
 	}
 	return kops.TopologySpec{
-		ControlPlane: func(in interface{}) string {
-			return string(ExpandString(in))
-		}(in["control_plane"]),
-		Nodes: func(in interface{}) string {
-			return string(ExpandString(in))
-		}(in["nodes"]),
 		Bastion: func(in interface{}) *kops.BastionSpec {
 			return func(in interface{}) *kops.BastionSpec {
 				if in == nil {
@@ -57,12 +49,6 @@ func ExpandDataSourceTopologySpec(in map[string]interface{}) kops.TopologySpec {
 }
 
 func FlattenDataSourceTopologySpecInto(in kops.TopologySpec, out map[string]interface{}) {
-	out["control_plane"] = func(in string) interface{} {
-		return FlattenString(string(in))
-	}(in.ControlPlane)
-	out["nodes"] = func(in string) interface{} {
-		return FlattenString(string(in))
-	}(in.Nodes)
 	out["bastion"] = func(in *kops.BastionSpec) interface{} {
 		return func(in *kops.BastionSpec) interface{} {
 			if in == nil {

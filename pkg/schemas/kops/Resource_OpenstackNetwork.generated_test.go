@@ -25,6 +25,7 @@ func TestExpandResourceOpenstackNetwork(t *testing.T) {
 					"ipv6_support_disabled":   nil,
 					"public_network_names":    func() []interface{} { return nil }(),
 					"internal_network_names":  func() []interface{} { return nil }(),
+					"address_sort_order":      nil,
 				},
 			},
 			want: _default,
@@ -46,6 +47,7 @@ func TestFlattenResourceOpenstackNetworkInto(t *testing.T) {
 		"ipv6_support_disabled":   nil,
 		"public_network_names":    func() []interface{} { return nil }(),
 		"internal_network_names":  func() []interface{} { return nil }(),
+		"address_sort_order":      nil,
 	}
 	type args struct {
 		in kops.OpenstackNetwork
@@ -101,6 +103,17 @@ func TestFlattenResourceOpenstackNetworkInto(t *testing.T) {
 				in: func() kops.OpenstackNetwork {
 					subject := kops.OpenstackNetwork{}
 					subject.InternalNetworkNames = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "AddressSortOrder - default",
+			args: args{
+				in: func() kops.OpenstackNetwork {
+					subject := kops.OpenstackNetwork{}
+					subject.AddressSortOrder = nil
 					return subject
 				}(),
 			},
@@ -124,6 +137,7 @@ func TestFlattenResourceOpenstackNetwork(t *testing.T) {
 		"ipv6_support_disabled":   nil,
 		"public_network_names":    func() []interface{} { return nil }(),
 		"internal_network_names":  func() []interface{} { return nil }(),
+		"address_sort_order":      nil,
 	}
 	type args struct {
 		in kops.OpenstackNetwork
@@ -179,6 +193,17 @@ func TestFlattenResourceOpenstackNetwork(t *testing.T) {
 				in: func() kops.OpenstackNetwork {
 					subject := kops.OpenstackNetwork{}
 					subject.InternalNetworkNames = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "AddressSortOrder - default",
+			args: args{
+				in: func() kops.OpenstackNetwork {
+					subject := kops.OpenstackNetwork{}
+					subject.AddressSortOrder = nil
 					return subject
 				}(),
 			},

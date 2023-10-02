@@ -62,7 +62,7 @@ func ConfigureProvider(_ context.Context, d *schema.ResourceData) (interface{}, 
 		return nil, diag.FromErr(field.Invalid(field.NewPath("State Store"), providerConfig.StateStore, invalidStateError))
 	}
 	return &options{
-		clientset: vfsclientset.NewVFSClientset(basePath),
+		clientset: vfsclientset.NewVFSClientset(vfs.NewVFSContext(), basePath),
 	}, nil
 }
 

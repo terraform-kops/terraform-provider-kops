@@ -32,6 +32,7 @@ func TestExpandResourceContainerdConfig(t *testing.T) {
 					"version":          nil,
 					"nvidia_gpu":       nil,
 					"runc":             nil,
+					"se_linux_enabled": false,
 				},
 			},
 			want: _default,
@@ -60,6 +61,7 @@ func TestFlattenResourceContainerdConfigInto(t *testing.T) {
 		"version":          nil,
 		"nvidia_gpu":       nil,
 		"runc":             nil,
+		"se_linux_enabled": false,
 	}
 	type args struct {
 		in kops.ContainerdConfig
@@ -192,6 +194,17 @@ func TestFlattenResourceContainerdConfigInto(t *testing.T) {
 				in: func() kops.ContainerdConfig {
 					subject := kops.ContainerdConfig{}
 					subject.Runc = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "SeLinuxEnabled - default",
+			args: args{
+				in: func() kops.ContainerdConfig {
+					subject := kops.ContainerdConfig{}
+					subject.SeLinuxEnabled = false
 					return subject
 				}(),
 			},
@@ -222,6 +235,7 @@ func TestFlattenResourceContainerdConfig(t *testing.T) {
 		"version":          nil,
 		"nvidia_gpu":       nil,
 		"runc":             nil,
+		"se_linux_enabled": false,
 	}
 	type args struct {
 		in kops.ContainerdConfig
@@ -354,6 +368,17 @@ func TestFlattenResourceContainerdConfig(t *testing.T) {
 				in: func() kops.ContainerdConfig {
 					subject := kops.ContainerdConfig{}
 					subject.Runc = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "SeLinuxEnabled - default",
+			args: args{
+				in: func() kops.ContainerdConfig {
+					subject := kops.ContainerdConfig{}
+					subject.SeLinuxEnabled = false
 					return subject
 				}(),
 			},

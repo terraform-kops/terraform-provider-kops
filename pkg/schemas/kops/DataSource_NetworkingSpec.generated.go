@@ -38,7 +38,7 @@ func DataSourceNetworkingSpec() *schema.Resource {
 			"amazon_vpc":               ComputedStruct(DataSourceAmazonVPCNetworkingSpec()),
 			"cilium":                   ComputedStruct(DataSourceCiliumNetworkingSpec()),
 			"lyft_vpc":                 ComputedStruct(DataSourceLyftVPCNetworkingSpec()),
-			"gce":                      ComputedStruct(DataSourceGCENetworkingSpec()),
+			"gcp":                      ComputedStruct(DataSourceGCPNetworkingSpec()),
 		},
 	}
 
@@ -422,24 +422,24 @@ func ExpandDataSourceNetworkingSpec(in map[string]interface{}) kops.NetworkingSp
 				}(in))
 			}(in)
 		}(in["lyft_vpc"]),
-		GCE: func(in interface{}) *kops.GCENetworkingSpec {
-			return func(in interface{}) *kops.GCENetworkingSpec {
+		GCP: func(in interface{}) *kops.GCPNetworkingSpec {
+			return func(in interface{}) *kops.GCPNetworkingSpec {
 				if in == nil {
 					return nil
 				}
 				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
 					return nil
 				}
-				return func(in kops.GCENetworkingSpec) *kops.GCENetworkingSpec {
+				return func(in kops.GCPNetworkingSpec) *kops.GCPNetworkingSpec {
 					return &in
-				}(func(in interface{}) kops.GCENetworkingSpec {
+				}(func(in interface{}) kops.GCPNetworkingSpec {
 					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
-						return ExpandDataSourceGCENetworkingSpec(in[0].(map[string]interface{}))
+						return ExpandDataSourceGCPNetworkingSpec(in[0].(map[string]interface{}))
 					}
-					return kops.GCENetworkingSpec{}
+					return kops.GCPNetworkingSpec{}
 				}(in))
 			}(in)
-		}(in["gce"]),
+		}(in["gcp"]),
 	}
 }
 
@@ -694,18 +694,18 @@ func FlattenDataSourceNetworkingSpecInto(in kops.NetworkingSpec, out map[string]
 			}(*in)
 		}(in)
 	}(in.LyftVPC)
-	out["gce"] = func(in *kops.GCENetworkingSpec) interface{} {
-		return func(in *kops.GCENetworkingSpec) interface{} {
+	out["gcp"] = func(in *kops.GCPNetworkingSpec) interface{} {
+		return func(in *kops.GCPNetworkingSpec) interface{} {
 			if in == nil {
 				return nil
 			}
-			return func(in kops.GCENetworkingSpec) interface{} {
-				return func(in kops.GCENetworkingSpec) []interface{} {
-					return []interface{}{FlattenDataSourceGCENetworkingSpec(in)}
+			return func(in kops.GCPNetworkingSpec) interface{} {
+				return func(in kops.GCPNetworkingSpec) []interface{} {
+					return []interface{}{FlattenDataSourceGCPNetworkingSpec(in)}
 				}(in)
 			}(*in)
 		}(in)
-	}(in.GCE)
+	}(in.GCP)
 }
 
 func FlattenDataSourceNetworkingSpec(in kops.NetworkingSpec) map[string]interface{} {

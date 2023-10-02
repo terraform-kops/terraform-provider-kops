@@ -72,6 +72,8 @@ func TestExpandDataSourceKubeControllerManagerConfig(t *testing.T) {
 					"authorization_kubeconfig":                            "",
 					"authorization_always_allow_paths":                    func() []interface{} { return nil }(),
 					"external_cloud_volume_plugin":                        "",
+					"endpoint_updates_batch_period":                       nil,
+					"endpoint_slice_updates_batch_period":                 nil,
 					"enable_profiling":                                    nil,
 					"enable_leader_migration":                             nil,
 				},
@@ -142,6 +144,8 @@ func TestFlattenDataSourceKubeControllerManagerConfigInto(t *testing.T) {
 		"authorization_kubeconfig":                            "",
 		"authorization_always_allow_paths":                    func() []interface{} { return nil }(),
 		"external_cloud_volume_plugin":                        "",
+		"endpoint_updates_batch_period":                       nil,
+		"endpoint_slice_updates_batch_period":                 nil,
 		"enable_profiling":                                    nil,
 		"enable_leader_migration":                             nil,
 	}
@@ -716,6 +720,28 @@ func TestFlattenDataSourceKubeControllerManagerConfigInto(t *testing.T) {
 				in: func() kops.KubeControllerManagerConfig {
 					subject := kops.KubeControllerManagerConfig{}
 					subject.ExternalCloudVolumePlugin = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EndpointUpdatesBatchPeriod - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.EndpointUpdatesBatchPeriod = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EndpointSliceUpdatesBatchPeriod - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.EndpointSliceUpdatesBatchPeriod = nil
 					return subject
 				}(),
 			},
@@ -808,6 +834,8 @@ func TestFlattenDataSourceKubeControllerManagerConfig(t *testing.T) {
 		"authorization_kubeconfig":                            "",
 		"authorization_always_allow_paths":                    func() []interface{} { return nil }(),
 		"external_cloud_volume_plugin":                        "",
+		"endpoint_updates_batch_period":                       nil,
+		"endpoint_slice_updates_batch_period":                 nil,
 		"enable_profiling":                                    nil,
 		"enable_leader_migration":                             nil,
 	}
@@ -1382,6 +1410,28 @@ func TestFlattenDataSourceKubeControllerManagerConfig(t *testing.T) {
 				in: func() kops.KubeControllerManagerConfig {
 					subject := kops.KubeControllerManagerConfig{}
 					subject.ExternalCloudVolumePlugin = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EndpointUpdatesBatchPeriod - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.EndpointUpdatesBatchPeriod = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EndpointSliceUpdatesBatchPeriod - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.EndpointSliceUpdatesBatchPeriod = nil
 					return subject
 				}(),
 			},

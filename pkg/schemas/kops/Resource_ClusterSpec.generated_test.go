@@ -23,21 +23,18 @@ func TestExpandResourceClusterSpec(t *testing.T) {
 				in: map[string]interface{}{
 					"channel":                           "",
 					"addons":                            func() []interface{} { return nil }(),
-					"config_base":                       "",
+					"config_store":                      func() []interface{} { return []interface{}{FlattenResourceConfigStoreSpec(kops.ConfigStoreSpec{})} }(),
 					"cloud_provider":                    func() []interface{} { return []interface{}{FlattenResourceCloudProviderSpec(kops.CloudProviderSpec{})} }(),
 					"container_runtime":                 "",
 					"kubernetes_version":                "",
-					"secret_store":                      "",
-					"key_store":                         "",
-					"config_store":                      "",
 					"dns_zone":                          "",
 					"cluster_dns_domain":                "",
 					"ssh_access":                        func() []interface{} { return nil }(),
 					"node_port_access":                  func() []interface{} { return nil }(),
 					"ssh_key_name":                      nil,
 					"update_policy":                     nil,
-					"external_policies":                 nil,
-					"additional_policies":               nil,
+					"external_policies":                 func() []interface{} { return nil }(),
+					"additional_policies":               func() map[string]interface{} { return nil }(),
 					"file_assets":                       func() []interface{} { return nil }(),
 					"etcd_cluster":                      func() []interface{} { return nil }(),
 					"containerd":                        nil,
@@ -92,21 +89,18 @@ func TestFlattenResourceClusterSpecInto(t *testing.T) {
 	_default := map[string]interface{}{
 		"channel":                           "",
 		"addons":                            func() []interface{} { return nil }(),
-		"config_base":                       "",
+		"config_store":                      func() []interface{} { return []interface{}{FlattenResourceConfigStoreSpec(kops.ConfigStoreSpec{})} }(),
 		"cloud_provider":                    func() []interface{} { return []interface{}{FlattenResourceCloudProviderSpec(kops.CloudProviderSpec{})} }(),
 		"container_runtime":                 "",
 		"kubernetes_version":                "",
-		"secret_store":                      "",
-		"key_store":                         "",
-		"config_store":                      "",
 		"dns_zone":                          "",
 		"cluster_dns_domain":                "",
 		"ssh_access":                        func() []interface{} { return nil }(),
 		"node_port_access":                  func() []interface{} { return nil }(),
 		"ssh_key_name":                      nil,
 		"update_policy":                     nil,
-		"external_policies":                 nil,
-		"additional_policies":               nil,
+		"external_policies":                 func() []interface{} { return nil }(),
+		"additional_policies":               func() map[string]interface{} { return nil }(),
 		"file_assets":                       func() []interface{} { return nil }(),
 		"etcd_cluster":                      func() []interface{} { return nil }(),
 		"containerd":                        nil,
@@ -181,11 +175,11 @@ func TestFlattenResourceClusterSpecInto(t *testing.T) {
 			want: _default,
 		},
 		{
-			name: "ConfigBase - default",
+			name: "ConfigStore - default",
 			args: args{
 				in: func() kops.ClusterSpec {
 					subject := kops.ClusterSpec{}
-					subject.ConfigBase = ""
+					subject.ConfigStore = kops.ConfigStoreSpec{}
 					return subject
 				}(),
 			},
@@ -219,39 +213,6 @@ func TestFlattenResourceClusterSpecInto(t *testing.T) {
 				in: func() kops.ClusterSpec {
 					subject := kops.ClusterSpec{}
 					subject.KubernetesVersion = ""
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "SecretStore - default",
-			args: args{
-				in: func() kops.ClusterSpec {
-					subject := kops.ClusterSpec{}
-					subject.SecretStore = ""
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "KeyStore - default",
-			args: args{
-				in: func() kops.ClusterSpec {
-					subject := kops.ClusterSpec{}
-					subject.KeyStore = ""
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "ConfigStore - default",
-			args: args{
-				in: func() kops.ClusterSpec {
-					subject := kops.ClusterSpec{}
-					subject.ConfigStore = ""
 					return subject
 				}(),
 			},
@@ -746,21 +707,18 @@ func TestFlattenResourceClusterSpec(t *testing.T) {
 	_default := map[string]interface{}{
 		"channel":                           "",
 		"addons":                            func() []interface{} { return nil }(),
-		"config_base":                       "",
+		"config_store":                      func() []interface{} { return []interface{}{FlattenResourceConfigStoreSpec(kops.ConfigStoreSpec{})} }(),
 		"cloud_provider":                    func() []interface{} { return []interface{}{FlattenResourceCloudProviderSpec(kops.CloudProviderSpec{})} }(),
 		"container_runtime":                 "",
 		"kubernetes_version":                "",
-		"secret_store":                      "",
-		"key_store":                         "",
-		"config_store":                      "",
 		"dns_zone":                          "",
 		"cluster_dns_domain":                "",
 		"ssh_access":                        func() []interface{} { return nil }(),
 		"node_port_access":                  func() []interface{} { return nil }(),
 		"ssh_key_name":                      nil,
 		"update_policy":                     nil,
-		"external_policies":                 nil,
-		"additional_policies":               nil,
+		"external_policies":                 func() []interface{} { return nil }(),
+		"additional_policies":               func() map[string]interface{} { return nil }(),
 		"file_assets":                       func() []interface{} { return nil }(),
 		"etcd_cluster":                      func() []interface{} { return nil }(),
 		"containerd":                        nil,
@@ -835,11 +793,11 @@ func TestFlattenResourceClusterSpec(t *testing.T) {
 			want: _default,
 		},
 		{
-			name: "ConfigBase - default",
+			name: "ConfigStore - default",
 			args: args{
 				in: func() kops.ClusterSpec {
 					subject := kops.ClusterSpec{}
-					subject.ConfigBase = ""
+					subject.ConfigStore = kops.ConfigStoreSpec{}
 					return subject
 				}(),
 			},
@@ -873,39 +831,6 @@ func TestFlattenResourceClusterSpec(t *testing.T) {
 				in: func() kops.ClusterSpec {
 					subject := kops.ClusterSpec{}
 					subject.KubernetesVersion = ""
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "SecretStore - default",
-			args: args{
-				in: func() kops.ClusterSpec {
-					subject := kops.ClusterSpec{}
-					subject.SecretStore = ""
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "KeyStore - default",
-			args: args{
-				in: func() kops.ClusterSpec {
-					subject := kops.ClusterSpec{}
-					subject.KeyStore = ""
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "ConfigStore - default",
-			args: args{
-				in: func() kops.ClusterSpec {
-					subject := kops.ClusterSpec{}
-					subject.ConfigStore = ""
 					return subject
 				}(),
 			},

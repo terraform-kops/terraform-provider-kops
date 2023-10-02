@@ -23,6 +23,7 @@ func TestExpandResourceAuthenticationSpec(t *testing.T) {
 				in: map[string]interface{}{
 					"kopeio": nil,
 					"aws":    nil,
+					"oidc":   nil,
 				},
 			},
 			want: _default,
@@ -42,6 +43,7 @@ func TestFlattenResourceAuthenticationSpecInto(t *testing.T) {
 	_default := map[string]interface{}{
 		"kopeio": nil,
 		"aws":    nil,
+		"oidc":   nil,
 	}
 	type args struct {
 		in kops.AuthenticationSpec
@@ -75,6 +77,17 @@ func TestFlattenResourceAuthenticationSpecInto(t *testing.T) {
 				in: func() kops.AuthenticationSpec {
 					subject := kops.AuthenticationSpec{}
 					subject.AWS = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "Oidc - default",
+			args: args{
+				in: func() kops.AuthenticationSpec {
+					subject := kops.AuthenticationSpec{}
+					subject.OIDC = nil
 					return subject
 				}(),
 			},
@@ -96,6 +109,7 @@ func TestFlattenResourceAuthenticationSpec(t *testing.T) {
 	_default := map[string]interface{}{
 		"kopeio": nil,
 		"aws":    nil,
+		"oidc":   nil,
 	}
 	type args struct {
 		in kops.AuthenticationSpec
@@ -129,6 +143,17 @@ func TestFlattenResourceAuthenticationSpec(t *testing.T) {
 				in: func() kops.AuthenticationSpec {
 					subject := kops.AuthenticationSpec{}
 					subject.AWS = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "Oidc - default",
+			args: args{
+				in: func() kops.AuthenticationSpec {
+					subject := kops.AuthenticationSpec{}
+					subject.OIDC = nil
 					return subject
 				}(),
 			},

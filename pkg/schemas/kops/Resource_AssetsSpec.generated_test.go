@@ -7,15 +7,15 @@ import (
 	"k8s.io/kops/pkg/apis/kops"
 )
 
-func TestExpandDataSourceAssets(t *testing.T) {
-	_default := kops.Assets{}
+func TestExpandResourceAssetsSpec(t *testing.T) {
+	_default := kops.AssetsSpec{}
 	type args struct {
 		in map[string]interface{}
 	}
 	tests := []struct {
 		name string
 		args args
-		want kops.Assets
+		want kops.AssetsSpec
 	}{
 		{
 			name: "default",
@@ -31,22 +31,22 @@ func TestExpandDataSourceAssets(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ExpandDataSourceAssets(tt.args.in)
+			got := ExpandResourceAssetsSpec(tt.args.in)
 			if diff := cmp.Diff(tt.want, got); diff != "" {
-				t.Errorf("ExpandDataSourceAssets() mismatch (-want +got):\n%s", diff)
+				t.Errorf("ExpandResourceAssetsSpec() mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}
 }
 
-func TestFlattenDataSourceAssetsInto(t *testing.T) {
+func TestFlattenResourceAssetsSpecInto(t *testing.T) {
 	_default := map[string]interface{}{
 		"container_registry": nil,
 		"file_repository":    nil,
 		"container_proxy":    nil,
 	}
 	type args struct {
-		in kops.Assets
+		in kops.AssetsSpec
 	}
 	tests := []struct {
 		name string
@@ -56,15 +56,15 @@ func TestFlattenDataSourceAssetsInto(t *testing.T) {
 		{
 			name: "default",
 			args: args{
-				in: kops.Assets{},
+				in: kops.AssetsSpec{},
 			},
 			want: _default,
 		},
 		{
 			name: "ContainerRegistry - default",
 			args: args{
-				in: func() kops.Assets {
-					subject := kops.Assets{}
+				in: func() kops.AssetsSpec {
+					subject := kops.AssetsSpec{}
 					subject.ContainerRegistry = nil
 					return subject
 				}(),
@@ -74,8 +74,8 @@ func TestFlattenDataSourceAssetsInto(t *testing.T) {
 		{
 			name: "FileRepository - default",
 			args: args{
-				in: func() kops.Assets {
-					subject := kops.Assets{}
+				in: func() kops.AssetsSpec {
+					subject := kops.AssetsSpec{}
 					subject.FileRepository = nil
 					return subject
 				}(),
@@ -85,8 +85,8 @@ func TestFlattenDataSourceAssetsInto(t *testing.T) {
 		{
 			name: "ContainerProxy - default",
 			args: args{
-				in: func() kops.Assets {
-					subject := kops.Assets{}
+				in: func() kops.AssetsSpec {
+					subject := kops.AssetsSpec{}
 					subject.ContainerProxy = nil
 					return subject
 				}(),
@@ -97,22 +97,22 @@ func TestFlattenDataSourceAssetsInto(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := map[string]interface{}{}
-			FlattenDataSourceAssetsInto(tt.args.in, got)
+			FlattenResourceAssetsSpecInto(tt.args.in, got)
 			if diff := cmp.Diff(tt.want, got); diff != "" {
-				t.Errorf("FlattenDataSourceAssets() mismatch (-want +got):\n%s", diff)
+				t.Errorf("FlattenResourceAssetsSpec() mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}
 }
 
-func TestFlattenDataSourceAssets(t *testing.T) {
+func TestFlattenResourceAssetsSpec(t *testing.T) {
 	_default := map[string]interface{}{
 		"container_registry": nil,
 		"file_repository":    nil,
 		"container_proxy":    nil,
 	}
 	type args struct {
-		in kops.Assets
+		in kops.AssetsSpec
 	}
 	tests := []struct {
 		name string
@@ -122,15 +122,15 @@ func TestFlattenDataSourceAssets(t *testing.T) {
 		{
 			name: "default",
 			args: args{
-				in: kops.Assets{},
+				in: kops.AssetsSpec{},
 			},
 			want: _default,
 		},
 		{
 			name: "ContainerRegistry - default",
 			args: args{
-				in: func() kops.Assets {
-					subject := kops.Assets{}
+				in: func() kops.AssetsSpec {
+					subject := kops.AssetsSpec{}
 					subject.ContainerRegistry = nil
 					return subject
 				}(),
@@ -140,8 +140,8 @@ func TestFlattenDataSourceAssets(t *testing.T) {
 		{
 			name: "FileRepository - default",
 			args: args{
-				in: func() kops.Assets {
-					subject := kops.Assets{}
+				in: func() kops.AssetsSpec {
+					subject := kops.AssetsSpec{}
 					subject.FileRepository = nil
 					return subject
 				}(),
@@ -151,8 +151,8 @@ func TestFlattenDataSourceAssets(t *testing.T) {
 		{
 			name: "ContainerProxy - default",
 			args: args{
-				in: func() kops.Assets {
-					subject := kops.Assets{}
+				in: func() kops.AssetsSpec {
+					subject := kops.AssetsSpec{}
 					subject.ContainerProxy = nil
 					return subject
 				}(),
@@ -162,9 +162,9 @@ func TestFlattenDataSourceAssets(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := FlattenDataSourceAssets(tt.args.in)
+			got := FlattenResourceAssetsSpec(tt.args.in)
 			if diff := cmp.Diff(tt.want, got); diff != "" {
-				t.Errorf("FlattenDataSourceAssets() mismatch (-want +got):\n%s", diff)
+				t.Errorf("FlattenResourceAssetsSpec() mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}

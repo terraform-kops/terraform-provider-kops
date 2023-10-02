@@ -10,6 +10,7 @@ import (
 	"k8s.io/kops/pkg/resources"
 	"k8s.io/kops/pkg/resources/ops"
 	"k8s.io/kops/upup/pkg/fi/cloudup"
+	"k8s.io/kops/util/pkg/vfs"
 )
 
 // Cluster defines the configuration for a cluster
@@ -94,7 +95,7 @@ func CreateCluster(name string, labels map[string]string, annotations map[string
 	if err != nil {
 		return nil, err
 	}
-	if err := cloudup.PerformAssignments(kc, cloud); err != nil {
+	if err := cloudup.PerformAssignments(kc, vfs.Context, cloud); err != nil {
 		return nil, err
 	}
 	_, err = clientset.CreateCluster(context.Background(), kc)
@@ -139,7 +140,7 @@ func UpdateCluster(name string, labels map[string]string, annotations map[string
 	if err != nil {
 		return nil, err
 	}
-	if err := cloudup.PerformAssignments(kc, cloud); err != nil {
+	if err := cloudup.PerformAssignments(kc, vfs.Context, cloud); err != nil {
 		return nil, err
 	}
 	kc, err = clientset.UpdateCluster(context.Background(), kc, nil)

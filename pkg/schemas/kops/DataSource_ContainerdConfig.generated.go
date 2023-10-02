@@ -25,6 +25,7 @@ func DataSourceContainerdConfig() *schema.Resource {
 			"version":          ComputedString(),
 			"nvidia_gpu":       ComputedStruct(DataSourceNvidiaGPUConfig()),
 			"runc":             ComputedStruct(DataSourceRunc()),
+			"se_linux_enabled": ComputedBool(),
 		},
 	}
 
@@ -239,6 +240,9 @@ func ExpandDataSourceContainerdConfig(in map[string]interface{}) kops.Containerd
 				}(in))
 			}(in)
 		}(in["runc"]),
+		SeLinuxEnabled: func(in interface{}) bool {
+			return bool(ExpandBool(in))
+		}(in["se_linux_enabled"]),
 	}
 }
 
@@ -371,6 +375,9 @@ func FlattenDataSourceContainerdConfigInto(in kops.ContainerdConfig, out map[str
 			}(*in)
 		}(in)
 	}(in.Runc)
+	out["se_linux_enabled"] = func(in bool) interface{} {
+		return FlattenBool(bool(in))
+	}(in.SeLinuxEnabled)
 }
 
 func FlattenDataSourceContainerdConfig(in kops.ContainerdConfig) map[string]interface{} {

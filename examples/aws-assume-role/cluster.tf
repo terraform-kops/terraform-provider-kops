@@ -56,9 +56,7 @@ resource "kops_cluster" "cluster" {
     calico {}
 
     topology {
-      control_plane = "private"
-      nodes         = "private"
-      dns           = "Private"
+      dns = "Private"
     }
   }
 

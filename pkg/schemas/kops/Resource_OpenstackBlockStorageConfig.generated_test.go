@@ -25,6 +25,7 @@ func TestExpandResourceOpenstackBlockStorageConfig(t *testing.T) {
 					"ignore_az":                   nil,
 					"override_az":                 nil,
 					"ignore_volume_micro_version": nil,
+					"metrics_enabled":             nil,
 					"create_storage_class":        nil,
 					"csi_plugin_image":            "",
 					"csi_topology_support":        nil,
@@ -50,6 +51,7 @@ func TestFlattenResourceOpenstackBlockStorageConfigInto(t *testing.T) {
 		"ignore_az":                   nil,
 		"override_az":                 nil,
 		"ignore_volume_micro_version": nil,
+		"metrics_enabled":             nil,
 		"create_storage_class":        nil,
 		"csi_plugin_image":            "",
 		"csi_topology_support":        nil,
@@ -109,6 +111,17 @@ func TestFlattenResourceOpenstackBlockStorageConfigInto(t *testing.T) {
 				in: func() kops.OpenstackBlockStorageConfig {
 					subject := kops.OpenstackBlockStorageConfig{}
 					subject.IgnoreVolumeMicroVersion = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MetricsEnabled - default",
+			args: args{
+				in: func() kops.OpenstackBlockStorageConfig {
+					subject := kops.OpenstackBlockStorageConfig{}
+					subject.MetricsEnabled = nil
 					return subject
 				}(),
 			},
@@ -176,6 +189,7 @@ func TestFlattenResourceOpenstackBlockStorageConfig(t *testing.T) {
 		"ignore_az":                   nil,
 		"override_az":                 nil,
 		"ignore_volume_micro_version": nil,
+		"metrics_enabled":             nil,
 		"create_storage_class":        nil,
 		"csi_plugin_image":            "",
 		"csi_topology_support":        nil,
@@ -235,6 +249,17 @@ func TestFlattenResourceOpenstackBlockStorageConfig(t *testing.T) {
 				in: func() kops.OpenstackBlockStorageConfig {
 					subject := kops.OpenstackBlockStorageConfig{}
 					subject.IgnoreVolumeMicroVersion = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MetricsEnabled - default",
+			args: args{
+				in: func() kops.OpenstackBlockStorageConfig {
+					subject := kops.OpenstackBlockStorageConfig{}
+					subject.MetricsEnabled = nil
 					return subject
 				}(),
 			},

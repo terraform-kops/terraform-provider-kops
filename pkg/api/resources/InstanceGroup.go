@@ -7,6 +7,7 @@ import (
 	"k8s.io/kops/pkg/apis/kops"
 	"k8s.io/kops/pkg/client/simple"
 	"k8s.io/kops/upup/pkg/fi/cloudup"
+	"k8s.io/kops/util/pkg/vfs"
 )
 
 // InstanceGroup represents a group of instances (either bastions, nodes or masters) with the same configuration
@@ -71,7 +72,7 @@ func CreateInstanceGroup(clusterName, name string, labels map[string]string, ann
 		return nil, err
 	}
 	ig := makeKopsInstanceGroup(name, labels, annotations, spec)
-	channel, err := cloudup.ChannelForCluster(cluster)
+	channel, err := cloudup.ChannelForCluster(vfs.Context, cluster)
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +97,7 @@ func UpdateInstanceGroup(clusterName, name string, labels map[string]string, ann
 		return nil, err
 	}
 	ig := makeKopsInstanceGroup(name, labels, annotations, spec)
-	channel, err := cloudup.ChannelForCluster(cluster)
+	channel, err := cloudup.ChannelForCluster(vfs.Context, cluster)
 	if err != nil {
 		return nil, err
 	}

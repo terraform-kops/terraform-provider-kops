@@ -16,6 +16,7 @@ func DataSourceNodeLocalDNSConfig() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"enabled":             ComputedBool(),
 			"external_core_file":  ComputedString(),
+			"additional_config":   ComputedString(),
 			"image":               ComputedString(),
 			"local_ip":            ComputedString(),
 			"forward_to_kube_dns": ComputedBool(),
@@ -55,6 +56,9 @@ func ExpandDataSourceNodeLocalDNSConfig(in map[string]interface{}) kops.NodeLoca
 		ExternalCoreFile: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["external_core_file"]),
+		AdditionalConfig: func(in interface{}) string {
+			return string(ExpandString(in))
+		}(in["additional_config"]),
 		Image: func(in interface{}) *string {
 			if in == nil {
 				return nil
@@ -168,6 +172,9 @@ func FlattenDataSourceNodeLocalDNSConfigInto(in kops.NodeLocalDNSConfig, out map
 	out["external_core_file"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.ExternalCoreFile)
+	out["additional_config"] = func(in string) interface{} {
+		return FlattenString(string(in))
+	}(in.AdditionalConfig)
 	out["image"] = func(in *string) interface{} {
 		return func(in *string) interface{} {
 			if in == nil {
