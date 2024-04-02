@@ -235,7 +235,7 @@ func main() {
 		generate(kops.DNSAccessSpec{}),
 		generate(kops.NetworkingSpec{},
 			rename("Subnets", "Subnet"),
-			required("Subnets", "NetworkID", "Topology"),
+			required("Subnets", "Topology"),
 			computed("NetworkCIDR", "NonMasqueradeCIDR"),
 			nullable("TagSubnets"),
 		),

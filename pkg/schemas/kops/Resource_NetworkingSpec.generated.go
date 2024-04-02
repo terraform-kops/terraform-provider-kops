@@ -13,7 +13,7 @@ var _ = Schema
 func ResourceNetworkingSpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"network_id":               RequiredString(),
+			"network_id":               OptionalString(),
 			"network_cidr":             OptionalComputedString(),
 			"additional_network_cidrs": OptionalList(String()),
 			"subnet":                   RequiredList(ResourceClusterSubnetSpec()),
