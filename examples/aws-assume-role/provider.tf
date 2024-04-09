@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     kops = {
-      source  = "github/eddycharly/kops"
+      source  = "github/terraform-kops/kops"
       version = "0.0.1"
     }
   }

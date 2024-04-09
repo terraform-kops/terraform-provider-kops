@@ -4,9 +4,9 @@ import (
 	"reflect"
 	"sort"
 
-	. "github.com/eddycharly/terraform-provider-kops/pkg/schemas"
-	coreschemas "github.com/eddycharly/terraform-provider-kops/pkg/schemas/core"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	. "github.com/terraform-kops/terraform-provider-kops/pkg/schemas"
+	coreschemas "github.com/terraform-kops/terraform-provider-kops/pkg/schemas/core"
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	"k8s.io/kops/pkg/apis/kops"

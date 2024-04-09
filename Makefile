@@ -36,7 +36,7 @@ gen: gen-tf-code
 
 .PHONY: build
 build: gen
-	@CGO_ENABLED=0 go build -ldflags="-s -w -X 'github.com/eddycharly/terraform-provider-kops/pkg/version.BuildVersion=v${PROVIDER_VERSION}'" ./cmd/terraform-provider-kops
+	@CGO_ENABLED=0 go build -ldflags="-s -w -X 'github.com/terraform-kops/terraform-provider-kops/pkg/version.BuildVersion=v${PROVIDER_VERSION}'" ./cmd/terraform-provider-kops
 
 .PHONY: fmt
 fmt: build
@@ -60,8 +60,8 @@ vet: fmt
 
 .PHONY: install
 install: all
-	@mkdir -p ${HOME}/.terraform.d/plugins/github/eddycharly/kops/${PROVIDER_VERSION}/${OS}_${GOARCH}
-	@cp terraform-provider-kops $(HOME)/.terraform.d/plugins/github/eddycharly/kops/${PROVIDER_VERSION}/${OS}_${GOARCH}/terraform-provider-kops
+	@mkdir -p ${HOME}/.terraform.d/plugins/github/terraform-kops/kops/${PROVIDER_VERSION}/${OS}_${GOARCH}
+	@cp terraform-provider-kops $(HOME)/.terraform.d/plugins/github/terraform-kops/kops/${PROVIDER_VERSION}/${OS}_${GOARCH}/terraform-provider-kops
 
 # EXAMPLES FOR TERRAFORM >= 0.15
 

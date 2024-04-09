@@ -3,8 +3,8 @@ package schemas
 import (
 	"reflect"
 
-	. "github.com/eddycharly/terraform-provider-kops/pkg/schemas"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	. "github.com/terraform-kops/terraform-provider-kops/pkg/schemas"
 	"k8s.io/kops/pkg/apis/kops"
 )
 

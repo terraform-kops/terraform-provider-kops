@@ -29,11 +29,11 @@ func reflectFuncs(baseType reflect.Type, mappings map[string]string, parser *par
 			out := make(map[string]string)
 			for i, v := range parser.packages[baseType.PkgPath()].Imports {
 				if v, ok := mappings[i]; ok {
-					out["github.com/eddycharly/terraform-provider-kops/pkg/schemas/"+v] = v + "schemas"
+					out["github.com/terraform-kops/terraform-provider-kops/pkg/schemas/"+v] = v + "schemas"
 				}
 				for i2 := range parser.packages[v.PkgPath].Imports {
 					if v, ok := mappings[i2]; ok {
-						out["github.com/eddycharly/terraform-provider-kops/pkg/schemas/"+v] = v + "schemas"
+						out["github.com/terraform-kops/terraform-provider-kops/pkg/schemas/"+v] = v + "schemas"
 					}
 				}
 			}

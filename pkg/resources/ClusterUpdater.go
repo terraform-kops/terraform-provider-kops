@@ -3,11 +3,11 @@ package resources
 import (
 	"context"
 
-	"github.com/eddycharly/terraform-provider-kops/pkg/config"
-	"github.com/eddycharly/terraform-provider-kops/pkg/schemas"
-	resourcesschema "github.com/eddycharly/terraform-provider-kops/pkg/schemas/resources"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/terraform-kops/terraform-provider-kops/pkg/config"
+	"github.com/terraform-kops/terraform-provider-kops/pkg/schemas"
+	resourcesschema "github.com/terraform-kops/terraform-provider-kops/pkg/schemas/resources"
 )
 
 func ClusterUpdater() *schema.Resource {

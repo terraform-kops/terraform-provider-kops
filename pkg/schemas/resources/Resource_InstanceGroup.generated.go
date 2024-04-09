@@ -3,10 +3,10 @@ package schemas
 import (
 	"context"
 
-	"github.com/eddycharly/terraform-provider-kops/pkg/api/resources"
-	. "github.com/eddycharly/terraform-provider-kops/pkg/schemas"
-	kopsschemas "github.com/eddycharly/terraform-provider-kops/pkg/schemas/kops"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/terraform-kops/terraform-provider-kops/pkg/api/resources"
+	. "github.com/terraform-kops/terraform-provider-kops/pkg/schemas"
+	kopsschemas "github.com/terraform-kops/terraform-provider-kops/pkg/schemas/kops"
 	"k8s.io/kops/pkg/apis/kops"
 )
 

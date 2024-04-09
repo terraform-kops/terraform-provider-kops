@@ -9,13 +9,13 @@ import (
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	core "k8s.io/api/core/v1"
 	"k8s.io/kops/pkg/apis/kops"
-	"github.com/eddycharly/terraform-provider-kops/pkg/api/config"
-	"github.com/eddycharly/terraform-provider-kops/pkg/api/datasources"
-	"github.com/eddycharly/terraform-provider-kops/pkg/api/kube"
-	"github.com/eddycharly/terraform-provider-kops/pkg/api/resources"
+	"github.com/terraform-kops/terraform-provider-kops/pkg/api/config"
+	"github.com/terraform-kops/terraform-provider-kops/pkg/api/datasources"
+	"github.com/terraform-kops/terraform-provider-kops/pkg/api/kube"
+	"github.com/terraform-kops/terraform-provider-kops/pkg/api/resources"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	. "github.com/eddycharly/terraform-provider-kops/pkg/schemas"
+	. "github.com/terraform-kops/terraform-provider-kops/pkg/schemas"
 	{{ range $k, $v := imports -}}
 	{{ $v }} {{ $k | quote }}
 	{{ end -}}

@@ -1,4 +1,4 @@
-module github.com/eddycharly/terraform-provider-kops
+module github.com/terraform-kops/terraform-provider-kops
 
 go 1.19
 
