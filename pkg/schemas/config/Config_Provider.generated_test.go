@@ -3,8 +3,8 @@ package schemas
 import (
 	"testing"
 
-	"github.com/eddycharly/terraform-provider-kops/pkg/api/config"
 	"github.com/google/go-cmp/cmp"
+	"github.com/terraform-kops/terraform-provider-kops/pkg/api/config"
 )
 
 func TestExpandConfigProvider(t *testing.T) {

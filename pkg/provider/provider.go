@@ -1,11 +1,11 @@
 package provider
 
 import (
-	"github.com/eddycharly/terraform-provider-kops/pkg/config"
-	"github.com/eddycharly/terraform-provider-kops/pkg/datasources"
-	"github.com/eddycharly/terraform-provider-kops/pkg/resources"
-	configschemas "github.com/eddycharly/terraform-provider-kops/pkg/schemas/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/terraform-kops/terraform-provider-kops/pkg/config"
+	"github.com/terraform-kops/terraform-provider-kops/pkg/datasources"
+	"github.com/terraform-kops/terraform-provider-kops/pkg/resources"
+	configschemas "github.com/terraform-kops/terraform-provider-kops/pkg/schemas/config"
 )
 
 func NewProvider() *schema.Provider {

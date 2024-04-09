@@ -3,8 +3,8 @@ package schemas
 import (
 	"testing"
 
-	"github.com/eddycharly/terraform-provider-kops/pkg/api/kube"
 	"github.com/google/go-cmp/cmp"
+	"github.com/terraform-kops/terraform-provider-kops/pkg/api/kube"
 )
 
 func TestExpandDataSourceConfig(t *testing.T) {

@@ -1,8 +1,8 @@
 package schemas
 
 import (
-	"github.com/eddycharly/terraform-provider-kops/pkg/api/kube"
-	. "github.com/eddycharly/terraform-provider-kops/pkg/schemas"
+	"github.com/terraform-kops/terraform-provider-kops/pkg/api/kube"
+	. "github.com/terraform-kops/terraform-provider-kops/pkg/schemas"
 )
 
 var _ = Schema

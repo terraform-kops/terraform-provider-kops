@@ -3,10 +3,10 @@ package datasources
 import (
 	"context"
 
-	"github.com/eddycharly/terraform-provider-kops/pkg/config"
-	datasourcesschemas "github.com/eddycharly/terraform-provider-kops/pkg/schemas/datasources"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/terraform-kops/terraform-provider-kops/pkg/config"
+	datasourcesschemas "github.com/terraform-kops/terraform-provider-kops/pkg/schemas/datasources"
 )
 
 func ClusterStatus() *schema.Resource {

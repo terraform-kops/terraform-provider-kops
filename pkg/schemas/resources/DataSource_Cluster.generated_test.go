@@ -3,9 +3,9 @@ package schemas
 import (
 	"testing"
 
-	"github.com/eddycharly/terraform-provider-kops/pkg/api/resources"
-	kopsschemas "github.com/eddycharly/terraform-provider-kops/pkg/schemas/kops"
 	"github.com/google/go-cmp/cmp"
+	"github.com/terraform-kops/terraform-provider-kops/pkg/api/resources"
+	kopsschemas "github.com/terraform-kops/terraform-provider-kops/pkg/schemas/kops"
 	"k8s.io/kops/pkg/apis/kops"
 )
 

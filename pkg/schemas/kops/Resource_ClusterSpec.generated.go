@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"sort"
 
-	. "github.com/eddycharly/terraform-provider-kops/pkg/schemas"
+	. "github.com/terraform-kops/terraform-provider-kops/pkg/schemas"
 	"k8s.io/kops/pkg/apis/kops"
 )
 

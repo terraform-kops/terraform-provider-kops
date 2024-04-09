@@ -13,3 +13,4 @@ crash.log
 terraform.log
 
 /terraform-provider-kops
+.idea
