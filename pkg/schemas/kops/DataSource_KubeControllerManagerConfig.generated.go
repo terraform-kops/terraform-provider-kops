@@ -46,6 +46,7 @@ func DataSourceKubeControllerManagerConfig() *schema.Resource {
 			"horizontal_pod_autoscaler_tolerance":                 ComputedQuantity(),
 			"horizontal_pod_autoscaler_use_rest_clients":          ComputedBool(),
 			"experimental_cluster_signing_duration":               ComputedDuration(),
+			"cluster_signing_duration":                            ComputedDuration(),
 			"feature_gates":                                       ComputedMap(String()),
 			"tls_cert_file":                                       ComputedString(),
 			"tls_cipher_suites":                                   ComputedList(String()),
@@ -518,6 +519,25 @@ func ExpandDataSourceKubeControllerManagerConfig(in map[string]interface{}) kops
 				}(ExpandDuration(in))
 			}(in)
 		}(in["experimental_cluster_signing_duration"]),
+		ClusterSigningDuration: func(in interface{}) *meta.Duration {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *meta.Duration {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in meta.Duration) *meta.Duration {
+					return &in
+				}(ExpandDuration(in))
+			}(in)
+		}(in["cluster_signing_duration"]),
 		FeatureGates: func(in interface{}) map[string]string {
 			return func(in interface{}) map[string]string {
 				if in == nil {
@@ -1114,6 +1134,16 @@ func FlattenDataSourceKubeControllerManagerConfigInto(in kops.KubeControllerMana
 			}(*in)
 		}(in)
 	}(in.ExperimentalClusterSigningDuration)
+	out["cluster_signing_duration"] = func(in *meta.Duration) interface{} {
+		return func(in *meta.Duration) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in meta.Duration) interface{} {
+				return FlattenDuration(in)
+			}(*in)
+		}(in)
+	}(in.ClusterSigningDuration)
 	out["feature_gates"] = func(in map[string]string) interface{} {
 		return func(in map[string]string) map[string]interface{} {
 			if in == nil {

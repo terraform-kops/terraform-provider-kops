@@ -52,6 +52,7 @@ func TestExpandDataSourceKubeControllerManagerConfig(t *testing.T) {
 					"horizontal_pod_autoscaler_tolerance":                 nil,
 					"horizontal_pod_autoscaler_use_rest_clients":          nil,
 					"experimental_cluster_signing_duration":               nil,
+					"cluster_signing_duration":                            nil,
 					"feature_gates":                                       func() map[string]interface{} { return nil }(),
 					"tls_cert_file":                                       nil,
 					"tls_cipher_suites":                                   func() []interface{} { return nil }(),
@@ -124,6 +125,7 @@ func TestFlattenDataSourceKubeControllerManagerConfigInto(t *testing.T) {
 		"horizontal_pod_autoscaler_tolerance":                 nil,
 		"horizontal_pod_autoscaler_use_rest_clients":          nil,
 		"experimental_cluster_signing_duration":               nil,
+		"cluster_signing_duration":                            nil,
 		"feature_gates":                                       func() map[string]interface{} { return nil }(),
 		"tls_cert_file":                                       nil,
 		"tls_cipher_suites":                                   func() []interface{} { return nil }(),
@@ -500,6 +502,17 @@ func TestFlattenDataSourceKubeControllerManagerConfigInto(t *testing.T) {
 				in: func() kops.KubeControllerManagerConfig {
 					subject := kops.KubeControllerManagerConfig{}
 					subject.ExperimentalClusterSigningDuration = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ClusterSigningDuration - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.ClusterSigningDuration = nil
 					return subject
 				}(),
 			},
@@ -814,6 +827,7 @@ func TestFlattenDataSourceKubeControllerManagerConfig(t *testing.T) {
 		"horizontal_pod_autoscaler_tolerance":                 nil,
 		"horizontal_pod_autoscaler_use_rest_clients":          nil,
 		"experimental_cluster_signing_duration":               nil,
+		"cluster_signing_duration":                            nil,
 		"feature_gates":                                       func() map[string]interface{} { return nil }(),
 		"tls_cert_file":                                       nil,
 		"tls_cipher_suites":                                   func() []interface{} { return nil }(),
@@ -1190,6 +1204,17 @@ func TestFlattenDataSourceKubeControllerManagerConfig(t *testing.T) {
 				in: func() kops.KubeControllerManagerConfig {
 					subject := kops.KubeControllerManagerConfig{}
 					subject.ExperimentalClusterSigningDuration = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ClusterSigningDuration - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.ClusterSigningDuration = nil
 					return subject
 				}(),
 			},
