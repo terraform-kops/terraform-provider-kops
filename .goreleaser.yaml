@@ -10,7 +10,6 @@ builds:
     env:
       - CGO_ENABLED=0
     goos:
-      - freebsd
       - windows
       - linux
       - darwin
@@ -22,10 +21,10 @@ builds:
     ldflags:
       - -s
       - -w
-      - -X 'github.com/eddycharly/terraform-provider-kops/pkg/version.BuildVersion={{.Version}}'
-      - -X 'github.com/eddycharly/terraform-provider-kops/pkg/version.BuildCommit={{.Commit}}'
-      - -X 'github.com/eddycharly/terraform-provider-kops/pkg/version.BuildDate={{.Date}}'
-      - -X 'github.com/eddycharly/terraform-provider-kops/pkg/version.BuiltBy=goreleaser'
+      - -X 'github.com/terraform-kops/terraform-provider-kops/pkg/version.BuildVersion={{.Version}}'
+      - -X 'github.com/terraform-kops/terraform-provider-kops/pkg/version.BuildCommit={{.Commit}}'
+      - -X 'github.com/terraform-kops/terraform-provider-kops/pkg/version.BuildDate={{.Date}}'
+      - -X 'github.com/terraform-kops/terraform-provider-kops/pkg/version.BuiltBy=goreleaser'
 archives:
   - id: terraform-provider-kops
     format: zip
