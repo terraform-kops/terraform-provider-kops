@@ -3,7 +3,11 @@ OS                        := $(shell echo `uname` | tr '[:upper:]' '[:lower:]')
 TOOLS_DIR                 := $(PWD)/.tools
 GOIMPORTS                 := $(TOOLS_DIR)/goimports
 GOIMPORTS_VERSION         := latest
-GOARCH                    ?= amd64
+GOARCH                    ?= $(shell uname -m)
+
+ifeq (${GOARCH},x86_64)
+	GOARCH := amd64
+endif
 
 .PHONY: all
 all: clean gen fmt build verify-gen vet test

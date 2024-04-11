@@ -30,6 +30,7 @@ func DataSourceCiliumNetworkingSpec() *schema.Resource {
 			"enable_prometheus_metrics":         ComputedBool(),
 			"enable_encryption":                 ComputedBool(),
 			"encryption_type":                   ComputedString(),
+			"node_encryption":                   ComputedBool(),
 			"identity_allocation_mode":          ComputedString(),
 			"identity_change_grace_period":      ComputedString(),
 			"masquerade":                        ComputedBool(),
@@ -211,6 +212,9 @@ func ExpandDataSourceCiliumNetworkingSpec(in map[string]interface{}) kops.Cilium
 		EncryptionType: func(in interface{}) kops.CiliumEncryptionType {
 			return kops.CiliumEncryptionType(ExpandString(in))
 		}(in["encryption_type"]),
+		NodeEncryption: func(in interface{}) bool {
+			return bool(ExpandBool(in))
+		}(in["node_encryption"]),
 		IdentityAllocationMode: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["identity_allocation_mode"]),
@@ -526,6 +530,9 @@ func FlattenDataSourceCiliumNetworkingSpecInto(in kops.CiliumNetworkingSpec, out
 	out["encryption_type"] = func(in kops.CiliumEncryptionType) interface{} {
 		return FlattenString(string(in))
 	}(in.EncryptionType)
+	out["node_encryption"] = func(in bool) interface{} {
+		return FlattenBool(bool(in))
+	}(in.NodeEncryption)
 	out["identity_allocation_mode"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.IdentityAllocationMode)

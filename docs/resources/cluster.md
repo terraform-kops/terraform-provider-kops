@@ -1019,7 +1019,8 @@ The following arguments are supported:
 - `horizontal_pod_autoscaler_cpu_initialization_period` - (Optional) - Duration - HorizontalPodAutoscalerCPUInitializationPeriod is the period after pod start<br />when CPU samples might be skipped. (default 5m).
 - `horizontal_pod_autoscaler_tolerance` - (Optional) - Quantity - HorizontalPodAutoscalerTolerance is the minimum change (from 1.0) in the<br />desired-to-actual metrics ratio for the horizontal pod autoscaler to<br />consider scaling.
 - `horizontal_pod_autoscaler_use_rest_clients` - (Optional) - Bool - HorizontalPodAutoscalerUseRestClients determines if the new-style clients<br />should be used if support for custom metrics is enabled.
-- `experimental_cluster_signing_duration` - (Optional) - Duration - ExperimentalClusterSigningDuration is the duration that determines<br />the length of duration that the signed certificates will be given. (default 8760h0m0s).
+- `experimental_cluster_signing_duration` - (Optional) - Duration - ExperimentalClusterSigningDuration is the max length of duration that the signed certificates will be given. (default 365*24h)<br />Deprecated - use cluster-signing-duration instead.
+- `cluster_signing_duration` - (Optional) - Duration - ClusterSigningDuration is the max length of duration that the signed certificates will be given. (default 365*24h).
 - `feature_gates` - (Optional) - Map(String) - FeatureGates is set of key=value pairs that describe feature gates for alpha/experimental features.
 - `tls_cert_file` - (Optional) - String - TLSCertFile is the file containing the TLS server certificate.
 - `tls_cipher_suites` - (Optional) - List(String) - TLSCipherSuites indicates the allowed TLS cipher suite.
@@ -1608,6 +1609,7 @@ The following arguments are supported:
 - `enable_prometheus_metrics` - (Optional) - Bool - EnablePrometheusMetrics enables the Cilium "/metrics" endpoint for both the agent and the operator.
 - `enable_encryption` - (Optional) - Bool - EnableEncryption enables Cilium Encryption.<br />Default: false.
 - `encryption_type` - (Optional) - String - EncryptionType specifies Cilium Encryption method ("ipsec", "wireguard").<br />Default: ipsec.
+- `node_encryption` - (Optional) - Bool - NodeEncryption enables encryption for pure node to node traffic.<br />Default: false.
 - `identity_allocation_mode` - (Optional) - String - IdentityAllocationMode specifies in which backend identities are stored ("crd", "kvstore").<br />Default: crd.
 - `identity_change_grace_period` - (Optional) - String - IdentityChangeGracePeriod specifies the duration to wait before using a changed identity.<br />Default: 5s.
 - `masquerade` - (Optional) - Bool - Masquerade enables masquerading IPv4 traffic to external destinations behind the node IP.<br />Default: false if IPAM is "eni" or in IPv6 mode, otherwise true.
@@ -1981,6 +1983,9 @@ The following arguments are supported:
 - `log_encoding` - (Optional) - String
 - `log_level` - (Optional) - String
 - `image` - (Optional) - String
+- `memory_limit` - (Optional) - Quantity
+- `memory_request` - (Optional) - Quantity
+- `cpu_request` - (Optional) - Quantity
 
 ### cluster_secrets
 

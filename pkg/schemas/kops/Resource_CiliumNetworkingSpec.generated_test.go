@@ -37,6 +37,7 @@ func TestExpandResourceCiliumNetworkingSpec(t *testing.T) {
 					"enable_prometheus_metrics":         false,
 					"enable_encryption":                 false,
 					"encryption_type":                   "",
+					"node_encryption":                   false,
 					"identity_allocation_mode":          "",
 					"identity_change_grace_period":      "",
 					"masquerade":                        nil,
@@ -103,6 +104,7 @@ func TestFlattenResourceCiliumNetworkingSpecInto(t *testing.T) {
 		"enable_prometheus_metrics":         false,
 		"enable_encryption":                 false,
 		"encryption_type":                   "",
+		"node_encryption":                   false,
 		"identity_allocation_mode":          "",
 		"identity_change_grace_period":      "",
 		"masquerade":                        nil,
@@ -323,6 +325,17 @@ func TestFlattenResourceCiliumNetworkingSpecInto(t *testing.T) {
 				in: func() kops.CiliumNetworkingSpec {
 					subject := kops.CiliumNetworkingSpec{}
 					subject.EncryptionType = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NodeEncryption - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.NodeEncryption = false
 					return subject
 				}(),
 			},
@@ -721,6 +734,7 @@ func TestFlattenResourceCiliumNetworkingSpec(t *testing.T) {
 		"enable_prometheus_metrics":         false,
 		"enable_encryption":                 false,
 		"encryption_type":                   "",
+		"node_encryption":                   false,
 		"identity_allocation_mode":          "",
 		"identity_change_grace_period":      "",
 		"masquerade":                        nil,
@@ -941,6 +955,17 @@ func TestFlattenResourceCiliumNetworkingSpec(t *testing.T) {
 				in: func() kops.CiliumNetworkingSpec {
 					subject := kops.CiliumNetworkingSpec{}
 					subject.EncryptionType = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NodeEncryption - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.NodeEncryption = false
 					return subject
 				}(),
 			},

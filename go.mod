@@ -12,7 +12,7 @@ require (
 	k8s.io/apimachinery v0.28.1
 	k8s.io/client-go v0.28.1
 	k8s.io/klog v1.0.0
-	k8s.io/kops v1.28.0
+	k8s.io/kops v1.28.1
 )
 
 require (

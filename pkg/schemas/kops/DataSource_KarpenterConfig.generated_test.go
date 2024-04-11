@@ -21,10 +21,13 @@ func TestExpandDataSourceKarpenterConfig(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
-					"enabled":      false,
-					"log_encoding": "",
-					"log_level":    "",
-					"image":        "",
+					"enabled":        false,
+					"log_encoding":   "",
+					"log_level":      "",
+					"image":          "",
+					"memory_limit":   nil,
+					"memory_request": nil,
+					"cpu_request":    nil,
 				},
 			},
 			want: _default,
@@ -42,10 +45,13 @@ func TestExpandDataSourceKarpenterConfig(t *testing.T) {
 
 func TestFlattenDataSourceKarpenterConfigInto(t *testing.T) {
 	_default := map[string]interface{}{
-		"enabled":      false,
-		"log_encoding": "",
-		"log_level":    "",
-		"image":        "",
+		"enabled":        false,
+		"log_encoding":   "",
+		"log_level":      "",
+		"image":          "",
+		"memory_limit":   nil,
+		"memory_request": nil,
+		"cpu_request":    nil,
 	}
 	type args struct {
 		in kops.KarpenterConfig
@@ -101,6 +107,39 @@ func TestFlattenDataSourceKarpenterConfigInto(t *testing.T) {
 				in: func() kops.KarpenterConfig {
 					subject := kops.KarpenterConfig{}
 					subject.Image = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryLimit - default",
+			args: args{
+				in: func() kops.KarpenterConfig {
+					subject := kops.KarpenterConfig{}
+					subject.MemoryLimit = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryRequest - default",
+			args: args{
+				in: func() kops.KarpenterConfig {
+					subject := kops.KarpenterConfig{}
+					subject.MemoryRequest = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CpuRequest - default",
+			args: args{
+				in: func() kops.KarpenterConfig {
+					subject := kops.KarpenterConfig{}
+					subject.CPURequest = nil
 					return subject
 				}(),
 			},
@@ -120,10 +159,13 @@ func TestFlattenDataSourceKarpenterConfigInto(t *testing.T) {
 
 func TestFlattenDataSourceKarpenterConfig(t *testing.T) {
 	_default := map[string]interface{}{
-		"enabled":      false,
-		"log_encoding": "",
-		"log_level":    "",
-		"image":        "",
+		"enabled":        false,
+		"log_encoding":   "",
+		"log_level":      "",
+		"image":          "",
+		"memory_limit":   nil,
+		"memory_request": nil,
+		"cpu_request":    nil,
 	}
 	type args struct {
 		in kops.KarpenterConfig
@@ -179,6 +221,39 @@ func TestFlattenDataSourceKarpenterConfig(t *testing.T) {
 				in: func() kops.KarpenterConfig {
 					subject := kops.KarpenterConfig{}
 					subject.Image = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryLimit - default",
+			args: args{
+				in: func() kops.KarpenterConfig {
+					subject := kops.KarpenterConfig{}
+					subject.MemoryLimit = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryRequest - default",
+			args: args{
+				in: func() kops.KarpenterConfig {
+					subject := kops.KarpenterConfig{}
+					subject.MemoryRequest = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CpuRequest - default",
+			args: args{
+				in: func() kops.KarpenterConfig {
+					subject := kops.KarpenterConfig{}
+					subject.CPURequest = nil
 					return subject
 				}(),
 			},
