@@ -1,6 +1,6 @@
 module github.com/terraform-kops/terraform-provider-kops
 
-go 1.19
+go 1.21
 
 require (
 	github.com/Masterminds/sprig v2.22.0+incompatible
