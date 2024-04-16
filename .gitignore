@@ -14,3 +14,6 @@ terraform.log
 
 /terraform-provider-kops
 .idea
+**/.terraform.tfstate.lock.info
+**/terraform.tfstate*
+examples/aws-kops-network/kubeconfig
