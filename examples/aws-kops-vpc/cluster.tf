@@ -2,7 +2,7 @@ resource "kops_cluster" "cluster" {
   name               = local.clusterName
   admin_ssh_key      = file("${path.module}/../dummy_ssh.pub")
   kubernetes_version = "1.27.10"
-    dns_zone         = local.dnsZone
+  dns_zone           = local.dnsZone
 
   api {
     access = [
