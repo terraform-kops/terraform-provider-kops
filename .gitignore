@@ -16,4 +16,5 @@ terraform.log
 .idea
 **/.terraform.tfstate.lock.info
 **/terraform.tfstate*
-examples/aws-kops-network/kubeconfig
+examples/**/kubeconfig
+examples/**/locals_override.tf
