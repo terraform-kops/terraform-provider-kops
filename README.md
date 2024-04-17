@@ -12,15 +12,14 @@ integration with the kOps api:
 
 ... just **pure go code.**
 
-Currently using kOps `v1.28.0` and compatible with terraform `0.15` and higher.
-
-This is a community supported fork of the original eddycharly provider that is no longer maintained.
+Currently using kOps `v1.28.1` tested with Terraform `1.5.x` and higher.
 
 **NOTES**
-- For now, provisioning the network is not supported. The network must
-be created separately and given to the provider through cluster attribute
-`network_id` and subnets attributes `provider_id`.
-- The provider has only been tested with AWS, Calico and Cilium networking.
+
+The provider has been tested only with:
+* AWS, using Calico and Cilium networking.
+* GCP, using `gcp` networking mode.
+
 If you use it with another cloud or networking provider, please let us know so
 that we can help troubleshooting if necessary and update the docs.
 

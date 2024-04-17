@@ -1325,7 +1325,7 @@ NetworkingSpec configures networking.
 
 The following arguments are supported:
 
-- `network_id` - (Required) - String - NetworkID is the cloud provider's identifier of the existing network (for example, AWS VPC) the cluster should use.<br />If not specified, kOps will create a new network.
+- `network_id` - (Optional) - String - NetworkID is the cloud provider's identifier of the existing network (for example, AWS VPC) the cluster should use.<br />If not specified, kOps will create a new network.
 - `network_cidr` - (Optional) - (Computed) - String - NetworkCIDR is the primary IPv4 CIDR used for the cloud provider's network.<br />It is not required on GCE.<br />On DO, it maps to the VPC CIDR.
 - `additional_network_cidrs` - (Optional) - List(String) - AdditionalNetworkCIDRs is a list of additional CIDR used for the AWS VPC<br />or otherwise allocated to k8s. This is a real CIDR, not the internal k8s network<br />On AWS, it maps to any additional CIDRs added to a VPC.
 - `subnet` - (Required) - List([cluster_subnet_spec](#cluster_subnet_spec)) - Subnets are the subnets that the cluster can use.

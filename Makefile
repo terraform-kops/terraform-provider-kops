@@ -70,7 +70,7 @@ install: all
 # EXAMPLES FOR TERRAFORM >= 0.15
 
 .PHONY: examples
-examples: example-basic example-aws-profile example-aws-assume-role example-bastion example-klog
+examples: example-basic example-aws-profile example-aws-assume-role example-aws-existing-vpc example-aws-kops-vpc example-bastion example-klog
 
 .PHONY: example-basic
 example-basic: install
@@ -88,6 +88,16 @@ example-aws-profile: install
 example-aws-assume-role: install
 	@terraform -chdir=./examples/aws-assume-role init
 	@terraform -chdir=./examples/aws-assume-role validate
+
+.PHONY: example-aws-existing-vpc
+example-aws-existing-vpc: install
+	@terraform -chdir=./examples/aws-existing-vpc init
+	@terraform -chdir=./examples/aws-existing-vpc validate
+
+.PHONY: example-aws-kops-vpc
+example-aws-kops-vpc: install
+	@terraform -chdir=./examples/aws-kops-vpc init
+	@terraform -chdir=./examples/aws-kops-vpc validate
 
 .PHONY: example-bastion
 example-bastion: install
