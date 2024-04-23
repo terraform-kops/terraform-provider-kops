@@ -71,7 +71,7 @@ func DataSourceCluster() *schema.Resource {
 			"secrets":                           ComputedStruct(DataSourceClusterSecrets()),
 		},
 	}
-	res.SchemaVersion = 4
+	res.SchemaVersion = 5
 	res.StateUpgraders = []schema.StateUpgrader{
 		{
 			Type: res.CoreConfigSchema().ImpliedType(),
@@ -105,6 +105,14 @@ func DataSourceCluster() *schema.Resource {
 				return ret, nil
 			},
 			Version: 3,
+		}, {
+			Type: res.CoreConfigSchema().ImpliedType(),
+			Upgrade: func(ctx context.Context, rawState map[string]interface{}, meta interface{}) (map[string]interface{}, error) {
+				ret := FlattenDataSourceCluster(ExpandDataSourceCluster(rawState))
+				ret["id"] = rawState["id"]
+				return ret, nil
+			},
+			Version: 4,
 		},
 	}
 	return res

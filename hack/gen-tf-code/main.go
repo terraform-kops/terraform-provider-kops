@@ -377,7 +377,7 @@ func main() {
 			doc(dataClusterStatusHeader, ""),
 		),
 		generate(resources.Cluster{},
-			version(4),
+			version(5),
 			required("Name"),
 			exclude("Revision"),
 			doc(dataClusterHeader, ""),
