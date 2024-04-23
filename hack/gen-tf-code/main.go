@@ -101,7 +101,7 @@ func main() {
 		"docs/resources/",
 		parser,
 		generate(resources.Cluster{},
-			version(4),
+			version(5),
 			required("Name"),
 			computedOnly("Revision"),
 			sensitive("AdminSshKey"),
