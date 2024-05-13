@@ -51,6 +51,24 @@ func ExpandResourceClusterSpec(in map[string]interface{}) kops.ClusterSpec {
 				return kops.CloudProviderSpec{}
 			}(in)
 		}(in["cloud_provider"]),
+		GossipConfig: func(in interface{}) *kops.GossipConfig {
+			return func(in interface{}) *kops.GossipConfig {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in kops.GossipConfig) *kops.GossipConfig {
+					return &in
+				}(func(in interface{}) kops.GossipConfig {
+					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+						return ExpandResourceGossipConfig(in[0].(map[string]interface{}))
+					}
+					return kops.GossipConfig{}
+				}(in))
+			}(in)
+		}(in["gossip_config"]),
 		ContainerRuntime: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["container_runtime"]),
@@ -60,6 +78,24 @@ func ExpandResourceClusterSpec(in map[string]interface{}) kops.ClusterSpec {
 		DNSZone: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["dns_zone"]),
+		DNSControllerGossipConfig: func(in interface{}) *kops.DNSControllerGossipConfig {
+			return func(in interface{}) *kops.DNSControllerGossipConfig {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in kops.DNSControllerGossipConfig) *kops.DNSControllerGossipConfig {
+					return &in
+				}(func(in interface{}) kops.DNSControllerGossipConfig {
+					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+						return ExpandResourceDNSControllerGossipConfig(in[0].(map[string]interface{}))
+					}
+					return kops.DNSControllerGossipConfig{}
+				}(in))
+			}(in)
+		}(in["dns_controller_gossip_config"]),
 		ClusterDNSDomain: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["cluster_dns_domain"]),
@@ -804,6 +840,18 @@ func FlattenResourceClusterSpecInto(in kops.ClusterSpec, out map[string]interfac
 			return []interface{}{FlattenResourceCloudProviderSpec(in)}
 		}(in)
 	}(in.CloudProvider)
+	out["gossip_config"] = func(in *kops.GossipConfig) interface{} {
+		return func(in *kops.GossipConfig) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in kops.GossipConfig) interface{} {
+				return func(in kops.GossipConfig) []interface{} {
+					return []interface{}{FlattenResourceGossipConfig(in)}
+				}(in)
+			}(*in)
+		}(in)
+	}(in.GossipConfig)
 	out["container_runtime"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.ContainerRuntime)
@@ -813,6 +861,18 @@ func FlattenResourceClusterSpecInto(in kops.ClusterSpec, out map[string]interfac
 	out["dns_zone"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.DNSZone)
+	out["dns_controller_gossip_config"] = func(in *kops.DNSControllerGossipConfig) interface{} {
+		return func(in *kops.DNSControllerGossipConfig) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in kops.DNSControllerGossipConfig) interface{} {
+				return func(in kops.DNSControllerGossipConfig) []interface{} {
+					return []interface{}{FlattenResourceDNSControllerGossipConfig(in)}
+				}(in)
+			}(*in)
+		}(in)
+	}(in.DNSControllerGossipConfig)
 	out["cluster_dns_domain"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.ClusterDNSDomain)

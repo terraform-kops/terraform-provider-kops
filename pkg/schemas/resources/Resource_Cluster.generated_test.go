@@ -31,9 +31,11 @@ func TestExpandResourceCluster(t *testing.T) {
 					"cloud_provider": func() []interface{} {
 						return []interface{}{kopsschemas.FlattenResourceCloudProviderSpec(kops.CloudProviderSpec{})}
 					}(),
+					"gossip_config":                     nil,
 					"container_runtime":                 "",
 					"kubernetes_version":                "",
 					"dns_zone":                          "",
+					"dns_controller_gossip_config":      nil,
 					"cluster_dns_domain":                "",
 					"ssh_access":                        func() []interface{} { return nil }(),
 					"node_port_access":                  func() []interface{} { return nil }(),
@@ -109,9 +111,11 @@ func TestFlattenResourceClusterInto(t *testing.T) {
 		"cloud_provider": func() []interface{} {
 			return []interface{}{kopsschemas.FlattenResourceCloudProviderSpec(kops.CloudProviderSpec{})}
 		}(),
+		"gossip_config":                     nil,
 		"container_runtime":                 "",
 		"kubernetes_version":                "",
 		"dns_zone":                          "",
+		"dns_controller_gossip_config":      nil,
 		"cluster_dns_domain":                "",
 		"ssh_access":                        func() []interface{} { return nil }(),
 		"node_port_access":                  func() []interface{} { return nil }(),
@@ -223,6 +227,17 @@ func TestFlattenResourceClusterInto(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "GossipConfig - default",
+			args: args{
+				in: func() resources.Cluster {
+					subject := resources.Cluster{}
+					subject.GossipConfig = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "ContainerRuntime - default",
 			args: args{
 				in: func() resources.Cluster {
@@ -250,6 +265,17 @@ func TestFlattenResourceClusterInto(t *testing.T) {
 				in: func() resources.Cluster {
 					subject := resources.Cluster{}
 					subject.DNSZone = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "DnsControllerGossipConfig - default",
+			args: args{
+				in: func() resources.Cluster {
+					subject := resources.Cluster{}
+					subject.DNSControllerGossipConfig = nil
 					return subject
 				}(),
 			},
@@ -805,9 +831,11 @@ func TestFlattenResourceCluster(t *testing.T) {
 		"cloud_provider": func() []interface{} {
 			return []interface{}{kopsschemas.FlattenResourceCloudProviderSpec(kops.CloudProviderSpec{})}
 		}(),
+		"gossip_config":                     nil,
 		"container_runtime":                 "",
 		"kubernetes_version":                "",
 		"dns_zone":                          "",
+		"dns_controller_gossip_config":      nil,
 		"cluster_dns_domain":                "",
 		"ssh_access":                        func() []interface{} { return nil }(),
 		"node_port_access":                  func() []interface{} { return nil }(),
@@ -919,6 +947,17 @@ func TestFlattenResourceCluster(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "GossipConfig - default",
+			args: args{
+				in: func() resources.Cluster {
+					subject := resources.Cluster{}
+					subject.GossipConfig = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "ContainerRuntime - default",
 			args: args{
 				in: func() resources.Cluster {
@@ -946,6 +985,17 @@ func TestFlattenResourceCluster(t *testing.T) {
 				in: func() resources.Cluster {
 					subject := resources.Cluster{}
 					subject.DNSZone = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "DnsControllerGossipConfig - default",
+			args: args{
+				in: func() resources.Cluster {
+					subject := resources.Cluster{}
+					subject.DNSControllerGossipConfig = nil
 					return subject
 				}(),
 			},
