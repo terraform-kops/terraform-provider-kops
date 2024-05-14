@@ -112,6 +112,7 @@ func TestExpandDataSourceKubeAPIServerConfig(t *testing.T) {
 					"service_account_key_file":                     func() []interface{} { return nil }(),
 					"service_account_signing_key_file":             nil,
 					"service_account_issuer":                       nil,
+					"additional_service_account_issuers":           func() []interface{} { return nil }(),
 					"service_account_jwksuri":                      nil,
 					"api_audiences":                                func() []interface{} { return nil }(),
 					"cpu_request":                                  nil,
@@ -232,6 +233,7 @@ func TestFlattenDataSourceKubeAPIServerConfigInto(t *testing.T) {
 		"service_account_key_file":                     func() []interface{} { return nil }(),
 		"service_account_signing_key_file":             nil,
 		"service_account_issuer":                       nil,
+		"additional_service_account_issuers":           func() []interface{} { return nil }(),
 		"service_account_jwksuri":                      nil,
 		"api_audiences":                                func() []interface{} { return nil }(),
 		"cpu_request":                                  nil,
@@ -1256,6 +1258,17 @@ func TestFlattenDataSourceKubeAPIServerConfigInto(t *testing.T) {
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
 					subject.ServiceAccountIssuer = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "AdditionalServiceAccountIssuers - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.AdditionalServiceAccountIssuers = nil
 					return subject
 				}(),
 			},
@@ -1498,6 +1511,7 @@ func TestFlattenDataSourceKubeAPIServerConfig(t *testing.T) {
 		"service_account_key_file":                     func() []interface{} { return nil }(),
 		"service_account_signing_key_file":             nil,
 		"service_account_issuer":                       nil,
+		"additional_service_account_issuers":           func() []interface{} { return nil }(),
 		"service_account_jwksuri":                      nil,
 		"api_audiences":                                func() []interface{} { return nil }(),
 		"cpu_request":                                  nil,
@@ -2522,6 +2536,17 @@ func TestFlattenDataSourceKubeAPIServerConfig(t *testing.T) {
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
 					subject.ServiceAccountIssuer = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "AdditionalServiceAccountIssuers - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.AdditionalServiceAccountIssuers = nil
 					return subject
 				}(),
 			},
