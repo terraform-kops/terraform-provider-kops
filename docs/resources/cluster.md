@@ -139,9 +139,11 @@ The following arguments are supported:
 - `addons` - (Optional) - List([addon_spec](#addon_spec)) - Additional addons that should be installed on the cluster.
 - `config_store` - (Optional) - [config_store_spec](#config_store_spec) - ConfigStore configures the stores that nodes use to get their configuration.
 - `cloud_provider` - (Required) - [cloud_provider_spec](#cloud_provider_spec) - CloudProvider configures the cloud provider to use.
+- `gossip_config` - (Optional) - [gossip_config](#gossip_config) - GossipConfig for the cluster assuming the use of gossip DNS.
 - `container_runtime` - (Optional) - String - Container runtime to use for Kubernetes.
 - `kubernetes_version` - (Optional) - String - The version of kubernetes to install (optional, and can be a "spec" like stable).
 - `dns_zone` - (Optional) - String - DNSZone is the DNS zone we should use when configuring DNS<br />This is because some clouds let us define a managed zone foo.bar, and then have<br />kubernetes.dev.foo.bar, without needing to define dev.foo.bar as a hosted zone.<br />DNSZone will probably be a suffix of the MasterPublicName.<br />Note that DNSZone can either by the host name of the zone (containing dots),<br />or can be an identifier for the zone.
+- `dns_controller_gossip_config` - (Optional) - [dns_controller_gossip_config](#dns_controller_gossip_config) - DNSControllerGossipConfig for the cluster assuming the use of gossip DNS.
 - `cluster_dns_domain` - (Optional) - String - ClusterDNSDomain is the suffix we use for internal DNS names (normally cluster.local).
 - `ssh_access` - (Optional) - List(String) - SSHAccess is a list of the CIDRs that can access SSH.
 - `node_port_access` - (Optional) - List(String) - NodePortAccess is a list of the CIDRs that can access the node ports range (30000-32767).
@@ -481,6 +483,50 @@ ScalewaySpec configures the Scaleway cloud provider.
 
 
 This resource has no attributes.
+
+### gossip_config
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `protocol` - (Optional) - String
+- `listen` - (Optional) - String
+- `secret` - (Optional) - String
+- `secondary` - (Optional) - [gossip_config_secondary](#gossip_config_secondary)
+
+### gossip_config_secondary
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `protocol` - (Optional) - String
+- `listen` - (Optional) - String
+- `secret` - (Optional) - String
+
+### dns_controller_gossip_config
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `protocol` - (Optional) - String
+- `listen` - (Optional) - String
+- `secret` - (Optional) - String
+- `secondary` - (Optional) - [dns_controller_gossip_config_secondary](#dns_controller_gossip_config_secondary)
+- `seed` - (Optional) - String
+
+### dns_controller_gossip_config_secondary
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `protocol` - (Optional) - String
+- `listen` - (Optional) - String
+- `secret` - (Optional) - String
+- `seed` - (Optional) - String
 
 ### file_asset_spec
 

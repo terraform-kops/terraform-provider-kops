@@ -18,9 +18,11 @@ func DataSourceClusterSpec() *schema.Resource {
 			"addons":                            ComputedList(DataSourceAddonSpec()),
 			"config_store":                      ComputedStruct(DataSourceConfigStoreSpec()),
 			"cloud_provider":                    ComputedStruct(DataSourceCloudProviderSpec()),
+			"gossip_config":                     ComputedStruct(DataSourceGossipConfig()),
 			"container_runtime":                 ComputedString(),
 			"kubernetes_version":                ComputedString(),
 			"dns_zone":                          ComputedString(),
+			"dns_controller_gossip_config":      ComputedStruct(DataSourceDNSControllerGossipConfig()),
 			"cluster_dns_domain":                ComputedString(),
 			"ssh_access":                        ComputedList(String()),
 			"node_port_access":                  ComputedList(String()),
@@ -110,6 +112,24 @@ func ExpandDataSourceClusterSpec(in map[string]interface{}) kops.ClusterSpec {
 				return kops.CloudProviderSpec{}
 			}(in)
 		}(in["cloud_provider"]),
+		GossipConfig: func(in interface{}) *kops.GossipConfig {
+			return func(in interface{}) *kops.GossipConfig {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in kops.GossipConfig) *kops.GossipConfig {
+					return &in
+				}(func(in interface{}) kops.GossipConfig {
+					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+						return ExpandDataSourceGossipConfig(in[0].(map[string]interface{}))
+					}
+					return kops.GossipConfig{}
+				}(in))
+			}(in)
+		}(in["gossip_config"]),
 		ContainerRuntime: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["container_runtime"]),
@@ -119,6 +139,24 @@ func ExpandDataSourceClusterSpec(in map[string]interface{}) kops.ClusterSpec {
 		DNSZone: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["dns_zone"]),
+		DNSControllerGossipConfig: func(in interface{}) *kops.DNSControllerGossipConfig {
+			return func(in interface{}) *kops.DNSControllerGossipConfig {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in kops.DNSControllerGossipConfig) *kops.DNSControllerGossipConfig {
+					return &in
+				}(func(in interface{}) kops.DNSControllerGossipConfig {
+					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+						return ExpandDataSourceDNSControllerGossipConfig(in[0].(map[string]interface{}))
+					}
+					return kops.DNSControllerGossipConfig{}
+				}(in))
+			}(in)
+		}(in["dns_controller_gossip_config"]),
 		ClusterDNSDomain: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["cluster_dns_domain"]),
@@ -863,6 +901,18 @@ func FlattenDataSourceClusterSpecInto(in kops.ClusterSpec, out map[string]interf
 			return []interface{}{FlattenDataSourceCloudProviderSpec(in)}
 		}(in)
 	}(in.CloudProvider)
+	out["gossip_config"] = func(in *kops.GossipConfig) interface{} {
+		return func(in *kops.GossipConfig) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in kops.GossipConfig) interface{} {
+				return func(in kops.GossipConfig) []interface{} {
+					return []interface{}{FlattenDataSourceGossipConfig(in)}
+				}(in)
+			}(*in)
+		}(in)
+	}(in.GossipConfig)
 	out["container_runtime"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.ContainerRuntime)
@@ -872,6 +922,18 @@ func FlattenDataSourceClusterSpecInto(in kops.ClusterSpec, out map[string]interf
 	out["dns_zone"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.DNSZone)
+	out["dns_controller_gossip_config"] = func(in *kops.DNSControllerGossipConfig) interface{} {
+		return func(in *kops.DNSControllerGossipConfig) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in kops.DNSControllerGossipConfig) interface{} {
+				return func(in kops.DNSControllerGossipConfig) []interface{} {
+					return []interface{}{FlattenDataSourceDNSControllerGossipConfig(in)}
+				}(in)
+			}(*in)
+		}(in)
+	}(in.DNSControllerGossipConfig)
 	out["cluster_dns_domain"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.ClusterDNSDomain)
