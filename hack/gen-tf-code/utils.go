@@ -37,6 +37,7 @@ func fieldName(in string) string {
 	in = strings.ReplaceAll(in, "ID", "Id")
 	in = strings.ReplaceAll(in, "IP", "Ip")
 	in = strings.ReplaceAll(in, "CA", "Ca")
+	in = strings.ReplaceAll(in, "GCage", "GcAge")
 	return in
 }
 

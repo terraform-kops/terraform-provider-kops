@@ -59,8 +59,8 @@ func DataSourceKubeletConfigSpec() *schema.Resource {
 			"non_masquerade_cidr":                      ComputedString(),
 			"enable_custom_metrics":                    ComputedBool(),
 			"network_plugin_mtu":                       ComputedInt(),
-			"image_minimum_g_cage":                     ComputedString(),
-			"image_maximum_g_cage":                     ComputedString(),
+			"image_minimum_gc_age":                     ComputedString(),
+			"image_maximum_gc_age":                     ComputedString(),
 			"image_gc_high_threshold_percent":          ComputedInt(),
 			"image_gc_low_threshold_percent":           ComputedInt(),
 			"image_pull_progress_deadline":             ComputedDuration(),
@@ -634,7 +634,7 @@ func ExpandDataSourceKubeletConfigSpec(in map[string]interface{}) kops.KubeletCo
 					return &in
 				}(string(ExpandString(in)))
 			}(in)
-		}(in["image_minimum_g_cage"]),
+		}(in["image_minimum_gc_age"]),
 		ImageMaximumGCAge: func(in interface{}) *string {
 			if in == nil {
 				return nil
@@ -653,7 +653,7 @@ func ExpandDataSourceKubeletConfigSpec(in map[string]interface{}) kops.KubeletCo
 					return &in
 				}(string(ExpandString(in)))
 			}(in)
-		}(in["image_maximum_g_cage"]),
+		}(in["image_maximum_gc_age"]),
 		ImageGCHighThresholdPercent: func(in interface{}) *int32 {
 			if in == nil {
 				return nil
@@ -1621,7 +1621,7 @@ func FlattenDataSourceKubeletConfigSpecInto(in kops.KubeletConfigSpec, out map[s
 			}(*in)
 		}(in)
 	}(in.NetworkPluginMTU)
-	out["image_minimum_g_cage"] = func(in *string) interface{} {
+	out["image_minimum_gc_age"] = func(in *string) interface{} {
 		return func(in *string) interface{} {
 			if in == nil {
 				return nil
@@ -1631,7 +1631,7 @@ func FlattenDataSourceKubeletConfigSpecInto(in kops.KubeletConfigSpec, out map[s
 			}(*in)
 		}(in)
 	}(in.ImageMinimumGCAge)
-	out["image_maximum_g_cage"] = func(in *string) interface{} {
+	out["image_maximum_gc_age"] = func(in *string) interface{} {
 		return func(in *string) interface{} {
 			if in == nil {
 				return nil
