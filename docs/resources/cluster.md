@@ -1014,6 +1014,7 @@ The following arguments are supported:
 - `service_account_key_file` - (Optional) - List(String) - File containing PEM-encoded x509 RSA or ECDSA private or public keys, used to verify ServiceAccount tokens.<br />The specified file can contain multiple keys, and the flag can be specified multiple times with different files.<br />If unspecified, --tls-private-key-file is used.
 - `service_account_signing_key_file` - (Optional) - String - Path to the file that contains the current private key of the service account token issuer.<br />The issuer will sign issued ID tokens with this private key. (Requires the 'TokenRequest' feature gate.).
 - `service_account_issuer` - (Optional) - String - Identifier of the service account token issuer. The issuer will assert this identifier<br />in "iss" claim of issued tokens. This value is a string or URI.
+- `additional_service_account_issuers` - (Optional) - List(String) - AdditionalServiceAccountIssuers can contain additional service account token issuers.
 - `service_account_jwksuri` - (Optional) - String - ServiceAccountJWKSURI overrides the path for the jwks document; this is useful when we are republishing the service account discovery information elsewhere.
 - `api_audiences` - (Optional) - List(String) - Identifiers of the API. The service account token authenticator will validate that<br />tokens used against the API are bound to at least one of these audiences. If the<br />--service-account-issuer flag is configured and this flag is not, this field<br />defaults to a single element list containing the issuer URL.
 - `cpu_request` - (Optional) - Quantity - CPURequest, cpu request compute resource for api server. Defaults to "150m".
@@ -1240,6 +1241,8 @@ The following arguments are supported:
 - `non_masquerade_cidr` - (Optional) - String - NonMasqueradeCIDR configures masquerading: traffic to IPs outside this range will use IP masquerade.
 - `enable_custom_metrics` - (Optional) - Bool - Enable gathering custom metrics.
 - `network_plugin_mtu` - (Optional) - Int - NetworkPluginMTU is the MTU to be passed to the network plugin,<br />and overrides the default MTU for cases where it cannot be automatically<br />computed (such as IPSEC).
+- `image_minimum_gc_age` - (Optional) - String - imageMinimumGCAge is the minimum age for an unused image before it is garbage collected. Default: "2m".
+- `image_maximum_gc_age` - (Optional) - String - imageMaximumGCAge is the maximum age an image can be unused before it is garbage collected.<br />The default of this field is "0s", which disables this field--meaning images won't be garbage<br />collected based on being unused for too long. Default: "0s" (disabled).
 - `image_gc_high_threshold_percent` - (Optional) - Int - ImageGCHighThresholdPercent is the percent of disk usage after which<br />image garbage collection is always run.
 - `image_gc_low_threshold_percent` - (Optional) - Int - ImageGCLowThresholdPercent is the percent of disk usage before which<br />image garbage collection is never run. Lowest disk usage to garbage<br />collect to.
 - `image_pull_progress_deadline` - (Optional) - Duration - ImagePullProgressDeadline is the timeout for image pulls<br />If no pulling progress is made before this deadline, the image pulling will be cancelled. (default 1m0s).

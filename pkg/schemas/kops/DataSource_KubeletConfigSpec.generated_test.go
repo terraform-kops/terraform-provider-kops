@@ -66,6 +66,8 @@ func TestExpandDataSourceKubeletConfigSpec(t *testing.T) {
 					"non_masquerade_cidr":                      nil,
 					"enable_custom_metrics":                    nil,
 					"network_plugin_mtu":                       nil,
+					"image_minimum_gc_age":                     nil,
+					"image_maximum_gc_age":                     nil,
 					"image_gc_high_threshold_percent":          nil,
 					"image_gc_low_threshold_percent":           nil,
 					"image_pull_progress_deadline":             nil,
@@ -176,6 +178,8 @@ func TestFlattenDataSourceKubeletConfigSpecInto(t *testing.T) {
 		"non_masquerade_cidr":                      nil,
 		"enable_custom_metrics":                    nil,
 		"network_plugin_mtu":                       nil,
+		"image_minimum_gc_age":                     nil,
+		"image_maximum_gc_age":                     nil,
 		"image_gc_high_threshold_percent":          nil,
 		"image_gc_low_threshold_percent":           nil,
 		"image_pull_progress_deadline":             nil,
@@ -730,6 +734,28 @@ func TestFlattenDataSourceKubeletConfigSpecInto(t *testing.T) {
 				in: func() kops.KubeletConfigSpec {
 					subject := kops.KubeletConfigSpec{}
 					subject.NetworkPluginMTU = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ImageMinimumGcAge - default",
+			args: args{
+				in: func() kops.KubeletConfigSpec {
+					subject := kops.KubeletConfigSpec{}
+					subject.ImageMinimumGCAge = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ImageMaximumGcAge - default",
+			args: args{
+				in: func() kops.KubeletConfigSpec {
+					subject := kops.KubeletConfigSpec{}
+					subject.ImageMaximumGCAge = nil
 					return subject
 				}(),
 			},
@@ -1322,6 +1348,8 @@ func TestFlattenDataSourceKubeletConfigSpec(t *testing.T) {
 		"non_masquerade_cidr":                      nil,
 		"enable_custom_metrics":                    nil,
 		"network_plugin_mtu":                       nil,
+		"image_minimum_gc_age":                     nil,
+		"image_maximum_gc_age":                     nil,
 		"image_gc_high_threshold_percent":          nil,
 		"image_gc_low_threshold_percent":           nil,
 		"image_pull_progress_deadline":             nil,
@@ -1876,6 +1904,28 @@ func TestFlattenDataSourceKubeletConfigSpec(t *testing.T) {
 				in: func() kops.KubeletConfigSpec {
 					subject := kops.KubeletConfigSpec{}
 					subject.NetworkPluginMTU = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ImageMinimumGcAge - default",
+			args: args{
+				in: func() kops.KubeletConfigSpec {
+					subject := kops.KubeletConfigSpec{}
+					subject.ImageMinimumGCAge = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ImageMaximumGcAge - default",
+			args: args{
+				in: func() kops.KubeletConfigSpec {
+					subject := kops.KubeletConfigSpec{}
+					subject.ImageMaximumGCAge = nil
 					return subject
 				}(),
 			},

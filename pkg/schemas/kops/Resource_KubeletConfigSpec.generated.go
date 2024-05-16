@@ -59,6 +59,8 @@ func ResourceKubeletConfigSpec() *schema.Resource {
 			"non_masquerade_cidr":                      OptionalString(),
 			"enable_custom_metrics":                    OptionalBool(),
 			"network_plugin_mtu":                       OptionalInt(),
+			"image_minimum_gc_age":                     OptionalString(),
+			"image_maximum_gc_age":                     OptionalString(),
 			"image_gc_high_threshold_percent":          OptionalInt(),
 			"image_gc_low_threshold_percent":           OptionalInt(),
 			"image_pull_progress_deadline":             OptionalDuration(),
@@ -614,6 +616,44 @@ func ExpandResourceKubeletConfigSpec(in map[string]interface{}) kops.KubeletConf
 				}(int32(ExpandInt(in)))
 			}(in)
 		}(in["network_plugin_mtu"]),
+		ImageMinimumGCAge: func(in interface{}) *string {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *string {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in string) *string {
+					return &in
+				}(string(ExpandString(in)))
+			}(in)
+		}(in["image_minimum_gc_age"]),
+		ImageMaximumGCAge: func(in interface{}) *string {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *string {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in string) *string {
+					return &in
+				}(string(ExpandString(in)))
+			}(in)
+		}(in["image_maximum_gc_age"]),
 		ImageGCHighThresholdPercent: func(in interface{}) *int32 {
 			if in == nil {
 				return nil
@@ -1581,6 +1621,26 @@ func FlattenResourceKubeletConfigSpecInto(in kops.KubeletConfigSpec, out map[str
 			}(*in)
 		}(in)
 	}(in.NetworkPluginMTU)
+	out["image_minimum_gc_age"] = func(in *string) interface{} {
+		return func(in *string) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in string) interface{} {
+				return FlattenString(string(in))
+			}(*in)
+		}(in)
+	}(in.ImageMinimumGCAge)
+	out["image_maximum_gc_age"] = func(in *string) interface{} {
+		return func(in *string) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in string) interface{} {
+				return FlattenString(string(in))
+			}(*in)
+		}(in)
+	}(in.ImageMaximumGCAge)
 	out["image_gc_high_threshold_percent"] = func(in *int32) interface{} {
 		return func(in *int32) interface{} {
 			if in == nil {

@@ -106,6 +106,7 @@ func ResourceKubeAPIServerConfig() *schema.Resource {
 			"service_account_key_file":                     OptionalList(String()),
 			"service_account_signing_key_file":             OptionalString(),
 			"service_account_issuer":                       OptionalString(),
+			"additional_service_account_issuers":           OptionalList(String()),
 			"service_account_jwksuri":                      OptionalString(),
 			"api_audiences":                                OptionalList(String()),
 			"cpu_request":                                  OptionalQuantity(),
@@ -1262,6 +1263,18 @@ func ExpandResourceKubeAPIServerConfig(in map[string]interface{}) kops.KubeAPISe
 				}(string(ExpandString(in)))
 			}(in)
 		}(in["service_account_issuer"]),
+		AdditionalServiceAccountIssuers: func(in interface{}) []string {
+			return func(in interface{}) []string {
+				if in == nil {
+					return nil
+				}
+				var out []string
+				for _, in := range in.([]interface{}) {
+					out = append(out, string(ExpandString(in)))
+				}
+				return out
+			}(in)
+		}(in["additional_service_account_issuers"]),
 		ServiceAccountJWKSURI: func(in interface{}) *string {
 			if in == nil {
 				return nil
@@ -2166,6 +2179,15 @@ func FlattenResourceKubeAPIServerConfigInto(in kops.KubeAPIServerConfig, out map
 			}(*in)
 		}(in)
 	}(in.ServiceAccountIssuer)
+	out["additional_service_account_issuers"] = func(in []string) interface{} {
+		return func(in []string) []interface{} {
+			var out []interface{}
+			for _, in := range in {
+				out = append(out, FlattenString(string(in)))
+			}
+			return out
+		}(in)
+	}(in.AdditionalServiceAccountIssuers)
 	out["service_account_jwksuri"] = func(in *string) interface{} {
 		return func(in *string) interface{} {
 			if in == nil {
