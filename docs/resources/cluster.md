@@ -501,7 +501,7 @@ The following arguments are supported:
 
 The following arguments are supported:
 
-- `protocol` - (Optional) - String
+- `protocol` - (Optional) - String([Nullable](#nullable-arguments))
 - `listen` - (Optional) - String
 - `secret` - (Optional) - String
 
@@ -523,7 +523,7 @@ The following arguments are supported:
 
 The following arguments are supported:
 
-- `protocol` - (Optional) - String
+- `protocol` - (Optional) - String([Nullable](#nullable-arguments))
 - `listen` - (Optional) - String
 - `secret` - (Optional) - String
 - `seed` - (Optional) - String

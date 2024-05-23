@@ -13,7 +13,7 @@ var _ = Schema
 func ResourceGossipConfigSecondary() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"protocol": OptionalString(),
+			"protocol": Nullable(OptionalString()),
 			"listen":   OptionalString(),
 			"secret":   OptionalString(),
 		},
@@ -31,20 +31,22 @@ func ExpandResourceGossipConfigSecondary(in map[string]interface{}) kops.GossipC
 			if in == nil {
 				return nil
 			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
+			if in, ok := in.([]interface{}); ok && len(in) == 1 {
+				return func(in interface{}) *string {
+					return func(in interface{}) *string {
+						if in == nil {
+							return nil
+						}
+						if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+							return nil
+						}
+						return func(in string) *string {
+							return &in
+						}(string(ExpandString(in)))
+					}(in)
+				}(in[0].(map[string]interface{})["value"])
 			}
-			return func(in interface{}) *string {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in string) *string {
-					return &in
-				}(string(ExpandString(in)))
-			}(in)
+			return nil
 		}(in["protocol"]),
 		Listen: func(in interface{}) *string {
 			if in == nil {
@@ -89,14 +91,17 @@ func ExpandResourceGossipConfigSecondary(in map[string]interface{}) kops.GossipC
 
 func FlattenResourceGossipConfigSecondaryInto(in kops.GossipConfigSecondary, out map[string]interface{}) {
 	out["protocol"] = func(in *string) interface{} {
-		return func(in *string) interface{} {
+		if in == nil {
+			return nil
+		}
+		return []interface{}{map[string]interface{}{"value": func(in *string) interface{} {
 			if in == nil {
 				return nil
 			}
 			return func(in string) interface{} {
 				return FlattenString(string(in))
 			}(*in)
-		}(in)
+		}(in)}}
 	}(in.Protocol)
 	out["listen"] = func(in *string) interface{} {
 		return func(in *string) interface{} {
