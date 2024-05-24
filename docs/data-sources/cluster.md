@@ -415,7 +415,7 @@ The following arguments are supported:
 
 The following arguments are supported:
 
-- `protocol` - (Computed) - String
+- `protocol` - (Computed) - String([Nullable](#nullable-arguments))
 - `listen` - (Computed) - String
 - `secret` - (Computed) - String
 
@@ -437,7 +437,7 @@ The following arguments are supported:
 
 The following arguments are supported:
 
-- `protocol` - (Computed) - String
+- `protocol` - (Computed) - String([Nullable](#nullable-arguments))
 - `listen` - (Computed) - String
 - `secret` - (Computed) - String
 - `seed` - (Computed) - String
