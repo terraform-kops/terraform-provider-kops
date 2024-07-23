@@ -8,8 +8,8 @@ require (
 	github.com/google/go-cmp v0.6.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.34.0
 	golang.org/x/tools v0.22.0
-	k8s.io/api v0.28.9
-	k8s.io/apimachinery v0.28.9
+	k8s.io/api v0.30.3
+	k8s.io/apimachinery v0.30.3
 	k8s.io/client-go v0.28.9
 	k8s.io/klog v1.0.0
 	k8s.io/kops v1.28.5
@@ -124,6 +124,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/monochromegane/go-gitignore v0.0.0-20200626010858-205db1a8cc00 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
+	github.com/mxk/go-flowrate v0.0.0-20140419014527-cca7078d478f // indirect
 	github.com/oklog/run v1.0.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0-rc4 // indirect
@@ -184,8 +185,8 @@ require (
 	k8s.io/component-base v0.28.9 // indirect
 	k8s.io/component-helpers v0.28.9 // indirect
 	k8s.io/csi-translation-lib v0.28.9 // indirect
-	k8s.io/klog/v2 v2.100.1 // indirect
-	k8s.io/kube-openapi v0.0.0-20230717233707-2695361300d9 // indirect
+	k8s.io/klog/v2 v2.120.1 // indirect
+	k8s.io/kube-openapi v0.0.0-20240228011516-70dd3763d340 // indirect
 	k8s.io/kubectl v0.28.9 // indirect
 	k8s.io/mount-utils v0.28.9 // indirect
 	k8s.io/utils v0.0.0-20230726121419-3b25d923346b // indirect
