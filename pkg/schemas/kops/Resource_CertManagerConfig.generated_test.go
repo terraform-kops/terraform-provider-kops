@@ -27,6 +27,7 @@ func TestExpandResourceCertManagerConfig(t *testing.T) {
 					"default_issuer":  nil,
 					"nameservers":     func() []interface{} { return nil }(),
 					"hosted_zone_ids": func() []interface{} { return nil }(),
+					"feature_gates":   func() map[string]interface{} { return nil }(),
 				},
 			},
 			want: _default,
@@ -50,6 +51,7 @@ func TestFlattenResourceCertManagerConfigInto(t *testing.T) {
 		"default_issuer":  nil,
 		"nameservers":     func() []interface{} { return nil }(),
 		"hosted_zone_ids": func() []interface{} { return nil }(),
+		"feature_gates":   func() map[string]interface{} { return nil }(),
 	}
 	type args struct {
 		in kops.CertManagerConfig
@@ -127,6 +129,17 @@ func TestFlattenResourceCertManagerConfigInto(t *testing.T) {
 				in: func() kops.CertManagerConfig {
 					subject := kops.CertManagerConfig{}
 					subject.HostedZoneIDs = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "FeatureGates - default",
+			args: args{
+				in: func() kops.CertManagerConfig {
+					subject := kops.CertManagerConfig{}
+					subject.FeatureGates = nil
 					return subject
 				}(),
 			},
@@ -152,6 +165,7 @@ func TestFlattenResourceCertManagerConfig(t *testing.T) {
 		"default_issuer":  nil,
 		"nameservers":     func() []interface{} { return nil }(),
 		"hosted_zone_ids": func() []interface{} { return nil }(),
+		"feature_gates":   func() map[string]interface{} { return nil }(),
 	}
 	type args struct {
 		in kops.CertManagerConfig
@@ -229,6 +243,17 @@ func TestFlattenResourceCertManagerConfig(t *testing.T) {
 				in: func() kops.CertManagerConfig {
 					subject := kops.CertManagerConfig{}
 					subject.HostedZoneIDs = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "FeatureGates - default",
+			args: args{
+				in: func() kops.CertManagerConfig {
+					subject := kops.CertManagerConfig{}
+					subject.FeatureGates = nil
 					return subject
 				}(),
 			},

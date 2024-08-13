@@ -45,8 +45,8 @@ func TestExpandDataSourceCluster(t *testing.T) {
 					"additional_policies":               func() map[string]interface{} { return nil }(),
 					"file_assets":                       func() []interface{} { return nil }(),
 					"etcd_cluster":                      func() []interface{} { return nil }(),
-					"containerd":                        nil,
 					"docker":                            nil,
+					"containerd":                        nil,
 					"kube_dns":                          nil,
 					"kube_api_server":                   nil,
 					"kube_controller_manager":           nil,
@@ -58,6 +58,7 @@ func TestExpandDataSourceCluster(t *testing.T) {
 					"cloud_config":                      nil,
 					"external_dns":                      nil,
 					"ntp":                               nil,
+					"packages":                          func() []interface{} { return nil }(),
 					"node_problem_detector":             nil,
 					"metrics_server":                    nil,
 					"cert_manager":                      nil,
@@ -124,8 +125,8 @@ func TestFlattenDataSourceClusterInto(t *testing.T) {
 		"additional_policies":               func() map[string]interface{} { return nil }(),
 		"file_assets":                       func() []interface{} { return nil }(),
 		"etcd_cluster":                      func() []interface{} { return nil }(),
-		"containerd":                        nil,
 		"docker":                            nil,
+		"containerd":                        nil,
 		"kube_dns":                          nil,
 		"kube_api_server":                   nil,
 		"kube_controller_manager":           nil,
@@ -137,6 +138,7 @@ func TestFlattenDataSourceClusterInto(t *testing.T) {
 		"cloud_config":                      nil,
 		"external_dns":                      nil,
 		"ntp":                               nil,
+		"packages":                          func() []interface{} { return nil }(),
 		"node_problem_detector":             nil,
 		"metrics_server":                    nil,
 		"cert_manager":                      nil,
@@ -379,22 +381,22 @@ func TestFlattenDataSourceClusterInto(t *testing.T) {
 			want: _default,
 		},
 		{
-			name: "Containerd - default",
+			name: "Docker - default",
 			args: args{
 				in: func() resources.Cluster {
 					subject := resources.Cluster{}
-					subject.Containerd = nil
+					subject.Docker = nil
 					return subject
 				}(),
 			},
 			want: _default,
 		},
 		{
-			name: "Docker - default",
+			name: "Containerd - default",
 			args: args{
 				in: func() resources.Cluster {
 					subject := resources.Cluster{}
-					subject.Docker = nil
+					subject.Containerd = nil
 					return subject
 				}(),
 			},
@@ -516,6 +518,17 @@ func TestFlattenDataSourceClusterInto(t *testing.T) {
 				in: func() resources.Cluster {
 					subject := resources.Cluster{}
 					subject.NTP = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "Packages - default",
+			args: args{
+				in: func() resources.Cluster {
+					subject := resources.Cluster{}
+					subject.Packages = nil
 					return subject
 				}(),
 			},
@@ -832,8 +845,8 @@ func TestFlattenDataSourceCluster(t *testing.T) {
 		"additional_policies":               func() map[string]interface{} { return nil }(),
 		"file_assets":                       func() []interface{} { return nil }(),
 		"etcd_cluster":                      func() []interface{} { return nil }(),
-		"containerd":                        nil,
 		"docker":                            nil,
+		"containerd":                        nil,
 		"kube_dns":                          nil,
 		"kube_api_server":                   nil,
 		"kube_controller_manager":           nil,
@@ -845,6 +858,7 @@ func TestFlattenDataSourceCluster(t *testing.T) {
 		"cloud_config":                      nil,
 		"external_dns":                      nil,
 		"ntp":                               nil,
+		"packages":                          func() []interface{} { return nil }(),
 		"node_problem_detector":             nil,
 		"metrics_server":                    nil,
 		"cert_manager":                      nil,
@@ -1087,22 +1101,22 @@ func TestFlattenDataSourceCluster(t *testing.T) {
 			want: _default,
 		},
 		{
-			name: "Containerd - default",
+			name: "Docker - default",
 			args: args{
 				in: func() resources.Cluster {
 					subject := resources.Cluster{}
-					subject.Containerd = nil
+					subject.Docker = nil
 					return subject
 				}(),
 			},
 			want: _default,
 		},
 		{
-			name: "Docker - default",
+			name: "Containerd - default",
 			args: args{
 				in: func() resources.Cluster {
 					subject := resources.Cluster{}
-					subject.Docker = nil
+					subject.Containerd = nil
 					return subject
 				}(),
 			},
@@ -1224,6 +1238,17 @@ func TestFlattenDataSourceCluster(t *testing.T) {
 				in: func() resources.Cluster {
 					subject := resources.Cluster{}
 					subject.NTP = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "Packages - default",
+			args: args{
+				in: func() resources.Cluster {
+					subject := resources.Cluster{}
+					subject.Packages = nil
 					return subject
 				}(),
 			},

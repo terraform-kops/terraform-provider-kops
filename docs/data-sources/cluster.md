@@ -55,7 +55,7 @@ The following arguments are supported:
 - `config_store` - (Computed) - [config_store_spec](#config_store_spec) - ConfigStore configures the stores that nodes use to get their configuration.
 - `cloud_provider` - (Computed) - [cloud_provider_spec](#cloud_provider_spec) - CloudProvider configures the cloud provider to use.
 - `gossip_config` - (Computed) - [gossip_config](#gossip_config) - GossipConfig for the cluster assuming the use of gossip DNS.
-- `container_runtime` - (Computed) - String - Container runtime to use for Kubernetes.
+- `container_runtime` - (Computed) - String - ContainerRuntime was removed.
 - `kubernetes_version` - (Computed) - String - The version of kubernetes to install (optional, and can be a "spec" like stable).
 - `dns_zone` - (Computed) - String - DNSZone is the DNS zone we should use when configuring DNS<br />This is because some clouds let us define a managed zone foo.bar, and then have<br />kubernetes.dev.foo.bar, without needing to define dev.foo.bar as a hosted zone.<br />DNSZone will probably be a suffix of the MasterPublicName.<br />Note that DNSZone can either by the host name of the zone (containing dots),<br />or can be an identifier for the zone.
 - `dns_controller_gossip_config` - (Computed) - [dns_controller_gossip_config](#dns_controller_gossip_config) - DNSControllerGossipConfig for the cluster assuming the use of gossip DNS.
@@ -68,8 +68,8 @@ The following arguments are supported:
 - `additional_policies` - (Computed) - Map(String) - Additional policies to add for roles.
 - `file_assets` - (Computed) - List([file_asset_spec](#file_asset_spec)) - A collection of files assets for deployed cluster wide.
 - `etcd_cluster` - (Computed) - List([etcd_cluster_spec](#etcd_cluster_spec)) - EtcdClusters stores the configuration for each cluster.
+- `docker` - (Computed) - [docker_config](#docker_config) - Docker was removed.
 - `containerd` - (Computed) - [containerd_config](#containerd_config) - Component configurations.
-- `docker` - (Computed) - [docker_config](#docker_config)
 - `kube_dns` - (Computed) - [kube_dns_config](#kube_dns_config)
 - `kube_api_server` - (Computed) - [kube_api_server_config](#kube_api_server_config)
 - `kube_controller_manager` - (Computed) - [kube_controller_manager_config](#kube_controller_manager_config)
@@ -81,6 +81,7 @@ The following arguments are supported:
 - `cloud_config` - (Computed) - [cloud_configuration](#cloud_configuration)
 - `external_dns` - (Computed) - [external_dns_config](#external_dns_config)
 - `ntp` - (Computed) - [ntp_config](#ntp_config)
+- `packages` - (Computed) - List(String) - Packages specifies additional packages to be installed.
 - `node_problem_detector` - (Computed) - [node_problem_detector_config](#node_problem_detector_config) - NodeProblemDetector determines the node problem detector configuration.
 - `metrics_server` - (Computed) - [metrics_server_config](#metrics_server_config) - MetricsServer determines the metrics server configuration.
 - `cert_manager` - (Computed) - [cert_manager_config](#cert_manager_config) - CertManager determines the metrics server configuration.
@@ -175,9 +176,12 @@ EBSCSIDriverSpec is the config for the AWS EBS CSI driver.
 
 The following arguments are supported:
 
-- `enabled` - (Computed) - Bool - Enabled enables the AWS EBS CSI driver<br />Default: false.
+- `enabled` - (Computed) - Bool - Enabled enables the AWS EBS CSI driver. Can only be set to true.<br />Default: true.
 - `managed` - (Computed) - Bool - Managed controls if aws-ebs-csi-driver is manged and deployed by kOps.<br />The deployment of aws-ebs-csi-driver is skipped if this is set to false.
 - `version` - (Computed) - String - Version is the container image tag used.<br />Default: The latest stable release which is compatible with your Kubernetes version.
+- `kube_api_qps` - (Computed) - Quantity - KubeAPIQPS QPS to use while talking with Kubernetes API server. (default 20).
+- `kube_api_burst` - (Computed) - Int - KubeAPIBurst Burst to use while talking with Kubernetes API server. (default 100).
+- `host_network` - (Computed) - Bool - HostNetwork can be used for large clusters for faster access to node info via instance metadata.<br />Default: false.
 - `volume_attach_limit` - (Computed) - Int - VolumeAttachLimit is the maximum number of volumes attachable per node.<br />If specified, the limit applies to all nodes.<br />If not specified, the value is approximated from the instance type.<br />Default: -.
 - `pod_annotations` - (Computed) - Map(String) - PodAnnotations are the annotations added to AWS EBS CSI node and controller Pods.<br />Default: none.
 
@@ -189,6 +193,7 @@ NodeTerminationHandlerSpec determines the node termination handler configuration
 
 The following arguments are supported:
 
+- `delete_sqs_msg_if_node_not_found` - (Computed) - Bool - DeleteSQSMsgIfNodeNotFound makes node termination handler delete the SQS Message from the SQS Queue if the targeted node is not found.<br />Only used in Queue Processor mode.<br />Default: false.
 - `enabled` - (Computed) - Bool - Enabled enables the node termination handler.<br />Default: true.
 - `enable_spot_interruption_draining` - (Computed) - Bool - EnableSpotInterruptionDraining makes node termination handler drain nodes when spot interruption termination notice is received.<br />Cannot be disabled in queue-processor mode.<br />Default: true.
 - `enable_scheduled_event_draining` - (Computed) - Bool - EnableScheduledEventDraining makes node termination handler drain nodes before the maintenance window starts for an EC2 instance scheduled event.<br />Cannot be disabled in queue-processor mode.<br />Default: true.
@@ -198,9 +203,14 @@ The following arguments are supported:
 - `enable_sqs_termination_draining` - (Computed) - Bool - EnableSQSTerminationDraining enables queue-processor mode which drains nodes when an SQS termination event is received.<br />Default: true.
 - `exclude_from_load_balancers` - (Computed) - Bool - ExcludeFromLoadBalancers makes node termination handler will mark for exclusion from load balancers before node are cordoned.<br />Default: true.
 - `managed_asg_tag` - (Computed) - String - ManagedASGTag is the tag used to determine which nodes NTH can take action on<br />This field has kept its name even though it now maps to the --managed-tag flag due to keeping the API stable.<br />Node termination handler does no longer check the ASG for this tag, but the actual EC2 instances.
+- `pod_termination_grace_period` - (Computed) - Int - PodTerminationGracePeriod is the time in seconds given to each pod to terminate gracefully.<br />If negative, the default value specified in the pod will be used, which defaults to 30 seconds if not specified for the pod.<br />Default: -1.
+- `taint_node` - (Computed) - Bool - TaintNode makes node termination handler taint nodes when an interruption event occurs.<br />Default: false.
+- `memory_limit` - (Computed) - Quantity - MemoryLimit of NodeTerminationHandler container.<br />Default: none.
 - `memory_request` - (Computed) - Quantity - MemoryRequest of NodeTerminationHandler container.<br />Default: 64Mi.
 - `cpu_request` - (Computed) - Quantity - CPURequest of NodeTerminationHandler container.<br />Default: 50m.
 - `version` - (Computed) - String - Version is the container image tag used.
+- `webhook_template` - (Computed) - String - Replaces the default webhook message template.
+- `webhook_url` - (Computed) - String - If specified, posts event data to URL upon instance interruption action.
 
 ### load_balancer_controller_spec
 
@@ -272,6 +282,7 @@ The following arguments are supported:
 - `node_tags` - (Computed) - String
 - `node_instance_prefix` - (Computed) - String
 - `pd_csi_driver` - (Computed) - [pd_csi_driver](#pd_csi_driver) - PDCSIDriver is the config for the PD CSI driver.
+- `binaries_location` - (Computed) - String - BinariesLocation is the location of the GCE cloud provider binaries.
 
 ### pd_csi_driver
 
@@ -471,7 +482,7 @@ The following arguments are supported:
 - `version` - (Computed) - String - Version is the version of etcd to run.
 - `leader_election_timeout` - (Computed) - Duration - LeaderElectionTimeout is the time (in milliseconds) for an etcd leader election timeout.
 - `heartbeat_interval` - (Computed) - Duration - HeartbeatInterval is the time (in milliseconds) for an etcd heartbeat interval.
-- `image` - (Computed) - String - Image is the etcd docker image to use. Setting this will ignore the Version specified.
+- `image` - (Computed) - String - Image is the etcd container image to use. Setting this will ignore the Version specified.
 - `backups` - (Computed) - [etcd_backup_spec](#etcd_backup_spec) - Backups describes how we do backups of etcd.
 - `manager` - (Computed) - [etcd_manager_spec](#etcd_manager_spec) - Manager describes the manager configuration.
 - `memory_request` - (Computed) - Quantity - MemoryRequest specifies the memory requests of each etcd container in the cluster.
@@ -532,67 +543,6 @@ The following arguments are supported:
 - `name` - (Computed) - String - Name of the environment variable. Must be a C_IDENTIFIER.
 - `value` - (Computed) - String - Variable references $(VAR_NAME) are expanded<br />using the previous defined environment variables in the container and<br />any service environment variables. If a variable cannot be resolved,<br />the reference in the input string will be unchanged. The $(VAR_NAME)<br />syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped<br />references will never be expanded, regardless of whether the variable<br />exists or not.<br />Defaults to "".<br />+optional.
 
-### containerd_config
-
-ContainerdConfig is the configuration for containerd.
-
-#### Argument Reference
-
-The following arguments are supported:
-
-- `address` - (Computed) - String - Address of containerd's GRPC server (default "/run/containerd/containerd.sock").
-- `config_override` - (Computed) - String - ConfigOverride is the complete containerd config file provided by the user.
-- `log_level` - (Computed) - String - LogLevel controls the logging details [trace, debug, info, warn, error, fatal, panic] (default "info").
-- `packages` - (Computed) - [packages_config](#packages_config) - Packages overrides the URL and hash for the packages.
-- `registry_mirrors` - (Computed) - Map(List(String)) - RegistryMirrors is list of image registries.
-- `root` - (Computed) - String - Root directory for persistent data (default "/var/lib/containerd").
-- `skip_install` - (Computed) - Bool - SkipInstall prevents kOps from installing and modifying containerd in any way (default "false").
-- `state` - (Computed) - String - State directory for execution state files (default "/run/containerd").
-- `version` - (Computed) - String - Version used to pick the containerd package.
-- `nvidia_gpu` - (Computed) - [nvidia_gpu_config](#nvidia_gpu_config) - NvidiaGPU configures the Nvidia GPU runtime.
-- `runc` - (Computed) - [runc](#runc) - Runc configures the runc runtime.
-- `se_linux_enabled` - (Computed) - Bool - SelinuxEnabled enables SELinux support.
-
-### packages_config
-
-#### Argument Reference
-
-The following arguments are supported:
-
-- `hash_amd64` - (Computed) - String - HashAmd64 overrides the hash for the AMD64 package.
-- `hash_arm64` - (Computed) - String - HashArm64 overrides the hash for the ARM64 package.
-- `url_amd64` - (Computed) - String - UrlAmd64 overrides the URL for the AMD64 package.
-- `url_arm64` - (Computed) - String - UrlArm64 overrides the URL for the ARM64 package.
-
-### nvidia_gpu_config
-
-#### Argument Reference
-
-The following arguments are supported:
-
-- `driver_package` - (Computed) - String - Package is the name of the nvidia driver package that will be installed.<br />Default is "nvidia-headless-510-server".
-- `enabled` - (Computed) - Bool - Enabled determines if kOps will install the Nvidia GPU runtime and drivers.<br />They will only be installed on intances that has an Nvidia GPU.
-- `dcgm_exporter` - (Computed) - [dcgm_exporter_config](#dcgm_exporter_config) - DCGMExporterConfig configures the DCGM exporter.
-
-### dcgm_exporter_config
-
-DCGMExporterConfig configures the DCGM exporter.<br />Only the DCGMExporterConfig in the cluster level takes effect. Configurations on the Instance Group are ignored.
-
-#### Argument Reference
-
-The following arguments are supported:
-
-- `enabled` - (Computed) - Bool - Enabled determines if kOps will install the DCGM exporter.
-
-### runc
-
-#### Argument Reference
-
-The following arguments are supported:
-
-- `version` - (Computed) - String - Version used to pick the runc package.
-- `packages` - (Computed) - [packages_config](#packages_config) - Packages overrides the URL and hash for the packages.
-
 ### docker_config
 
 DockerConfig is the configuration for docker.
@@ -635,6 +585,79 @@ The following arguments are supported:
 - `storage_opts` - (Computed) - List(String) - StorageOpts is a series of options passed to the storage driver.
 - `user_namespace_remap` - (Computed) - String - UserNamespaceRemap sets the user namespace remapping option for the docker daemon.
 - `version` - (Computed) - String - Version is consumed by the nodeup and used to pick the docker version.
+
+### packages_config
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `hash_amd64` - (Computed) - String - HashAmd64 overrides the hash for the AMD64 package.
+- `hash_arm64` - (Computed) - String - HashArm64 overrides the hash for the ARM64 package.
+- `url_amd64` - (Computed) - String - UrlAmd64 overrides the URL for the AMD64 package.
+- `url_arm64` - (Computed) - String - UrlArm64 overrides the URL for the ARM64 package.
+
+### containerd_config
+
+ContainerdConfig is the configuration for containerd.
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `address` - (Computed) - String - Address of containerd's GRPC server (default "/run/containerd/containerd.sock").
+- `config_additions` - (Computed) - Map(IntOrString) - ConfigAdditions adds additional config entries to the generated config file.
+- `config_override` - (Computed) - String - ConfigOverride is the complete containerd config file provided by the user.
+- `log_level` - (Computed) - String - LogLevel controls the logging details [trace, debug, info, warn, error, fatal, panic] (default "info").
+- `packages` - (Computed) - [packages_config](#packages_config) - Packages overrides the URL and hash for the packages.
+- `registry_mirrors` - (Computed) - Map(List(String)) - RegistryMirrors is list of image registries.
+- `root` - (Computed) - String - Root directory for persistent data (default "/var/lib/containerd").
+- `skip_install` - (Computed) - Bool - SkipInstall prevents kOps from installing and modifying containerd in any way (default "false").
+- `state` - (Computed) - String - State directory for execution state files (default "/run/containerd").
+- `version` - (Computed) - String - Version used to pick the containerd package.
+- `nvidia_gpu` - (Computed) - [nvidia_gpu_config](#nvidia_gpu_config) - NvidiaGPU configures the Nvidia GPU runtime.
+- `runc` - (Computed) - [runc](#runc) - Runc configures the runc runtime.
+- `se_linux_enabled` - (Computed) - Bool - SelinuxEnabled enables SELinux support.
+- `nri` - (Computed) - [nri_config](#nri_config) - NRI configures the Node Resource Interface.
+
+### nvidia_gpu_config
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `driver_package` - (Computed) - String - Package is the name of the nvidia driver package that will be installed.<br />Default is "nvidia-headless-510-server".
+- `enabled` - (Computed) - Bool - Enabled determines if kOps will install the Nvidia GPU runtime and drivers.<br />They will only be installed on intances that has an Nvidia GPU.
+- `dcgm_exporter` - (Computed) - [dcgm_exporter_config](#dcgm_exporter_config) - DCGMExporterConfig configures the DCGM exporter.
+
+### dcgm_exporter_config
+
+DCGMExporterConfig configures the DCGM exporter.<br />Only the DCGMExporterConfig in the cluster level takes effect. Configurations on the Instance Group are ignored.
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `enabled` - (Computed) - Bool - Enabled determines if kOps will install the DCGM exporter.
+
+### runc
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `version` - (Computed) - String - Version used to pick the runc package.
+- `packages` - (Computed) - [packages_config](#packages_config) - Packages overrides the URL and hash for the packages.
+
+### nri_config
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `enabled` - (Computed) - Bool - Enable NRI support in containerd.
+- `plugin_registration_timeout` - (Computed) - Duration - PluginRegistrationTimeout is the timeout for plugin registration.
+- `plugin_request_timeout` - (Computed) - Duration - PluginRequestTimeout is the timeout for a plugin to handle a request.
 
 ### kube_dns_config
 
@@ -761,10 +784,12 @@ Defines a set of pods (namely those matching the labelSelector<br />relative to 
 
 The following arguments are supported:
 
-- `label_selector` - (Computed) - [label_selector](#label_selector) - A label query over a set of resources, in this case pods.<br />+optional.
+- `label_selector` - (Computed) - [label_selector](#label_selector) - A label query over a set of resources, in this case pods.<br />If it's null, this PodAffinityTerm matches with no Pods.<br />+optional.
 - `namespaces` - (Computed) - List(String) - namespaces specifies a static list of namespace names that the term applies to.<br />The term is applied to the union of the namespaces listed in this field<br />and the ones selected by namespaceSelector.<br />null or empty namespaces list and null namespaceSelector means "this pod's namespace".<br />+optional.
 - `topology_key` - (Computed) - String - This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching<br />the labelSelector in the specified namespaces, where co-located is defined as running on a node<br />whose value of the label with key topologyKey matches that of any node on which any of the<br />selected pods is running.<br />Empty topologyKey is not allowed.
 - `namespace_selector` - (Computed) - [label_selector](#label_selector) - A label query over the set of namespaces that the term applies to.<br />The term is applied to the union of the namespaces selected by this field<br />and the ones listed in the namespaces field.<br />null selector and null or empty namespaces list means "this pod's namespace".<br />An empty selector ({}) matches all namespaces.<br />+optional.
+- `match_label_keys` - (Computed) - List(String) - MatchLabelKeys is a set of pod label keys to select which pods will<br />be taken into consideration. The keys are used to lookup values from the<br />incoming pod labels, those key-value labels are merged with `LabelSelector` as `key in (value)`<br />to select the group of existing pods which pods will be taken into consideration<br />for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming<br />pod labels will be ignored. The default value is empty.<br />The same key is forbidden to exist in both MatchLabelKeys and LabelSelector.<br />Also, MatchLabelKeys cannot be set when LabelSelector isn't set.<br />This is an alpha field and requires enabling MatchLabelKeysInPodAffinity feature gate.<br />+listType=atomic<br />+optional.
+- `mismatch_label_keys` - (Computed) - List(String) - MismatchLabelKeys is a set of pod label keys to select which pods will<br />be taken into consideration. The keys are used to lookup values from the<br />incoming pod labels, those key-value labels are merged with `LabelSelector` as `key notin (value)`<br />to select the group of existing pods which pods will be taken into consideration<br />for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming<br />pod labels will be ignored. The default value is empty.<br />The same key is forbidden to exist in both MismatchLabelKeys and LabelSelector.<br />Also, MismatchLabelKeys cannot be set when LabelSelector isn't set.<br />This is an alpha field and requires enabling MatchLabelKeysInPodAffinity feature gate.<br />+listType=atomic<br />+optional.
 
 ### label_selector
 
@@ -822,7 +847,7 @@ The following arguments are supported:
 - `enabled` - (Computed) - Bool - Enabled activates the node-local-dns addon.
 - `external_core_file` - (Computed) - String - ExternalCoreFile is used to provide a complete NodeLocalDNS CoreFile by the user - ignores other provided flags which modify the CoreFile.
 - `additional_config` - (Computed) - String - AdditionalConfig is used to provide additional config for node local dns by the user - it will include the original CoreFile made by kOps.
-- `image` - (Computed) - String - Image overrides the default docker image used for node-local-dns addon.
+- `image` - (Computed) - String - Image overrides the default container image used for node-local-dns addon.
 - `local_ip` - (Computed) - String - Local listen IP address. It can be any IP in the 169.254.20.0/16 space or any other IP address that can be guaranteed to not collide with any existing IP.
 - `forward_to_kube_dns` - (Computed) - Bool - If enabled, nodelocal dns will use kubedns as a default upstream.
 - `memory_request` - (Computed) - Quantity - MemoryRequest specifies the memory requests of each node-local-dns container in the daemonset. Default 5Mi.
@@ -837,7 +862,7 @@ KubeAPIServerConfig defines the configuration for the kube api.
 
 The following arguments are supported:
 
-- `image` - (Computed) - String - Image is the docker container used.
+- `image` - (Computed) - String - Image is the container image used.
 - `disable_basic_auth` - (Computed) - Bool - DisableBasicAuth removes the --basic-auth-file flag.
 - `log_format` - (Computed) - String - LogFormat is the logging format of the api.<br />Supported values: text, json.<br />Default: text.
 - `log_level` - (Computed) - Int - LogLevel is the logging level of the api.
@@ -938,6 +963,7 @@ The following arguments are supported:
 - `event_ttl` - (Computed) - Duration - Amount of time to retain Kubernetes events.
 - `audit_dynamic_configuration` - (Computed) - Bool - AuditDynamicConfiguration enables dynamic audit configuration via AuditSinks.
 - `enable_profiling` - (Computed) - Bool - EnableProfiling enables profiling via web interface host:port/debug/pprof/.
+- `enable_contention_profiling` - (Computed) - Bool - EnableContentionProfiling enables block profiling, if profiling is enabled.
 - `cors_allowed_origins` - (Computed) - List(String) - CorsAllowedOrigins is a list of origins for CORS. An allowed origin can be a regular<br />expression to support subdomain matching. If this list is empty CORS will not be enabled.
 - `default_not_ready_toleration_seconds` - (Computed) - Int - DefaultNotReadyTolerationSeconds indicates the tolerationSeconds of the toleration for notReady:NoExecute that is added by default to every pod that does not already have such a toleration.
 - `default_unreachable_toleration_seconds` - (Computed) - Int - DefaultUnreachableTolerationSeconds indicates the tolerationSeconds of the toleration for unreachable:NoExecute that is added by default to every pod that does not already have such a toleration.
@@ -954,7 +980,7 @@ The following arguments are supported:
 - `log_format` - (Computed) - String - LogFormat is the logging format of the controler manager.<br />Supported values: text, json.<br />Default: text.
 - `log_level` - (Computed) - Int - LogLevel is the defined logLevel.
 - `service_account_private_key_file` - (Computed) - String - ServiceAccountPrivateKeyFile is the location of the private key for service account token signing.
-- `image` - (Computed) - String - Image is the docker image to use.
+- `image` - (Computed) - String - Image is the container image to use.
 - `cloud_provider` - (Computed) - String - CloudProvider is the provider for cloud services.
 - `cluster_name` - (Computed) - String - ClusterName is the instance prefix for the cluster.
 - `cluster_cidr` - (Computed) - String - ClusterCIDR is CIDR Range for Pods in cluster.
@@ -998,6 +1024,8 @@ The following arguments are supported:
 - `concurrent_resource_quota_syncs` - (Computed) - Int - The number of resourcequota objects that are allowed to sync concurrently.
 - `concurrent_serviceaccount_token_syncs` - (Computed) - Int - The number of serviceaccount objects that are allowed to sync concurrently to create tokens.
 - `concurrent_rc_syncs` - (Computed) - Int - The number of replicationcontroller objects that are allowed to sync concurrently.
+- `concurrent_horizontal_pod_austoscaler_syncs` - (Computed) - Int - The number of horizontal pod autoscaler objects that are allowed to sync concurrently (default 5).
+- `concurrent_job_syncs` - (Computed) - Int - The number of job objects that are allowed to sync concurrently (default 5).
 - `authentication_kubeconfig` - (Computed) - String - AuthenticationKubeconfig is the path to an Authentication Kubeconfig.
 - `authorization_kubeconfig` - (Computed) - String - AuthorizationKubeconfig is the path to an Authorization Kubeconfig.
 - `authorization_always_allow_paths` - (Computed) - List(String) - AuthorizationAlwaysAllowPaths is the list of HTTP paths to skip during authorization.
@@ -1005,7 +1033,12 @@ The following arguments are supported:
 - `endpoint_updates_batch_period` - (Computed) - Duration - The length of endpoint updates batching period. Processing of pod changes will be delayed by this duration<br />to join them with potential upcoming updates and reduce the overall number of endpoints updates.<br />Larger number = higher endpoint programming latency, but lower number of endpoints revision generated.
 - `endpoint_slice_updates_batch_period` - (Computed) - Duration - The length of endpoint slice updates batching period. Processing of pod changes will be delayed by this duration<br />to join them with potential upcoming updates and reduce the overall number of endpoints updates.<br />Larger number = higher endpoint programming latency, but lower number of endpoints revision generated.
 - `enable_profiling` - (Computed) - Bool - EnableProfiling enables profiling via web interface host:port/debug/pprof/.
+- `enable_contention_profiling` - (Computed) - Bool - EnableContentionProfiling enables block profiling, if profiling is enabled.
 - `enable_leader_migration` - (Computed) - Bool - EnableLeaderMigration enables controller leader migration.
+- `cpu_request` - (Computed) - Quantity - CPURequest, cpu request compute resource for kube-controler-manager. Defaults to "100m".
+- `cpu_limit` - (Computed) - Quantity - CPULimit, cpu limit compute resource for kube-controler-manager e.g. "500m".
+- `memory_request` - (Computed) - Quantity - MemoryRequest, memory request compute resource for kube-controler-manager e.g. "30Mi".
+- `memory_limit` - (Computed) - Quantity - MemoryLimit, memory limit compute resource for kube-controler-manager e.g. "30Mi".
 
 ### leader_election_configuration
 
@@ -1047,6 +1080,7 @@ The following arguments are supported:
 - `enable_leader_migration` - (Computed) - Bool - EnableLeaderMigration enables controller leader migration.
 - `cpu_request` - (Computed) - Quantity - CPURequest of NodeTerminationHandler container.<br />Default: 200m.
 - `node_status_update_frequency` - (Computed) - Duration - NodeStatusUpdateFrequency is the duration between node status updates. (default: 5m).
+- `concurrent_node_syncs` - (Computed) - Int - ConcurrentNodeSyncs is the number of workers concurrently synchronizing nodes. (default: 1).
 
 ### kube_scheduler_config
 
@@ -1059,19 +1093,26 @@ The following arguments are supported:
 - `master` - (Computed) - String - Master is a url to the kube master.
 - `log_format` - (Computed) - String - LogFormat is the logging format of the scheduler.<br />Supported values: text, json.<br />Default: text.
 - `log_level` - (Computed) - Int - LogLevel is the logging level.
-- `image` - (Computed) - String - Image is the docker image to use.
+- `image` - (Computed) - String - Image is the container image to use.
 - `leader_election` - (Computed) - [leader_election_configuration](#leader_election_configuration) - LeaderElection defines the configuration of leader election client.
-- `use_policy_config_map` - (Computed) - Bool - UsePolicyConfigMap enable setting the scheduler policy from a configmap.
+- `use_policy_config_map` - (Computed) - Bool - UsePolicyConfigMap enable setting the scheduler policy from a configmap<br />Deprecated - use KubeSchedulerConfiguration instead.
 - `feature_gates` - (Computed) - Map(String) - FeatureGates is set of key=value pairs that describe feature gates for alpha/experimental features.
 - `max_persistent_volumes` - (Computed) - Int - MaxPersistentVolumes changes the maximum number of persistent volumes the scheduler will scheduler onto the same<br />node. Only takes effect if value is positive. This corresponds to the KUBE_MAX_PD_VOLS environment variable.<br />The default depends on the version and the cloud provider<br />as outlined: https://kubernetes.io/docs/concepts/storage/storage-limits/.
 - `qps` - (Computed) - Quantity - Qps sets the maximum qps to send to apiserver after the burst quota is exhausted.
 - `burst` - (Computed) - Int - Burst sets the maximum qps to send to apiserver after the burst quota is exhausted.
+- `kube_api_qps` - (Computed) - Quantity - KubeAPIQPS QPS to use while talking with kubernetes apiserver. (default 20).
+- `kube_api_burst` - (Computed) - Int - KubeAPIBurst Burst to use while talking with kubernetes apiserver. (default 30).
 - `authentication_kubeconfig` - (Computed) - String - AuthenticationKubeconfig is the path to an Authentication Kubeconfig.
 - `authorization_kubeconfig` - (Computed) - String - AuthorizationKubeconfig is the path to an Authorization Kubeconfig.
 - `authorization_always_allow_paths` - (Computed) - List(String) - AuthorizationAlwaysAllowPaths is the list of HTTP paths to skip during authorization.
 - `enable_profiling` - (Computed) - Bool - EnableProfiling enables profiling via web interface host:port/debug/pprof/.
+- `enable_contention_profiling` - (Computed) - Bool - EnableContentionProfiling enables block profiling, if profiling is enabled.
 - `tls_cert_file` - (Computed) - String - TLSCertFile is the file containing the TLS server certificate.
 - `tls_private_key_file` - (Computed) - String - TLSPrivateKeyFile is the file containing the private key for the TLS server certificate.
+- `cpu_request` - (Computed) - Quantity - CPURequest, cpu request compute resource for scheduler. Defaults to "100m".
+- `cpu_limit` - (Computed) - Quantity - CPULimit, cpu limit compute resource for scheduler e.g. "500m".
+- `memory_request` - (Computed) - Quantity - MemoryRequest, memory request compute resource for scheduler e.g. "30Mi".
+- `memory_limit` - (Computed) - Quantity - MemoryLimit, memory limit compute resource for scheduler e.g. "30Mi".
 
 ### kube_proxy_config
 
@@ -1150,7 +1191,7 @@ The following arguments are supported:
 - `resolver_config` - (Computed) - String - ResolverConfig is the resolver configuration file used as the basis for the container DNS resolution configuration."), [].
 - `reconcile_cidr` - (Computed) - Bool - ReconcileCIDR is Reconcile node CIDR with the CIDR specified by the<br />API server. No-op if register-node or configure-cbr0 is false.
 - `register_schedulable` - (Computed) - Bool - registerSchedulable tells the kubelet to register the node as schedulable. No-op if register-node is false.
-- `serialize_image_pulls` - (Computed) - Bool - // SerializeImagePulls when enabled, tells the Kubelet to pull images one<br />// at a time. We recommend *not* changing the default value on nodes that<br />// run docker daemon with version  < 1.9 or an Aufs storage backend.<br />// Issue #10959 has more details.
+- `serialize_image_pulls` - (Computed) - Bool - SerializeImagePulls when enabled, tells the Kubelet to pull images one at a time.
 - `node_labels` - (Computed) - Map(String) - NodeLabels to add when registering the node in the cluster.
 - `non_masquerade_cidr` - (Computed) - String - NonMasqueradeCIDR configures masquerading: traffic to IPs outside this range will use IP masquerade.
 - `enable_custom_metrics` - (Computed) - Bool - Enable gathering custom metrics.
@@ -1181,7 +1222,7 @@ The following arguments are supported:
 - `experimental_allowed_unsafe_sysctls` - (Computed) - List(String) - ExperimentalAllowedUnsafeSysctls are passed to the kubelet config to whitelist allowable sysctls<br />Was promoted to beta and renamed. https://github.com/kubernetes/kubernetes/pull/63717.
 - `allowed_unsafe_sysctls` - (Computed) - List(String) - AllowedUnsafeSysctls are passed to the kubelet config to whitelist allowable sysctls.
 - `streaming_connection_idle_timeout` - (Computed) - Duration - StreamingConnectionIdleTimeout is the maximum time a streaming connection can be idle before the connection is automatically closed.
-- `docker_disable_shared_pid` - (Computed) - Bool - DockerDisableSharedPID uses a shared PID namespace for containers in a pod.
+- `docker_disable_shared_pid` - (Computed) - Bool - DockerDisableSharedPID was removed.
 - `root_dir` - (Computed) - String - RootDir is the directory path for managing kubelet files (volume mounts,etc).
 - `authentication_token_webhook` - (Computed) - Bool - AuthenticationTokenWebhook uses the TokenReview API to determine authentication for bearer tokens.
 - `authentication_token_webhook_cache_ttl` - (Computed) - Duration - AuthenticationTokenWebhook sets the duration to cache responses from the webhook token authenticator. Default is 2m. (default 2m0s).
@@ -1247,7 +1288,7 @@ NodeProblemDetector determines the node problem detector configuration.
 The following arguments are supported:
 
 - `enabled` - (Computed) - Bool - Enabled enables the NodeProblemDetector.<br />Default: false.
-- `image` - (Computed) - String - Image is the NodeProblemDetector docker container used.
+- `image` - (Computed) - String - Image is the NodeProblemDetector container image used.
 - `memory_request` - (Computed) - Quantity - MemoryRequest of NodeProblemDetector container.<br />Default: 80Mi.
 - `cpu_request` - (Computed) - Quantity - CPURequest of NodeProblemDetector container.<br />Default: 10m.
 - `memory_limit` - (Computed) - Quantity - MemoryLimit of NodeProblemDetector container.<br />Default: 80Mi.
@@ -1262,7 +1303,7 @@ MetricsServerConfig determines the metrics server configuration.
 The following arguments are supported:
 
 - `enabled` - (Computed) - Bool - Enabled enables the metrics server.<br />Default: false.
-- `image` - (Computed) - String - Image is the docker container used.<br />Default: the latest supported image for the specified kubernetes version.
+- `image` - (Computed) - String - Image is the container image used.<br />Default: the latest supported image for the specified kubernetes version.
 - `insecure` - (Computed) - Bool - Insecure determines if API server will validate metrics server TLS cert.<br />Default: true.
 
 ### cert_manager_config
@@ -1275,10 +1316,11 @@ The following arguments are supported:
 
 - `enabled` - (Computed) - Bool - Enabled enables the cert manager.<br />Default: false.
 - `managed` - (Computed) - Bool - Managed controls if cert-manager is manged and deployed by kOps.<br />The deployment of cert-manager is skipped if this is set to false.
-- `image` - (Computed) - String - Image is the docker container used.<br />Default: the latest supported image for the specified kubernetes version.
+- `image` - (Computed) - String - Image is the container image used.<br />Default: the latest supported image for the specified kubernetes version.
 - `default_issuer` - (Computed) - String - defaultIssuer sets a default clusterIssuer<br />Default: none.
 - `nameservers` - (Computed) - List(String) - nameservers is a list of nameserver IP addresses to use instead of the pod defaults.<br />Default: none.
 - `hosted_zone_ids` - (Computed) - List(String) - HostedZoneIDs is a list of route53 hostedzone IDs that cert-manager will be allowed to do dns-01 validation for.
+- `feature_gates` - (Computed) - Map(Bool) - FeatureGates is a list of experimental features that can be enabled or disabled.
 
 ### networking_spec
 
@@ -1295,7 +1337,7 @@ The following arguments are supported:
 - `tag_subnets` - (Computed) - Bool([Nullable](#nullable-arguments)) - TagSubnets controls if tags are added to subnets to enable use by load balancers (AWS only). Default: true.
 - `topology` - (Computed) - [topology_spec](#topology_spec) - Topology defines the type of network topology to use on the cluster - default public<br />This is heavily weighted towards AWS for the time being, but should also be agnostic enough<br />to port out to GCE later if needed.
 - `egress_proxy` - (Computed) - [egress_proxy_spec](#egress_proxy_spec) - HTTPProxy defines connection information to support use of a private cluster behind an forward HTTP Proxy.
-- `non_masquerade_cidr` - (Computed) - String - NonMasqueradeCIDR is the CIDR for the internal k8s network (on which pods & services live)<br />It cannot overlap ServiceClusterIPRange.
+- `non_masquerade_cidr` - (Computed) - String - NonMasqueradeCIDR is the CIDR for the internal k8s network (for pod IPs)<br />It cannot overlap ServiceClusterIPRange.
 - `pod_cidr` - (Computed) - String - PodCIDR is the CIDR from which we allocate IPs for pods.
 - `service_cluster_ip_range` - (Computed) - String - ServiceClusterIPRange is the CIDR, from the internal network, where we allocate IPs for services.
 - `isolate_control_plane` - (Computed) - Bool - IsolateControlPlane determines whether we should lock down masters so that they are not on the pod network.<br />true is the kube-up behaviour, but it is very surprising: it means that daemonsets only work on the master<br />if they have hostNetwork=true.<br />false is now the default, and it will:<br /> * give the master a normal PodCIDR<br /> * run kube-proxy on the master<br /> * enable debugging handlers on the master, so kubectl logs works.
@@ -1546,6 +1588,7 @@ The following arguments are supported:
 
 - `image` - (Computed) - String - Image is the container image name to use.
 - `init_image` - (Computed) - String - InitImage is the init container image name to use.
+- `network_policy_agent_image` - (Computed) - String - NetworkPolicyAgentImage is the container image to use for the network policy agent.
 - `env` - (Computed) - List([env_var](#env_var)) - Env is a list of environment variables to set in the container.
 
 ### cilium_networking_spec
@@ -1606,6 +1649,7 @@ The following arguments are supported:
 - `hubble` - (Computed) - [hubble_spec](#hubble_spec) - Hubble configures the Hubble service on the Cilium agent.
 - `disable_cnp_status_updates` - (Computed) - Bool - DisableCNPStatusUpdates determines if CNP NodeStatus updates will be sent to the Kubernetes api-server.
 - `enable_service_topology` - (Computed) - Bool - EnableServiceTopology determine if cilium should use topology aware hints.
+- `ingress` - (Computed) - [cilium_ingress_spec](#cilium_ingress_spec) - Ingress specifies the configuration for Cilium Ingress settings.
 
 ### hubble_spec
 
@@ -1617,6 +1661,21 @@ The following arguments are supported:
 
 - `enabled` - (Computed) - Bool - Enabled decides if Hubble is enabled on the agent or not.
 - `metrics` - (Computed) - List(String) - Metrics is a list of metrics to collect. If empty or null, metrics are disabled.<br />See https://docs.cilium.io/en/stable/configuration/metrics/#hubble-exported-metrics.
+
+### cilium_ingress_spec
+
+CiliumIngressSpec configures Cilium Ingress settings.
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `enabled` - (Computed) - Bool - Enabled specifies whether Cilium Ingress is enabled.
+- `enforce_https` - (Computed) - Bool - EnforceHttps specifies whether HTTPS enforcement is enabled for Ingress traffic.<br />Default: true.
+- `enable_secrets_sync` - (Computed) - Bool - EnableSecretsSync specifies whether synchronization of secrets is enabled.<br />Default: true.
+- `load_balancer_annotation_prefixes` - (Computed) - String - LoadBalancerAnnotationPrefixes specifies annotation prefixes for Load Balancer configuration.<br />Default: "service.beta.kubernetes.io service.kubernetes.io cloud.google.com".
+- `default_load_balancer_mode` - (Computed) - String - DefaultLoadBalancerMode specifies the default load balancer mode.<br />Possible values: 'shared' or 'dedicated'<br />Default: dedicated.
+- `shared_load_balancer_service_name` - (Computed) - String - SharedLoadBalancerServiceName specifies the name of the shared load balancer service.<br />Default: cilium-ingress.
 
 ### lyft_vpc_networking_spec
 
@@ -1717,7 +1776,7 @@ This resource has no attributes.
 
 The following arguments are supported:
 
-- `image` - (Computed) - String - Image is the AWS IAM Authenticator docker image to use.
+- `image` - (Computed) - String - Image is the AWS IAM Authenticator container image to use.
 - `backend_mode` - (Computed) - String - BackendMode is the AWS IAM Authenticator backend to use. Default MountedFile.
 - `cluster_id` - (Computed) - String - ClusterID identifies the cluster performing authentication to prevent certain replay attacks. Default master public DNS name.
 - `memory_request` - (Computed) - Quantity - MemoryRequest memory request of AWS IAM Authenticator container. Default 20Mi.
@@ -1821,7 +1880,7 @@ ExecContainerAction defines an hood action.
 
 The following arguments are supported:
 
-- `image` - (Computed) - String - Image is the docker image.
+- `image` - (Computed) - String - Image is the container image.
 - `command` - (Computed) - List(String) - Command is the command supplied to the above image.
 - `environment` - (Computed) - Map(String) - Environment is a map of environment variables added to the hook.
 
@@ -1833,9 +1892,9 @@ AssetsSpec defines the privately hosted assets.
 
 The following arguments are supported:
 
-- `container_registry` - (Computed) - String - ContainerRegistry is a url for to a docker registry.
+- `container_registry` - (Computed) - String - ContainerRegistry is a url for to a container registry.
 - `file_repository` - (Computed) - String - FileRepository is the url for a private file serving repository.
-- `container_proxy` - (Computed) - String - ContainerProxy is a url for a pull-through proxy of a docker registry.
+- `container_proxy` - (Computed) - String - ContainerProxy is a url for a pull-through proxy of a container registry.
 
 ### iam_spec
 
@@ -1898,6 +1957,7 @@ The following arguments are supported:
 - `aws_use_static_instance_list` - (Computed) - Bool - AWSUseStaticInstanceList makes cluster autoscaler to use statically defined set of AWS EC2 Instance List.<br />Default: false.
 - `ignore_daemon_sets_utilization` - (Computed) - Bool - IgnoreDaemonSetsUtilization causes the cluster autoscaler to ignore DaemonSet-managed pods when calculating resource utilization for scaling down.<br />Default: false.
 - `scale_down_utilization_threshold` - (Computed) - String - ScaleDownUtilizationThreshold determines the utilization threshold for node scale-down.<br />Default: 0.5.
+- `skip_nodes_with_custom_controller_pods` - (Computed) - Bool - SkipNodesWithCustomControllerPods makes the cluster autoscaler skip scale-down of nodes with pods owned by custom controllers.<br />Default: true.
 - `skip_nodes_with_system_pods` - (Computed) - Bool - SkipNodesWithSystemPods makes the cluster autoscaler skip scale-down of nodes with non-DaemonSet pods in the kube-system namespace.<br />Default: true.
 - `skip_nodes_with_local_storage` - (Computed) - Bool - SkipNodesWithLocalStorage makes the cluster autoscaler skip scale-down of nodes with local storage.<br />Default: true.
 - `new_pod_scale_up_delay` - (Computed) - String - NewPodScaleUpDelay causes the cluster autoscaler to ignore unschedulable pods until they are a certain "age", regardless of the scan-interval<br />Default: 0s.
@@ -1905,7 +1965,7 @@ The following arguments are supported:
 - `scale_down_unneeded_time` - (Computed) - String - scaleDownUnneededTime determines the time a node should be unneeded before it is eligible for scale down<br />Default: 10m0s.
 - `scale_down_unready_time` - (Computed) - String - ScaleDownUnreadyTime determines the time an unready node should be unneeded before it is eligible for scale down<br />Default: 20m0s.
 - `cordon_node_before_terminating` - (Computed) - Bool - CordonNodeBeforeTerminating should CA cordon nodes before terminating during downscale process<br />Default: false.
-- `image` - (Computed) - String - Image is the docker container used.<br />Default: the latest supported image for the specified kubernetes version.
+- `image` - (Computed) - String - Image is the container image used.<br />Default: the latest supported image for the specified kubernetes version.
 - `memory_request` - (Computed) - Quantity - MemoryRequest of cluster autoscaler container.<br />Default: 300Mi.
 - `cpu_request` - (Computed) - Quantity - CPURequest of cluster autoscaler container.<br />Default: 100m.
 - `max_node_provision_time` - (Computed) - String - MaxNodeProvisionTime determines how long CAS will wait for a node to join the cluster.

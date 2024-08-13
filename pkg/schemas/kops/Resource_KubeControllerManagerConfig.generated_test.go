@@ -69,6 +69,8 @@ func TestExpandResourceKubeControllerManagerConfig(t *testing.T) {
 					"concurrent_resource_quota_syncs":                     nil,
 					"concurrent_serviceaccount_token_syncs":               nil,
 					"concurrent_rc_syncs":                                 nil,
+					"concurrent_horizontal_pod_austoscaler_syncs":         nil,
+					"concurrent_job_syncs":                                nil,
 					"authentication_kubeconfig":                           "",
 					"authorization_kubeconfig":                            "",
 					"authorization_always_allow_paths":                    func() []interface{} { return nil }(),
@@ -76,7 +78,12 @@ func TestExpandResourceKubeControllerManagerConfig(t *testing.T) {
 					"endpoint_updates_batch_period":                       nil,
 					"endpoint_slice_updates_batch_period":                 nil,
 					"enable_profiling":                                    nil,
+					"enable_contention_profiling":                         nil,
 					"enable_leader_migration":                             nil,
+					"cpu_request":                                         nil,
+					"cpu_limit":                                           nil,
+					"memory_request":                                      nil,
+					"memory_limit":                                        nil,
 				},
 			},
 			want: _default,
@@ -142,6 +149,8 @@ func TestFlattenResourceKubeControllerManagerConfigInto(t *testing.T) {
 		"concurrent_resource_quota_syncs":                     nil,
 		"concurrent_serviceaccount_token_syncs":               nil,
 		"concurrent_rc_syncs":                                 nil,
+		"concurrent_horizontal_pod_austoscaler_syncs":         nil,
+		"concurrent_job_syncs":                                nil,
 		"authentication_kubeconfig":                           "",
 		"authorization_kubeconfig":                            "",
 		"authorization_always_allow_paths":                    func() []interface{} { return nil }(),
@@ -149,7 +158,12 @@ func TestFlattenResourceKubeControllerManagerConfigInto(t *testing.T) {
 		"endpoint_updates_batch_period":                       nil,
 		"endpoint_slice_updates_batch_period":                 nil,
 		"enable_profiling":                                    nil,
+		"enable_contention_profiling":                         nil,
 		"enable_leader_migration":                             nil,
+		"cpu_request":                                         nil,
+		"cpu_limit":                                           nil,
+		"memory_request":                                      nil,
+		"memory_limit":                                        nil,
 	}
 	type args struct {
 		in kops.KubeControllerManagerConfig
@@ -695,6 +709,28 @@ func TestFlattenResourceKubeControllerManagerConfigInto(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "ConcurrentHorizontalPodAustoscalerSyncs - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.ConcurrentHorizontalPodAustoscalerSyncs = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ConcurrentJobSyncs - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.ConcurrentJobSyncs = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "AuthenticationKubeconfig - default",
 			args: args{
 				in: func() kops.KubeControllerManagerConfig {
@@ -772,11 +808,66 @@ func TestFlattenResourceKubeControllerManagerConfigInto(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "EnableContentionProfiling - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.EnableContentionProfiling = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "EnableLeaderMigration - default",
 			args: args{
 				in: func() kops.KubeControllerManagerConfig {
 					subject := kops.KubeControllerManagerConfig{}
 					subject.EnableLeaderMigration = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CpuRequest - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.CPURequest = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CpuLimit - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.CPULimit = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryRequest - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.MemoryRequest = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryLimit - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.MemoryLimit = nil
 					return subject
 				}(),
 			},
@@ -844,6 +935,8 @@ func TestFlattenResourceKubeControllerManagerConfig(t *testing.T) {
 		"concurrent_resource_quota_syncs":                     nil,
 		"concurrent_serviceaccount_token_syncs":               nil,
 		"concurrent_rc_syncs":                                 nil,
+		"concurrent_horizontal_pod_austoscaler_syncs":         nil,
+		"concurrent_job_syncs":                                nil,
 		"authentication_kubeconfig":                           "",
 		"authorization_kubeconfig":                            "",
 		"authorization_always_allow_paths":                    func() []interface{} { return nil }(),
@@ -851,7 +944,12 @@ func TestFlattenResourceKubeControllerManagerConfig(t *testing.T) {
 		"endpoint_updates_batch_period":                       nil,
 		"endpoint_slice_updates_batch_period":                 nil,
 		"enable_profiling":                                    nil,
+		"enable_contention_profiling":                         nil,
 		"enable_leader_migration":                             nil,
+		"cpu_request":                                         nil,
+		"cpu_limit":                                           nil,
+		"memory_request":                                      nil,
+		"memory_limit":                                        nil,
 	}
 	type args struct {
 		in kops.KubeControllerManagerConfig
@@ -1397,6 +1495,28 @@ func TestFlattenResourceKubeControllerManagerConfig(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "ConcurrentHorizontalPodAustoscalerSyncs - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.ConcurrentHorizontalPodAustoscalerSyncs = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ConcurrentJobSyncs - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.ConcurrentJobSyncs = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "AuthenticationKubeconfig - default",
 			args: args{
 				in: func() kops.KubeControllerManagerConfig {
@@ -1474,11 +1594,66 @@ func TestFlattenResourceKubeControllerManagerConfig(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "EnableContentionProfiling - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.EnableContentionProfiling = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "EnableLeaderMigration - default",
 			args: args{
 				in: func() kops.KubeControllerManagerConfig {
 					subject := kops.KubeControllerManagerConfig{}
 					subject.EnableLeaderMigration = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CpuRequest - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.CPURequest = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CpuLimit - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.CPULimit = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryRequest - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.MemoryRequest = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryLimit - default",
+			args: args{
+				in: func() kops.KubeControllerManagerConfig {
+					subject := kops.KubeControllerManagerConfig{}
+					subject.MemoryLimit = nil
 					return subject
 				}(),
 			},

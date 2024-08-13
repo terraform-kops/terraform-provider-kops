@@ -15,26 +15,27 @@ var _ = Schema
 func ResourceClusterAutoscalerConfig() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"enabled":                          OptionalBool(),
-			"expander":                         OptionalString(),
-			"balance_similar_node_groups":      OptionalBool(),
-			"aws_use_static_instance_list":     OptionalBool(),
-			"ignore_daemon_sets_utilization":   OptionalBool(),
-			"scale_down_utilization_threshold": OptionalString(),
-			"skip_nodes_with_system_pods":      RequiredBool(),
-			"skip_nodes_with_local_storage":    RequiredBool(),
-			"new_pod_scale_up_delay":           OptionalString(),
-			"scale_down_delay_after_add":       OptionalString(),
-			"scale_down_unneeded_time":         OptionalString(),
-			"scale_down_unready_time":          OptionalString(),
-			"cordon_node_before_terminating":   OptionalBool(),
-			"image":                            OptionalString(),
-			"memory_request":                   OptionalQuantity(),
-			"cpu_request":                      OptionalQuantity(),
-			"max_node_provision_time":          OptionalString(),
-			"pod_annotations":                  OptionalMap(String()),
-			"create_priority_expender_config":  OptionalBool(),
-			"custom_priority_expander_config":  OptionalComplexMap(List(String())),
+			"enabled":                                OptionalBool(),
+			"expander":                               OptionalString(),
+			"balance_similar_node_groups":            OptionalBool(),
+			"aws_use_static_instance_list":           OptionalBool(),
+			"ignore_daemon_sets_utilization":         OptionalBool(),
+			"scale_down_utilization_threshold":       OptionalString(),
+			"skip_nodes_with_custom_controller_pods": OptionalBool(),
+			"skip_nodes_with_system_pods":            RequiredBool(),
+			"skip_nodes_with_local_storage":          RequiredBool(),
+			"new_pod_scale_up_delay":                 OptionalString(),
+			"scale_down_delay_after_add":             OptionalString(),
+			"scale_down_unneeded_time":               OptionalString(),
+			"scale_down_unready_time":                OptionalString(),
+			"cordon_node_before_terminating":         OptionalBool(),
+			"image":                                  OptionalString(),
+			"memory_request":                         OptionalQuantity(),
+			"cpu_request":                            OptionalQuantity(),
+			"max_node_provision_time":                OptionalString(),
+			"pod_annotations":                        OptionalMap(String()),
+			"create_priority_expender_config":        OptionalBool(),
+			"custom_priority_expander_config":        OptionalComplexMap(List(String())),
 		},
 	}
 
@@ -144,6 +145,25 @@ func ExpandResourceClusterAutoscalerConfig(in map[string]interface{}) kops.Clust
 				}(string(ExpandString(in)))
 			}(in)
 		}(in["scale_down_utilization_threshold"]),
+		SkipNodesWithCustomControllerPods: func(in interface{}) *bool {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
+		}(in["skip_nodes_with_custom_controller_pods"]),
 		SkipNodesWithSystemPods: func(in interface{}) *bool {
 			return func(in interface{}) *bool {
 				if in == nil {
@@ -450,6 +470,16 @@ func FlattenResourceClusterAutoscalerConfigInto(in kops.ClusterAutoscalerConfig,
 			}(*in)
 		}(in)
 	}(in.ScaleDownUtilizationThreshold)
+	out["skip_nodes_with_custom_controller_pods"] = func(in *bool) interface{} {
+		return func(in *bool) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in bool) interface{} {
+				return FlattenBool(bool(in))
+			}(*in)
+		}(in)
+	}(in.SkipNodesWithCustomControllerPods)
 	out["skip_nodes_with_system_pods"] = func(in *bool) interface{} {
 		return func(in *bool) interface{} {
 			if in == nil {

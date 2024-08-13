@@ -64,6 +64,7 @@ func ResourceCiliumNetworkingSpec() *schema.Resource {
 			"hubble":                            OptionalStruct(ResourceHubbleSpec()),
 			"disable_cnp_status_updates":        OptionalBool(),
 			"enable_service_topology":           OptionalBool(),
+			"ingress":                           OptionalStruct(ResourceCiliumIngressSpec()),
 		},
 	}
 
@@ -431,6 +432,24 @@ func ExpandResourceCiliumNetworkingSpec(in map[string]interface{}) kops.CiliumNe
 		EnableServiceTopology: func(in interface{}) bool {
 			return bool(ExpandBool(in))
 		}(in["enable_service_topology"]),
+		Ingress: func(in interface{}) *kops.CiliumIngressSpec {
+			return func(in interface{}) *kops.CiliumIngressSpec {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in kops.CiliumIngressSpec) *kops.CiliumIngressSpec {
+					return &in
+				}(func(in interface{}) kops.CiliumIngressSpec {
+					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+						return ExpandResourceCiliumIngressSpec(in[0].(map[string]interface{}))
+					}
+					return kops.CiliumIngressSpec{}
+				}(in))
+			}(in)
+		}(in["ingress"]),
 	}
 }
 
@@ -688,6 +707,18 @@ func FlattenResourceCiliumNetworkingSpecInto(in kops.CiliumNetworkingSpec, out m
 	out["enable_service_topology"] = func(in bool) interface{} {
 		return FlattenBool(bool(in))
 	}(in.EnableServiceTopology)
+	out["ingress"] = func(in *kops.CiliumIngressSpec) interface{} {
+		return func(in *kops.CiliumIngressSpec) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in kops.CiliumIngressSpec) interface{} {
+				return func(in kops.CiliumIngressSpec) []interface{} {
+					return []interface{}{FlattenResourceCiliumIngressSpec(in)}
+				}(in)
+			}(*in)
+		}(in)
+	}(in.Ingress)
 }
 
 func FlattenResourceCiliumNetworkingSpec(in kops.CiliumNetworkingSpec) map[string]interface{} {

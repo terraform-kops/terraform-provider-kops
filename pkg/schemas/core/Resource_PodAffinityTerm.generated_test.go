@@ -21,10 +21,12 @@ func TestExpandResourcePodAffinityTerm(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
-					"label_selector":     nil,
-					"namespaces":         func() []interface{} { return nil }(),
-					"topology_key":       "",
-					"namespace_selector": nil,
+					"label_selector":      nil,
+					"namespaces":          func() []interface{} { return nil }(),
+					"topology_key":        "",
+					"namespace_selector":  nil,
+					"match_label_keys":    func() []interface{} { return nil }(),
+					"mismatch_label_keys": func() []interface{} { return nil }(),
 				},
 			},
 			want: _default,
@@ -42,10 +44,12 @@ func TestExpandResourcePodAffinityTerm(t *testing.T) {
 
 func TestFlattenResourcePodAffinityTermInto(t *testing.T) {
 	_default := map[string]interface{}{
-		"label_selector":     nil,
-		"namespaces":         func() []interface{} { return nil }(),
-		"topology_key":       "",
-		"namespace_selector": nil,
+		"label_selector":      nil,
+		"namespaces":          func() []interface{} { return nil }(),
+		"topology_key":        "",
+		"namespace_selector":  nil,
+		"match_label_keys":    func() []interface{} { return nil }(),
+		"mismatch_label_keys": func() []interface{} { return nil }(),
 	}
 	type args struct {
 		in core.PodAffinityTerm
@@ -101,6 +105,28 @@ func TestFlattenResourcePodAffinityTermInto(t *testing.T) {
 				in: func() core.PodAffinityTerm {
 					subject := core.PodAffinityTerm{}
 					subject.NamespaceSelector = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MatchLabelKeys - default",
+			args: args{
+				in: func() core.PodAffinityTerm {
+					subject := core.PodAffinityTerm{}
+					subject.MatchLabelKeys = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MismatchLabelKeys - default",
+			args: args{
+				in: func() core.PodAffinityTerm {
+					subject := core.PodAffinityTerm{}
+					subject.MismatchLabelKeys = nil
 					return subject
 				}(),
 			},
@@ -120,10 +146,12 @@ func TestFlattenResourcePodAffinityTermInto(t *testing.T) {
 
 func TestFlattenResourcePodAffinityTerm(t *testing.T) {
 	_default := map[string]interface{}{
-		"label_selector":     nil,
-		"namespaces":         func() []interface{} { return nil }(),
-		"topology_key":       "",
-		"namespace_selector": nil,
+		"label_selector":      nil,
+		"namespaces":          func() []interface{} { return nil }(),
+		"topology_key":        "",
+		"namespace_selector":  nil,
+		"match_label_keys":    func() []interface{} { return nil }(),
+		"mismatch_label_keys": func() []interface{} { return nil }(),
 	}
 	type args struct {
 		in core.PodAffinityTerm
@@ -179,6 +207,28 @@ func TestFlattenResourcePodAffinityTerm(t *testing.T) {
 				in: func() core.PodAffinityTerm {
 					subject := core.PodAffinityTerm{}
 					subject.NamespaceSelector = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MatchLabelKeys - default",
+			args: args{
+				in: func() core.PodAffinityTerm {
+					subject := core.PodAffinityTerm{}
+					subject.MatchLabelKeys = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MismatchLabelKeys - default",
+			args: args{
+				in: func() core.PodAffinityTerm {
+					subject := core.PodAffinityTerm{}
+					subject.MismatchLabelKeys = nil
 					return subject
 				}(),
 			},

@@ -14,6 +14,7 @@ var _ = Schema
 func ResourceNodeTerminationHandlerSpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
+			"delete_sqs_msg_if_node_not_found":  OptionalBool(),
 			"enabled":                           RequiredBool(),
 			"enable_spot_interruption_draining": RequiredBool(),
 			"enable_scheduled_event_draining":   OptionalBool(),
@@ -23,9 +24,14 @@ func ResourceNodeTerminationHandlerSpec() *schema.Resource {
 			"enable_sqs_termination_draining":   OptionalBool(),
 			"exclude_from_load_balancers":       OptionalBool(),
 			"managed_asg_tag":                   OptionalString(),
+			"pod_termination_grace_period":      OptionalInt(),
+			"taint_node":                        OptionalBool(),
+			"memory_limit":                      OptionalQuantity(),
 			"memory_request":                    OptionalQuantity(),
 			"cpu_request":                       OptionalQuantity(),
 			"version":                           OptionalString(),
+			"webhook_template":                  OptionalString(),
+			"webhook_url":                       OptionalString(),
 		},
 	}
 
@@ -37,6 +43,25 @@ func ExpandResourceNodeTerminationHandlerSpec(in map[string]interface{}) kops.No
 		panic("expand NodeTerminationHandlerSpec failure, in is nil")
 	}
 	return kops.NodeTerminationHandlerSpec{
+		DeleteSQSMsgIfNodeNotFound: func(in interface{}) *bool {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
+		}(in["delete_sqs_msg_if_node_not_found"]),
 		Enabled: func(in interface{}) *bool {
 			return func(in interface{}) *bool {
 				if in == nil {
@@ -196,6 +221,63 @@ func ExpandResourceNodeTerminationHandlerSpec(in map[string]interface{}) kops.No
 				}(string(ExpandString(in)))
 			}(in)
 		}(in["managed_asg_tag"]),
+		PodTerminationGracePeriod: func(in interface{}) *int32 {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *int32 {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in int32) *int32 {
+					return &in
+				}(int32(ExpandInt(in)))
+			}(in)
+		}(in["pod_termination_grace_period"]),
+		TaintNode: func(in interface{}) *bool {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
+		}(in["taint_node"]),
+		MemoryLimit: func(in interface{}) *resource.Quantity {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *resource.Quantity {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in resource.Quantity) *resource.Quantity {
+					return &in
+				}(ExpandQuantity(in))
+			}(in)
+		}(in["memory_limit"]),
 		MemoryRequest: func(in interface{}) *resource.Quantity {
 			if in == nil {
 				return nil
@@ -253,10 +335,58 @@ func ExpandResourceNodeTerminationHandlerSpec(in map[string]interface{}) kops.No
 				}(string(ExpandString(in)))
 			}(in)
 		}(in["version"]),
+		WebhookTemplate: func(in interface{}) *string {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *string {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in string) *string {
+					return &in
+				}(string(ExpandString(in)))
+			}(in)
+		}(in["webhook_template"]),
+		WebhookURL: func(in interface{}) *string {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *string {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in string) *string {
+					return &in
+				}(string(ExpandString(in)))
+			}(in)
+		}(in["webhook_url"]),
 	}
 }
 
 func FlattenResourceNodeTerminationHandlerSpecInto(in kops.NodeTerminationHandlerSpec, out map[string]interface{}) {
+	out["delete_sqs_msg_if_node_not_found"] = func(in *bool) interface{} {
+		return func(in *bool) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in bool) interface{} {
+				return FlattenBool(bool(in))
+			}(*in)
+		}(in)
+	}(in.DeleteSQSMsgIfNodeNotFound)
 	out["enabled"] = func(in *bool) interface{} {
 		return func(in *bool) interface{} {
 			if in == nil {
@@ -347,6 +477,36 @@ func FlattenResourceNodeTerminationHandlerSpecInto(in kops.NodeTerminationHandle
 			}(*in)
 		}(in)
 	}(in.ManagedASGTag)
+	out["pod_termination_grace_period"] = func(in *int32) interface{} {
+		return func(in *int32) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in int32) interface{} {
+				return FlattenInt(int(in))
+			}(*in)
+		}(in)
+	}(in.PodTerminationGracePeriod)
+	out["taint_node"] = func(in *bool) interface{} {
+		return func(in *bool) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in bool) interface{} {
+				return FlattenBool(bool(in))
+			}(*in)
+		}(in)
+	}(in.TaintNode)
+	out["memory_limit"] = func(in *resource.Quantity) interface{} {
+		return func(in *resource.Quantity) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in resource.Quantity) interface{} {
+				return FlattenQuantity(in)
+			}(*in)
+		}(in)
+	}(in.MemoryLimit)
 	out["memory_request"] = func(in *resource.Quantity) interface{} {
 		return func(in *resource.Quantity) interface{} {
 			if in == nil {
@@ -377,6 +537,26 @@ func FlattenResourceNodeTerminationHandlerSpecInto(in kops.NodeTerminationHandle
 			}(*in)
 		}(in)
 	}(in.Version)
+	out["webhook_template"] = func(in *string) interface{} {
+		return func(in *string) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in string) interface{} {
+				return FlattenString(string(in))
+			}(*in)
+		}(in)
+	}(in.WebhookTemplate)
+	out["webhook_url"] = func(in *string) interface{} {
+		return func(in *string) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in string) interface{} {
+				return FlattenString(string(in))
+			}(*in)
+		}(in)
+	}(in.WebhookURL)
 }
 
 func FlattenResourceNodeTerminationHandlerSpec(in kops.NodeTerminationHandlerSpec) map[string]interface{} {

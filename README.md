@@ -12,7 +12,7 @@ integration with the kOps api:
 
 ... just **pure go code.**
 
-Currently using kOps `v1.28.1` tested with Terraform `1.5.x` and higher.
+Currently using kOps `v1.29.2` tested with Terraform `1.5.x` and higher.
 
 **NOTES**
 
@@ -336,7 +336,7 @@ and running the `terraform import` command:
 
     resource "kops_cluster" "cluster" {
       name        = "cluster.example.com"
-      
+
       // ....
     }
     ```
@@ -362,7 +362,7 @@ and running the `terraform import` command:
     resource "kops_instance_group" "ig-0" {
       cluster_name = "cluster.example.com"
       name         = "ig-0"
-      
+
       // ....
     }
     ```
@@ -373,7 +373,7 @@ and running the `terraform import` command:
     terraform import kops_instance_group.ig-0 cluster.example.com/ig-0
     ```
 
-**NOTE**: the id of the instance group to be imported must be given in the 
+**NOTE**: the id of the instance group to be imported must be given in the
 `cluster name/instance group name` format.
 
 ## Getting kubeconfig file

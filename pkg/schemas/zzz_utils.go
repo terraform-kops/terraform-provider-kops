@@ -156,6 +156,14 @@ func FlattenIntOrString(in intstr.IntOrString) interface{} {
 	return in.String()
 }
 
+func DataSourceIntOrString() *schema.Schema {
+	return Simple(schema.TypeString, false, false, false)
+}
+
+func ResourceIntOrString() *schema.Schema {
+	return Simple(schema.TypeString, false, false, false)
+}
+
 // Map
 
 func RequiredMap(elem *schema.Schema) *schema.Schema {

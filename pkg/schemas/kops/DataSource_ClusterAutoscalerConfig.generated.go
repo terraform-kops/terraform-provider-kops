@@ -15,26 +15,27 @@ var _ = Schema
 func DataSourceClusterAutoscalerConfig() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"enabled":                          ComputedBool(),
-			"expander":                         ComputedString(),
-			"balance_similar_node_groups":      ComputedBool(),
-			"aws_use_static_instance_list":     ComputedBool(),
-			"ignore_daemon_sets_utilization":   ComputedBool(),
-			"scale_down_utilization_threshold": ComputedString(),
-			"skip_nodes_with_system_pods":      ComputedBool(),
-			"skip_nodes_with_local_storage":    ComputedBool(),
-			"new_pod_scale_up_delay":           ComputedString(),
-			"scale_down_delay_after_add":       ComputedString(),
-			"scale_down_unneeded_time":         ComputedString(),
-			"scale_down_unready_time":          ComputedString(),
-			"cordon_node_before_terminating":   ComputedBool(),
-			"image":                            ComputedString(),
-			"memory_request":                   ComputedQuantity(),
-			"cpu_request":                      ComputedQuantity(),
-			"max_node_provision_time":          ComputedString(),
-			"pod_annotations":                  ComputedMap(String()),
-			"create_priority_expender_config":  ComputedBool(),
-			"custom_priority_expander_config":  ComputedComplexMap(List(String())),
+			"enabled":                                ComputedBool(),
+			"expander":                               ComputedString(),
+			"balance_similar_node_groups":            ComputedBool(),
+			"aws_use_static_instance_list":           ComputedBool(),
+			"ignore_daemon_sets_utilization":         ComputedBool(),
+			"scale_down_utilization_threshold":       ComputedString(),
+			"skip_nodes_with_custom_controller_pods": ComputedBool(),
+			"skip_nodes_with_system_pods":            ComputedBool(),
+			"skip_nodes_with_local_storage":          ComputedBool(),
+			"new_pod_scale_up_delay":                 ComputedString(),
+			"scale_down_delay_after_add":             ComputedString(),
+			"scale_down_unneeded_time":               ComputedString(),
+			"scale_down_unready_time":                ComputedString(),
+			"cordon_node_before_terminating":         ComputedBool(),
+			"image":                                  ComputedString(),
+			"memory_request":                         ComputedQuantity(),
+			"cpu_request":                            ComputedQuantity(),
+			"max_node_provision_time":                ComputedString(),
+			"pod_annotations":                        ComputedMap(String()),
+			"create_priority_expender_config":        ComputedBool(),
+			"custom_priority_expander_config":        ComputedComplexMap(List(String())),
 		},
 	}
 
@@ -144,6 +145,25 @@ func ExpandDataSourceClusterAutoscalerConfig(in map[string]interface{}) kops.Clu
 				}(string(ExpandString(in)))
 			}(in)
 		}(in["scale_down_utilization_threshold"]),
+		SkipNodesWithCustomControllerPods: func(in interface{}) *bool {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
+		}(in["skip_nodes_with_custom_controller_pods"]),
 		SkipNodesWithSystemPods: func(in interface{}) *bool {
 			if in == nil {
 				return nil
@@ -462,6 +482,16 @@ func FlattenDataSourceClusterAutoscalerConfigInto(in kops.ClusterAutoscalerConfi
 			}(*in)
 		}(in)
 	}(in.ScaleDownUtilizationThreshold)
+	out["skip_nodes_with_custom_controller_pods"] = func(in *bool) interface{} {
+		return func(in *bool) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in bool) interface{} {
+				return FlattenBool(bool(in))
+			}(*in)
+		}(in)
+	}(in.SkipNodesWithCustomControllerPods)
 	out["skip_nodes_with_system_pods"] = func(in *bool) interface{} {
 		return func(in *bool) interface{} {
 			if in == nil {

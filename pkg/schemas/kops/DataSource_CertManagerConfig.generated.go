@@ -19,6 +19,7 @@ func DataSourceCertManagerConfig() *schema.Resource {
 			"default_issuer":  ComputedString(),
 			"nameservers":     ComputedList(String()),
 			"hosted_zone_ids": ComputedList(String()),
+			"feature_gates":   ComputedMap(Bool()),
 		},
 	}
 
@@ -130,6 +131,23 @@ func ExpandDataSourceCertManagerConfig(in map[string]interface{}) kops.CertManag
 				return out
 			}(in)
 		}(in["hosted_zone_ids"]),
+		FeatureGates: func(in interface{}) map[string]bool {
+			return func(in interface{}) map[string]bool {
+				if in == nil {
+					return nil
+				}
+				if in, ok := in.(map[string]interface{}); ok {
+					if len(in) > 0 {
+						out := map[string]bool{}
+						for key, in := range in {
+							out[key] = bool(ExpandBool(in))
+						}
+						return out
+					}
+				}
+				return nil
+			}(in)
+		}(in["feature_gates"]),
 	}
 }
 
@@ -192,6 +210,18 @@ func FlattenDataSourceCertManagerConfigInto(in kops.CertManagerConfig, out map[s
 			return out
 		}(in)
 	}(in.HostedZoneIDs)
+	out["feature_gates"] = func(in map[string]bool) interface{} {
+		return func(in map[string]bool) map[string]interface{} {
+			if in == nil {
+				return nil
+			}
+			out := map[string]interface{}{}
+			for key, in := range in {
+				out[key] = FlattenBool(bool(in))
+			}
+			return out
+		}(in)
+	}(in.FeatureGates)
 }
 
 func FlattenDataSourceCertManagerConfig(in kops.CertManagerConfig) map[string]interface{} {

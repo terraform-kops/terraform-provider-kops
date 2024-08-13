@@ -71,6 +71,7 @@ func TestExpandResourceCiliumNetworkingSpec(t *testing.T) {
 					"hubble":                            nil,
 					"disable_cnp_status_updates":        nil,
 					"enable_service_topology":           false,
+					"ingress":                           nil,
 				},
 			},
 			want: _default,
@@ -138,6 +139,7 @@ func TestFlattenResourceCiliumNetworkingSpecInto(t *testing.T) {
 		"hubble":                            nil,
 		"disable_cnp_status_updates":        nil,
 		"enable_service_topology":           false,
+		"ingress":                           nil,
 	}
 	type args struct {
 		in kops.CiliumNetworkingSpec
@@ -699,6 +701,17 @@ func TestFlattenResourceCiliumNetworkingSpecInto(t *testing.T) {
 				in: func() kops.CiliumNetworkingSpec {
 					subject := kops.CiliumNetworkingSpec{}
 					subject.EnableServiceTopology = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "Ingress - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.Ingress = nil
 					return subject
 				}(),
 			},
@@ -768,6 +781,7 @@ func TestFlattenResourceCiliumNetworkingSpec(t *testing.T) {
 		"hubble":                            nil,
 		"disable_cnp_status_updates":        nil,
 		"enable_service_topology":           false,
+		"ingress":                           nil,
 	}
 	type args struct {
 		in kops.CiliumNetworkingSpec
@@ -1329,6 +1343,17 @@ func TestFlattenResourceCiliumNetworkingSpec(t *testing.T) {
 				in: func() kops.CiliumNetworkingSpec {
 					subject := kops.CiliumNetworkingSpec{}
 					subject.EnableServiceTopology = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "Ingress - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.Ingress = nil
 					return subject
 				}(),
 			},

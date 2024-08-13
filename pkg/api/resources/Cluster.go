@@ -3,6 +3,7 @@ package resources
 import (
 	"context"
 	"fmt"
+	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/kops/pkg/apis/kops"
@@ -204,7 +205,7 @@ func DeleteCluster(name string, clientset simple.Clientset) error {
 		clusterResources[k] = resource
 	}
 	if len(clusterResources) != 0 {
-		err = ops.DeleteResources(cloud, clusterResources)
+		err = ops.DeleteResources(cloud, clusterResources, 0, 10*time.Second, 10*time.Minute)
 		if err != nil {
 			return err
 		}

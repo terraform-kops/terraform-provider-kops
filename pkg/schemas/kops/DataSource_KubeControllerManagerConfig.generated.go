@@ -63,6 +63,8 @@ func DataSourceKubeControllerManagerConfig() *schema.Resource {
 			"concurrent_resource_quota_syncs":                     ComputedInt(),
 			"concurrent_serviceaccount_token_syncs":               ComputedInt(),
 			"concurrent_rc_syncs":                                 ComputedInt(),
+			"concurrent_horizontal_pod_austoscaler_syncs":         ComputedInt(),
+			"concurrent_job_syncs":                                ComputedInt(),
 			"authentication_kubeconfig":                           ComputedString(),
 			"authorization_kubeconfig":                            ComputedString(),
 			"authorization_always_allow_paths":                    ComputedList(String()),
@@ -70,7 +72,12 @@ func DataSourceKubeControllerManagerConfig() *schema.Resource {
 			"endpoint_updates_batch_period":                       ComputedDuration(),
 			"endpoint_slice_updates_batch_period":                 ComputedDuration(),
 			"enable_profiling":                                    ComputedBool(),
+			"enable_contention_profiling":                         ComputedBool(),
 			"enable_leader_migration":                             ComputedBool(),
+			"cpu_request":                                         ComputedQuantity(),
+			"cpu_limit":                                           ComputedQuantity(),
+			"memory_request":                                      ComputedQuantity(),
+			"memory_limit":                                        ComputedQuantity(),
 		},
 	}
 
@@ -785,6 +792,44 @@ func ExpandDataSourceKubeControllerManagerConfig(in map[string]interface{}) kops
 				}(int32(ExpandInt(in)))
 			}(in)
 		}(in["concurrent_rc_syncs"]),
+		ConcurrentHorizontalPodAustoscalerSyncs: func(in interface{}) *int32 {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *int32 {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in int32) *int32 {
+					return &in
+				}(int32(ExpandInt(in)))
+			}(in)
+		}(in["concurrent_horizontal_pod_austoscaler_syncs"]),
+		ConcurrentJobSyncs: func(in interface{}) *int32 {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *int32 {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in int32) *int32 {
+					return &in
+				}(int32(ExpandInt(in)))
+			}(in)
+		}(in["concurrent_job_syncs"]),
 		AuthenticationKubeconfig: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["authentication_kubeconfig"]),
@@ -863,6 +908,25 @@ func ExpandDataSourceKubeControllerManagerConfig(in map[string]interface{}) kops
 				}(bool(ExpandBool(in)))
 			}(in)
 		}(in["enable_profiling"]),
+		EnableContentionProfiling: func(in interface{}) *bool {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
+		}(in["enable_contention_profiling"]),
 		EnableLeaderMigration: func(in interface{}) *bool {
 			if in == nil {
 				return nil
@@ -882,6 +946,82 @@ func ExpandDataSourceKubeControllerManagerConfig(in map[string]interface{}) kops
 				}(bool(ExpandBool(in)))
 			}(in)
 		}(in["enable_leader_migration"]),
+		CPURequest: func(in interface{}) *resource.Quantity {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *resource.Quantity {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in resource.Quantity) *resource.Quantity {
+					return &in
+				}(ExpandQuantity(in))
+			}(in)
+		}(in["cpu_request"]),
+		CPULimit: func(in interface{}) *resource.Quantity {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *resource.Quantity {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in resource.Quantity) *resource.Quantity {
+					return &in
+				}(ExpandQuantity(in))
+			}(in)
+		}(in["cpu_limit"]),
+		MemoryRequest: func(in interface{}) *resource.Quantity {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *resource.Quantity {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in resource.Quantity) *resource.Quantity {
+					return &in
+				}(ExpandQuantity(in))
+			}(in)
+		}(in["memory_request"]),
+		MemoryLimit: func(in interface{}) *resource.Quantity {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *resource.Quantity {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in resource.Quantity) *resource.Quantity {
+					return &in
+				}(ExpandQuantity(in))
+			}(in)
+		}(in["memory_limit"]),
 	}
 }
 
@@ -1284,6 +1424,26 @@ func FlattenDataSourceKubeControllerManagerConfigInto(in kops.KubeControllerMana
 			}(*in)
 		}(in)
 	}(in.ConcurrentRCSyncs)
+	out["concurrent_horizontal_pod_austoscaler_syncs"] = func(in *int32) interface{} {
+		return func(in *int32) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in int32) interface{} {
+				return FlattenInt(int(in))
+			}(*in)
+		}(in)
+	}(in.ConcurrentHorizontalPodAustoscalerSyncs)
+	out["concurrent_job_syncs"] = func(in *int32) interface{} {
+		return func(in *int32) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in int32) interface{} {
+				return FlattenInt(int(in))
+			}(*in)
+		}(in)
+	}(in.ConcurrentJobSyncs)
 	out["authentication_kubeconfig"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.AuthenticationKubeconfig)
@@ -1332,6 +1492,16 @@ func FlattenDataSourceKubeControllerManagerConfigInto(in kops.KubeControllerMana
 			}(*in)
 		}(in)
 	}(in.EnableProfiling)
+	out["enable_contention_profiling"] = func(in *bool) interface{} {
+		return func(in *bool) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in bool) interface{} {
+				return FlattenBool(bool(in))
+			}(*in)
+		}(in)
+	}(in.EnableContentionProfiling)
 	out["enable_leader_migration"] = func(in *bool) interface{} {
 		return func(in *bool) interface{} {
 			if in == nil {
@@ -1342,6 +1512,46 @@ func FlattenDataSourceKubeControllerManagerConfigInto(in kops.KubeControllerMana
 			}(*in)
 		}(in)
 	}(in.EnableLeaderMigration)
+	out["cpu_request"] = func(in *resource.Quantity) interface{} {
+		return func(in *resource.Quantity) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in resource.Quantity) interface{} {
+				return FlattenQuantity(in)
+			}(*in)
+		}(in)
+	}(in.CPURequest)
+	out["cpu_limit"] = func(in *resource.Quantity) interface{} {
+		return func(in *resource.Quantity) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in resource.Quantity) interface{} {
+				return FlattenQuantity(in)
+			}(*in)
+		}(in)
+	}(in.CPULimit)
+	out["memory_request"] = func(in *resource.Quantity) interface{} {
+		return func(in *resource.Quantity) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in resource.Quantity) interface{} {
+				return FlattenQuantity(in)
+			}(*in)
+		}(in)
+	}(in.MemoryRequest)
+	out["memory_limit"] = func(in *resource.Quantity) interface{} {
+		return func(in *resource.Quantity) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in resource.Quantity) interface{} {
+				return FlattenQuantity(in)
+			}(*in)
+		}(in)
+	}(in.MemoryLimit)
 }
 
 func FlattenDataSourceKubeControllerManagerConfig(in kops.KubeControllerManagerConfig) map[string]interface{} {

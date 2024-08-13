@@ -19,6 +19,7 @@ func ResourceCertManagerConfig() *schema.Resource {
 			"default_issuer":  OptionalString(),
 			"nameservers":     OptionalList(String()),
 			"hosted_zone_ids": OptionalList(String()),
+			"feature_gates":   OptionalMap(Bool()),
 		},
 	}
 
@@ -118,6 +119,23 @@ func ExpandResourceCertManagerConfig(in map[string]interface{}) kops.CertManager
 				return out
 			}(in)
 		}(in["hosted_zone_ids"]),
+		FeatureGates: func(in interface{}) map[string]bool {
+			return func(in interface{}) map[string]bool {
+				if in == nil {
+					return nil
+				}
+				if in, ok := in.(map[string]interface{}); ok {
+					if len(in) > 0 {
+						out := map[string]bool{}
+						for key, in := range in {
+							out[key] = bool(ExpandBool(in))
+						}
+						return out
+					}
+				}
+				return nil
+			}(in)
+		}(in["feature_gates"]),
 	}
 }
 
@@ -180,6 +198,18 @@ func FlattenResourceCertManagerConfigInto(in kops.CertManagerConfig, out map[str
 			return out
 		}(in)
 	}(in.HostedZoneIDs)
+	out["feature_gates"] = func(in map[string]bool) interface{} {
+		return func(in map[string]bool) map[string]interface{} {
+			if in == nil {
+				return nil
+			}
+			out := map[string]interface{}{}
+			for key, in := range in {
+				out[key] = FlattenBool(bool(in))
+			}
+			return out
+		}(in)
+	}(in.FeatureGates)
 }
 
 func FlattenResourceCertManagerConfig(in kops.CertManagerConfig) map[string]interface{} {

@@ -244,24 +244,6 @@ func ExpandResourceClusterSpec(in map[string]interface{}) kops.ClusterSpec {
 				return out
 			}(in)
 		}(in["etcd_cluster"]),
-		Containerd: func(in interface{}) *kops.ContainerdConfig {
-			return func(in interface{}) *kops.ContainerdConfig {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in kops.ContainerdConfig) *kops.ContainerdConfig {
-					return &in
-				}(func(in interface{}) kops.ContainerdConfig {
-					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
-						return ExpandResourceContainerdConfig(in[0].(map[string]interface{}))
-					}
-					return kops.ContainerdConfig{}
-				}(in))
-			}(in)
-		}(in["containerd"]),
 		Docker: func(in interface{}) *kops.DockerConfig {
 			return func(in interface{}) *kops.DockerConfig {
 				if in == nil {
@@ -280,6 +262,24 @@ func ExpandResourceClusterSpec(in map[string]interface{}) kops.ClusterSpec {
 				}(in))
 			}(in)
 		}(in["docker"]),
+		Containerd: func(in interface{}) *kops.ContainerdConfig {
+			return func(in interface{}) *kops.ContainerdConfig {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in kops.ContainerdConfig) *kops.ContainerdConfig {
+					return &in
+				}(func(in interface{}) kops.ContainerdConfig {
+					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+						return ExpandResourceContainerdConfig(in[0].(map[string]interface{}))
+					}
+					return kops.ContainerdConfig{}
+				}(in))
+			}(in)
+		}(in["containerd"]),
 		KubeDNS: func(in interface{}) *kops.KubeDNSConfig {
 			return func(in interface{}) *kops.KubeDNSConfig {
 				if in == nil {
@@ -478,6 +478,18 @@ func ExpandResourceClusterSpec(in map[string]interface{}) kops.ClusterSpec {
 				}(in))
 			}(in)
 		}(in["ntp"]),
+		Packages: func(in interface{}) []string {
+			return func(in interface{}) []string {
+				if in == nil {
+					return nil
+				}
+				var out []string
+				for _, in := range in.([]interface{}) {
+					out = append(out, string(ExpandString(in)))
+				}
+				return out
+			}(in)
+		}(in["packages"]),
 		NodeProblemDetector: func(in interface{}) *kops.NodeProblemDetectorConfig {
 			return func(in interface{}) *kops.NodeProblemDetectorConfig {
 				if in == nil {
@@ -977,18 +989,6 @@ func FlattenResourceClusterSpecInto(in kops.ClusterSpec, out map[string]interfac
 			return out
 		}(in)
 	}(in.EtcdClusters)
-	out["containerd"] = func(in *kops.ContainerdConfig) interface{} {
-		return func(in *kops.ContainerdConfig) interface{} {
-			if in == nil {
-				return nil
-			}
-			return func(in kops.ContainerdConfig) interface{} {
-				return func(in kops.ContainerdConfig) []interface{} {
-					return []interface{}{FlattenResourceContainerdConfig(in)}
-				}(in)
-			}(*in)
-		}(in)
-	}(in.Containerd)
 	out["docker"] = func(in *kops.DockerConfig) interface{} {
 		return func(in *kops.DockerConfig) interface{} {
 			if in == nil {
@@ -1001,6 +1001,18 @@ func FlattenResourceClusterSpecInto(in kops.ClusterSpec, out map[string]interfac
 			}(*in)
 		}(in)
 	}(in.Docker)
+	out["containerd"] = func(in *kops.ContainerdConfig) interface{} {
+		return func(in *kops.ContainerdConfig) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in kops.ContainerdConfig) interface{} {
+				return func(in kops.ContainerdConfig) []interface{} {
+					return []interface{}{FlattenResourceContainerdConfig(in)}
+				}(in)
+			}(*in)
+		}(in)
+	}(in.Containerd)
 	out["kube_dns"] = func(in *kops.KubeDNSConfig) interface{} {
 		return func(in *kops.KubeDNSConfig) interface{} {
 			if in == nil {
@@ -1133,6 +1145,15 @@ func FlattenResourceClusterSpecInto(in kops.ClusterSpec, out map[string]interfac
 			}(*in)
 		}(in)
 	}(in.NTP)
+	out["packages"] = func(in []string) interface{} {
+		return func(in []string) []interface{} {
+			var out []interface{}
+			for _, in := range in {
+				out = append(out, FlattenString(string(in)))
+			}
+			return out
+		}(in)
+	}(in.Packages)
 	out["node_problem_detector"] = func(in *kops.NodeProblemDetectorConfig) interface{} {
 		return func(in *kops.NodeProblemDetectorConfig) interface{} {
 			if in == nil {

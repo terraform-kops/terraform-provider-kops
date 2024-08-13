@@ -37,6 +37,7 @@ func TestExpandResourceCloudControllerManagerConfig(t *testing.T) {
 					"enable_leader_migration":         nil,
 					"cpu_request":                     nil,
 					"node_status_update_frequency":    nil,
+					"concurrent_node_syncs":           nil,
 				},
 			},
 			want: _default,
@@ -70,6 +71,7 @@ func TestFlattenResourceCloudControllerManagerConfigInto(t *testing.T) {
 		"enable_leader_migration":         nil,
 		"cpu_request":                     nil,
 		"node_status_update_frequency":    nil,
+		"concurrent_node_syncs":           nil,
 	}
 	type args struct {
 		in kops.CloudControllerManagerConfig
@@ -257,6 +259,17 @@ func TestFlattenResourceCloudControllerManagerConfigInto(t *testing.T) {
 				in: func() kops.CloudControllerManagerConfig {
 					subject := kops.CloudControllerManagerConfig{}
 					subject.NodeStatusUpdateFrequency = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ConcurrentNodeSyncs - default",
+			args: args{
+				in: func() kops.CloudControllerManagerConfig {
+					subject := kops.CloudControllerManagerConfig{}
+					subject.ConcurrentNodeSyncs = nil
 					return subject
 				}(),
 			},
@@ -292,6 +305,7 @@ func TestFlattenResourceCloudControllerManagerConfig(t *testing.T) {
 		"enable_leader_migration":         nil,
 		"cpu_request":                     nil,
 		"node_status_update_frequency":    nil,
+		"concurrent_node_syncs":           nil,
 	}
 	type args struct {
 		in kops.CloudControllerManagerConfig
@@ -479,6 +493,17 @@ func TestFlattenResourceCloudControllerManagerConfig(t *testing.T) {
 				in: func() kops.CloudControllerManagerConfig {
 					subject := kops.CloudControllerManagerConfig{}
 					subject.NodeStatusUpdateFrequency = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ConcurrentNodeSyncs - default",
+			args: args{
+				in: func() kops.CloudControllerManagerConfig {
+					subject := kops.CloudControllerManagerConfig{}
+					subject.ConcurrentNodeSyncs = nil
 					return subject
 				}(),
 			},

@@ -122,6 +122,7 @@ func TestExpandResourceKubeAPIServerConfig(t *testing.T) {
 					"event_ttl":                                    nil,
 					"audit_dynamic_configuration":                  nil,
 					"enable_profiling":                             nil,
+					"enable_contention_profiling":                  nil,
 					"cors_allowed_origins":                         func() []interface{} { return nil }(),
 					"default_not_ready_toleration_seconds":         nil,
 					"default_unreachable_toleration_seconds":       nil,
@@ -243,6 +244,7 @@ func TestFlattenResourceKubeAPIServerConfigInto(t *testing.T) {
 		"event_ttl":                                    nil,
 		"audit_dynamic_configuration":                  nil,
 		"enable_profiling":                             nil,
+		"enable_contention_profiling":                  nil,
 		"cors_allowed_origins":                         func() []interface{} { return nil }(),
 		"default_not_ready_toleration_seconds":         nil,
 		"default_unreachable_toleration_seconds":       nil,
@@ -1368,6 +1370,17 @@ func TestFlattenResourceKubeAPIServerConfigInto(t *testing.T) {
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
 					subject.EnableProfiling = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EnableContentionProfiling - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.EnableContentionProfiling = nil
 					return subject
 				}(),
 			},
@@ -1521,6 +1534,7 @@ func TestFlattenResourceKubeAPIServerConfig(t *testing.T) {
 		"event_ttl":                                    nil,
 		"audit_dynamic_configuration":                  nil,
 		"enable_profiling":                             nil,
+		"enable_contention_profiling":                  nil,
 		"cors_allowed_origins":                         func() []interface{} { return nil }(),
 		"default_not_ready_toleration_seconds":         nil,
 		"default_unreachable_toleration_seconds":       nil,
@@ -2646,6 +2660,17 @@ func TestFlattenResourceKubeAPIServerConfig(t *testing.T) {
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
 					subject.EnableProfiling = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EnableContentionProfiling - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.EnableContentionProfiling = nil
 					return subject
 				}(),
 			},

@@ -27,6 +27,7 @@ func TestExpandResourceGCESpec(t *testing.T) {
 					"node_tags":            nil,
 					"node_instance_prefix": nil,
 					"pd_csi_driver":        nil,
+					"binaries_location":    nil,
 				},
 			},
 			want: _default,
@@ -50,6 +51,7 @@ func TestFlattenResourceGCESpecInto(t *testing.T) {
 		"node_tags":            nil,
 		"node_instance_prefix": nil,
 		"pd_csi_driver":        nil,
+		"binaries_location":    nil,
 	}
 	type args struct {
 		in kops.GCESpec
@@ -127,6 +129,17 @@ func TestFlattenResourceGCESpecInto(t *testing.T) {
 				in: func() kops.GCESpec {
 					subject := kops.GCESpec{}
 					subject.PDCSIDriver = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "BinariesLocation - default",
+			args: args{
+				in: func() kops.GCESpec {
+					subject := kops.GCESpec{}
+					subject.BinariesLocation = nil
 					return subject
 				}(),
 			},
@@ -152,6 +165,7 @@ func TestFlattenResourceGCESpec(t *testing.T) {
 		"node_tags":            nil,
 		"node_instance_prefix": nil,
 		"pd_csi_driver":        nil,
+		"binaries_location":    nil,
 	}
 	type args struct {
 		in kops.GCESpec
@@ -229,6 +243,17 @@ func TestFlattenResourceGCESpec(t *testing.T) {
 				in: func() kops.GCESpec {
 					subject := kops.GCESpec{}
 					subject.PDCSIDriver = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "BinariesLocation - default",
+			args: args{
+				in: func() kops.GCESpec {
+					subject := kops.GCESpec{}
+					subject.BinariesLocation = nil
 					return subject
 				}(),
 			},
