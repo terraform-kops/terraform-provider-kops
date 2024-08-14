@@ -28,7 +28,7 @@ func (u *ClusterUpdater) UpdateCluster(clientset simple.Clientset) error {
 		if lifecycleOverrides, err := utils.ParseLifecycleOverrides(u.Apply.LifecycleOverrides); err != nil {
 			return err
 		} else {
-			if err := utils.ClusterApply(clientset, u.ClusterName, u.Apply.AllowKopsDowngrade, lifecycleOverrides); err != nil {
+			if err := utils.ClusterApply(clientset, u.ClusterName, u.Apply.AllowKopsDowngrade, lifecycleOverrides, false); err != nil {
 				return err
 			}
 		}
@@ -41,6 +41,17 @@ func (u *ClusterUpdater) UpdateCluster(clientset simple.Clientset) error {
 	if !u.RollingUpdate.Skip {
 		if err := utils.ClusterRollingUpdate(clientset, u.ClusterName, u.RollingUpdate.RollingUpdateOptions); err != nil {
 			return err
+		}
+
+		// Prune deferred deletions
+		if !u.Apply.Skip {
+			if lifecycleOverrides, err := utils.ParseLifecycleOverrides(u.Apply.LifecycleOverrides); err != nil {
+				return err
+			} else {
+				if err := utils.ClusterApply(clientset, u.ClusterName, u.Apply.AllowKopsDowngrade, lifecycleOverrides, true); err != nil {
+					return err
+				}
+			}
 		}
 	}
 	return nil
