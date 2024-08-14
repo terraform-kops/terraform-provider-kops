@@ -107,6 +107,7 @@ The following arguments are supported:
 - `name` - (Required) - String - Name defines the cluster name.
 - `admin_ssh_key` - (Computed) - String - AdminSshKey defines the cluster admin ssh key.
 - `secrets` - (Computed) - [cluster_secrets](#cluster_secrets) - Secrets defines the cluster secret.
+- `delete` - (Computed) - [delete_options](#delete_options) - Delete holds cluster delete options.
 
 ## Nested resources
 
@@ -2021,6 +2022,16 @@ The following arguments are supported:
 - `docker_config` - (Sensitive) - (Computed) - String - DockerConfig holds a valid docker config.<br />After creating a dockerconfig secret, a /root/.docker/config.json file will be added to newly created nodes.<br />This file will be used by Kubernetes to authenticate to container registries and will also work when using containerd as container runtime.
 - `cluster_ca_cert` - (Sensitive) - (Computed) - String
 - `cluster_ca_key` - (Sensitive) - (Computed) - String
+
+### delete_options
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `interval` - (Computed) - Duration - Interval is the time to wait between deletion attempts (default 10s).
+- `wait` - (Computed) - Duration - Wait is the amount of time to wait for the cluster resources to de deleted (default 10m0s).
+- `count` - (Computed) - Int - Count is the number of deletion retries to make before giving up (default 0).
 
 
 

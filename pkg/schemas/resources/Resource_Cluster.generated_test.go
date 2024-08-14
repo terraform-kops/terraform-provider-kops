@@ -87,6 +87,7 @@ func TestExpandResourceCluster(t *testing.T) {
 					"admin_ssh_key":                    "",
 					"secrets":                          nil,
 					"revision":                         0,
+					"delete":                           func() []interface{} { return []interface{}{FlattenResourceDeleteOptions(resources.DeleteOptions{})} }(),
 				},
 			},
 			want: _default,
@@ -168,6 +169,7 @@ func TestFlattenResourceClusterInto(t *testing.T) {
 		"admin_ssh_key":                    "",
 		"secrets":                          nil,
 		"revision":                         0,
+		"delete":                           func() []interface{} { return []interface{}{FlattenResourceDeleteOptions(resources.DeleteOptions{})} }(),
 	}
 	type args struct {
 		in resources.Cluster
@@ -817,6 +819,17 @@ func TestFlattenResourceClusterInto(t *testing.T) {
 				in: func() resources.Cluster {
 					subject := resources.Cluster{}
 					subject.Revision = 0
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "Delete - default",
+			args: args{
+				in: func() resources.Cluster {
+					subject := resources.Cluster{}
+					subject.Delete = resources.DeleteOptions{}
 					return subject
 				}(),
 			},
@@ -900,6 +913,7 @@ func TestFlattenResourceCluster(t *testing.T) {
 		"admin_ssh_key":                    "",
 		"secrets":                          nil,
 		"revision":                         0,
+		"delete":                           func() []interface{} { return []interface{}{FlattenResourceDeleteOptions(resources.DeleteOptions{})} }(),
 	}
 	type args struct {
 		in resources.Cluster
@@ -1549,6 +1563,17 @@ func TestFlattenResourceCluster(t *testing.T) {
 				in: func() resources.Cluster {
 					subject := resources.Cluster{}
 					subject.Revision = 0
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "Delete - default",
+			args: args{
+				in: func() resources.Cluster {
+					subject := resources.Cluster{}
+					subject.Delete = resources.DeleteOptions{}
 					return subject
 				}(),
 			},

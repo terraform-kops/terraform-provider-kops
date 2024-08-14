@@ -72,6 +72,7 @@ func DataSourceCluster() *schema.Resource {
 			"name":                              RequiredString(),
 			"admin_ssh_key":                     ComputedString(),
 			"secrets":                           ComputedStruct(DataSourceClusterSecrets()),
+			"delete":                            ComputedStruct(DataSourceDeleteOptions()),
 		},
 	}
 	res.SchemaVersion = 5
@@ -187,6 +188,14 @@ func ExpandDataSourceCluster(in map[string]interface{}) resources.Cluster {
 				}(in))
 			}(in)
 		}(in["secrets"]),
+		Delete: func(in interface{}) resources.DeleteOptions {
+			return func(in interface{}) resources.DeleteOptions {
+				if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+					return ExpandDataSourceDeleteOptions(in[0].(map[string]interface{}))
+				}
+				return resources.DeleteOptions{}
+			}(in)
+		}(in["delete"]),
 	}
 }
 
@@ -234,6 +243,11 @@ func FlattenDataSourceClusterInto(in resources.Cluster, out map[string]interface
 			}(*in)
 		}(in)
 	}(in.Secrets)
+	out["delete"] = func(in resources.DeleteOptions) interface{} {
+		return func(in resources.DeleteOptions) []interface{} {
+			return []interface{}{FlattenDataSourceDeleteOptions(in)}
+		}(in)
+	}(in.Delete)
 }
 
 func FlattenDataSourceCluster(in resources.Cluster) map[string]interface{} {
