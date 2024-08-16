@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -67,7 +68,19 @@ func ClusterRead(_ context.Context, d *schema.ResourceData, m interface{}) diag.
 
 func ClusterDelete(_ context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	in := resourcesschema.ExpandResourceCluster(d.Get("").(map[string]interface{}))
-	if err := resources.DeleteCluster(in.Name, config.Clientset(m)); err != nil {
+	count := 0
+	if in.Delete.Count != nil {
+		count = *in.Delete.Count
+	}
+	interval := 10 * time.Second
+	if in.Delete.Interval != nil {
+		interval = (*in.Delete.Interval).Duration
+	}
+	wait := 10 * time.Minute
+	if in.Delete.Wait != nil {
+		wait = (*in.Delete.Wait).Duration
+	}
+	if err := resources.DeleteCluster(in.Name, config.Clientset(m), count, interval, wait); err != nil {
 		return diag.FromErr(err)
 	}
 	return nil

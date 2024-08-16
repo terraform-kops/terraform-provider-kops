@@ -116,6 +116,7 @@ func DataSourceKubeAPIServerConfig() *schema.Resource {
 			"event_ttl":                                    ComputedDuration(),
 			"audit_dynamic_configuration":                  ComputedBool(),
 			"enable_profiling":                             ComputedBool(),
+			"enable_contention_profiling":                  ComputedBool(),
 			"cors_allowed_origins":                         ComputedList(String()),
 			"default_not_ready_toleration_seconds":         ComputedInt(),
 			"default_unreachable_toleration_seconds":       ComputedInt(),
@@ -1439,6 +1440,25 @@ func ExpandDataSourceKubeAPIServerConfig(in map[string]interface{}) kops.KubeAPI
 				}(bool(ExpandBool(in)))
 			}(in)
 		}(in["enable_profiling"]),
+		EnableContentionProfiling: func(in interface{}) *bool {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
+		}(in["enable_contention_profiling"]),
 		CorsAllowedOrigins: func(in interface{}) []string {
 			return func(in interface{}) []string {
 				if in == nil {
@@ -2277,6 +2297,16 @@ func FlattenDataSourceKubeAPIServerConfigInto(in kops.KubeAPIServerConfig, out m
 			}(*in)
 		}(in)
 	}(in.EnableProfiling)
+	out["enable_contention_profiling"] = func(in *bool) interface{} {
+		return func(in *bool) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in bool) interface{} {
+				return FlattenBool(bool(in))
+			}(*in)
+		}(in)
+	}(in.EnableContentionProfiling)
 	out["cors_allowed_origins"] = func(in []string) interface{} {
 		return func(in []string) []interface{} {
 			var out []interface{}

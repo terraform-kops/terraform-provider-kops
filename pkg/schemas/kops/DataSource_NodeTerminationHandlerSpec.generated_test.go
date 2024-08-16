@@ -21,6 +21,7 @@ func TestExpandDataSourceNodeTerminationHandlerSpec(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
+					"delete_sqs_msg_if_node_not_found":  nil,
 					"enabled":                           nil,
 					"enable_spot_interruption_draining": nil,
 					"enable_scheduled_event_draining":   nil,
@@ -30,9 +31,14 @@ func TestExpandDataSourceNodeTerminationHandlerSpec(t *testing.T) {
 					"enable_sqs_termination_draining":   nil,
 					"exclude_from_load_balancers":       nil,
 					"managed_asg_tag":                   nil,
+					"pod_termination_grace_period":      nil,
+					"taint_node":                        nil,
+					"memory_limit":                      nil,
 					"memory_request":                    nil,
 					"cpu_request":                       nil,
 					"version":                           nil,
+					"webhook_template":                  nil,
+					"webhook_url":                       nil,
 				},
 			},
 			want: _default,
@@ -50,6 +56,7 @@ func TestExpandDataSourceNodeTerminationHandlerSpec(t *testing.T) {
 
 func TestFlattenDataSourceNodeTerminationHandlerSpecInto(t *testing.T) {
 	_default := map[string]interface{}{
+		"delete_sqs_msg_if_node_not_found":  nil,
 		"enabled":                           nil,
 		"enable_spot_interruption_draining": nil,
 		"enable_scheduled_event_draining":   nil,
@@ -59,9 +66,14 @@ func TestFlattenDataSourceNodeTerminationHandlerSpecInto(t *testing.T) {
 		"enable_sqs_termination_draining":   nil,
 		"exclude_from_load_balancers":       nil,
 		"managed_asg_tag":                   nil,
+		"pod_termination_grace_period":      nil,
+		"taint_node":                        nil,
+		"memory_limit":                      nil,
 		"memory_request":                    nil,
 		"cpu_request":                       nil,
 		"version":                           nil,
+		"webhook_template":                  nil,
+		"webhook_url":                       nil,
 	}
 	type args struct {
 		in kops.NodeTerminationHandlerSpec
@@ -75,6 +87,17 @@ func TestFlattenDataSourceNodeTerminationHandlerSpecInto(t *testing.T) {
 			name: "default",
 			args: args{
 				in: kops.NodeTerminationHandlerSpec{},
+			},
+			want: _default,
+		},
+		{
+			name: "DeleteSqsMsgIfNodeNotFound - default",
+			args: args{
+				in: func() kops.NodeTerminationHandlerSpec {
+					subject := kops.NodeTerminationHandlerSpec{}
+					subject.DeleteSQSMsgIfNodeNotFound = nil
+					return subject
+				}(),
 			},
 			want: _default,
 		},
@@ -178,6 +201,39 @@ func TestFlattenDataSourceNodeTerminationHandlerSpecInto(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "PodTerminationGracePeriod - default",
+			args: args{
+				in: func() kops.NodeTerminationHandlerSpec {
+					subject := kops.NodeTerminationHandlerSpec{}
+					subject.PodTerminationGracePeriod = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "TaintNode - default",
+			args: args{
+				in: func() kops.NodeTerminationHandlerSpec {
+					subject := kops.NodeTerminationHandlerSpec{}
+					subject.TaintNode = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryLimit - default",
+			args: args{
+				in: func() kops.NodeTerminationHandlerSpec {
+					subject := kops.NodeTerminationHandlerSpec{}
+					subject.MemoryLimit = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "MemoryRequest - default",
 			args: args{
 				in: func() kops.NodeTerminationHandlerSpec {
@@ -205,6 +261,28 @@ func TestFlattenDataSourceNodeTerminationHandlerSpecInto(t *testing.T) {
 				in: func() kops.NodeTerminationHandlerSpec {
 					subject := kops.NodeTerminationHandlerSpec{}
 					subject.Version = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "WebhookTemplate - default",
+			args: args{
+				in: func() kops.NodeTerminationHandlerSpec {
+					subject := kops.NodeTerminationHandlerSpec{}
+					subject.WebhookTemplate = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "WebhookURL - default",
+			args: args{
+				in: func() kops.NodeTerminationHandlerSpec {
+					subject := kops.NodeTerminationHandlerSpec{}
+					subject.WebhookURL = nil
 					return subject
 				}(),
 			},
@@ -224,6 +302,7 @@ func TestFlattenDataSourceNodeTerminationHandlerSpecInto(t *testing.T) {
 
 func TestFlattenDataSourceNodeTerminationHandlerSpec(t *testing.T) {
 	_default := map[string]interface{}{
+		"delete_sqs_msg_if_node_not_found":  nil,
 		"enabled":                           nil,
 		"enable_spot_interruption_draining": nil,
 		"enable_scheduled_event_draining":   nil,
@@ -233,9 +312,14 @@ func TestFlattenDataSourceNodeTerminationHandlerSpec(t *testing.T) {
 		"enable_sqs_termination_draining":   nil,
 		"exclude_from_load_balancers":       nil,
 		"managed_asg_tag":                   nil,
+		"pod_termination_grace_period":      nil,
+		"taint_node":                        nil,
+		"memory_limit":                      nil,
 		"memory_request":                    nil,
 		"cpu_request":                       nil,
 		"version":                           nil,
+		"webhook_template":                  nil,
+		"webhook_url":                       nil,
 	}
 	type args struct {
 		in kops.NodeTerminationHandlerSpec
@@ -249,6 +333,17 @@ func TestFlattenDataSourceNodeTerminationHandlerSpec(t *testing.T) {
 			name: "default",
 			args: args{
 				in: kops.NodeTerminationHandlerSpec{},
+			},
+			want: _default,
+		},
+		{
+			name: "DeleteSqsMsgIfNodeNotFound - default",
+			args: args{
+				in: func() kops.NodeTerminationHandlerSpec {
+					subject := kops.NodeTerminationHandlerSpec{}
+					subject.DeleteSQSMsgIfNodeNotFound = nil
+					return subject
+				}(),
 			},
 			want: _default,
 		},
@@ -352,6 +447,39 @@ func TestFlattenDataSourceNodeTerminationHandlerSpec(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "PodTerminationGracePeriod - default",
+			args: args{
+				in: func() kops.NodeTerminationHandlerSpec {
+					subject := kops.NodeTerminationHandlerSpec{}
+					subject.PodTerminationGracePeriod = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "TaintNode - default",
+			args: args{
+				in: func() kops.NodeTerminationHandlerSpec {
+					subject := kops.NodeTerminationHandlerSpec{}
+					subject.TaintNode = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryLimit - default",
+			args: args{
+				in: func() kops.NodeTerminationHandlerSpec {
+					subject := kops.NodeTerminationHandlerSpec{}
+					subject.MemoryLimit = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "MemoryRequest - default",
 			args: args{
 				in: func() kops.NodeTerminationHandlerSpec {
@@ -379,6 +507,28 @@ func TestFlattenDataSourceNodeTerminationHandlerSpec(t *testing.T) {
 				in: func() kops.NodeTerminationHandlerSpec {
 					subject := kops.NodeTerminationHandlerSpec{}
 					subject.Version = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "WebhookTemplate - default",
+			args: args{
+				in: func() kops.NodeTerminationHandlerSpec {
+					subject := kops.NodeTerminationHandlerSpec{}
+					subject.WebhookTemplate = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "WebhookURL - default",
+			args: args{
+				in: func() kops.NodeTerminationHandlerSpec {
+					subject := kops.NodeTerminationHandlerSpec{}
+					subject.WebhookURL = nil
 					return subject
 				}(),
 			},

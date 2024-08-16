@@ -32,8 +32,8 @@ func DataSourceClusterSpec() *schema.Resource {
 			"additional_policies":               ComputedMap(String()),
 			"file_assets":                       ComputedList(DataSourceFileAssetSpec()),
 			"etcd_cluster":                      ComputedList(DataSourceEtcdClusterSpec()),
-			"containerd":                        ComputedStruct(DataSourceContainerdConfig()),
 			"docker":                            ComputedStruct(DataSourceDockerConfig()),
+			"containerd":                        ComputedStruct(DataSourceContainerdConfig()),
 			"kube_dns":                          ComputedStruct(DataSourceKubeDNSConfig()),
 			"kube_api_server":                   ComputedStruct(DataSourceKubeAPIServerConfig()),
 			"kube_controller_manager":           ComputedStruct(DataSourceKubeControllerManagerConfig()),
@@ -45,6 +45,7 @@ func DataSourceClusterSpec() *schema.Resource {
 			"cloud_config":                      ComputedStruct(DataSourceCloudConfiguration()),
 			"external_dns":                      ComputedStruct(DataSourceExternalDNSConfig()),
 			"ntp":                               ComputedStruct(DataSourceNTPConfig()),
+			"packages":                          ComputedList(String()),
 			"node_problem_detector":             ComputedStruct(DataSourceNodeProblemDetectorConfig()),
 			"metrics_server":                    ComputedStruct(DataSourceMetricsServerConfig()),
 			"cert_manager":                      ComputedStruct(DataSourceCertManagerConfig()),
@@ -305,24 +306,6 @@ func ExpandDataSourceClusterSpec(in map[string]interface{}) kops.ClusterSpec {
 				return out
 			}(in)
 		}(in["etcd_cluster"]),
-		Containerd: func(in interface{}) *kops.ContainerdConfig {
-			return func(in interface{}) *kops.ContainerdConfig {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in kops.ContainerdConfig) *kops.ContainerdConfig {
-					return &in
-				}(func(in interface{}) kops.ContainerdConfig {
-					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
-						return ExpandDataSourceContainerdConfig(in[0].(map[string]interface{}))
-					}
-					return kops.ContainerdConfig{}
-				}(in))
-			}(in)
-		}(in["containerd"]),
 		Docker: func(in interface{}) *kops.DockerConfig {
 			return func(in interface{}) *kops.DockerConfig {
 				if in == nil {
@@ -341,6 +324,24 @@ func ExpandDataSourceClusterSpec(in map[string]interface{}) kops.ClusterSpec {
 				}(in))
 			}(in)
 		}(in["docker"]),
+		Containerd: func(in interface{}) *kops.ContainerdConfig {
+			return func(in interface{}) *kops.ContainerdConfig {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in kops.ContainerdConfig) *kops.ContainerdConfig {
+					return &in
+				}(func(in interface{}) kops.ContainerdConfig {
+					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+						return ExpandDataSourceContainerdConfig(in[0].(map[string]interface{}))
+					}
+					return kops.ContainerdConfig{}
+				}(in))
+			}(in)
+		}(in["containerd"]),
 		KubeDNS: func(in interface{}) *kops.KubeDNSConfig {
 			return func(in interface{}) *kops.KubeDNSConfig {
 				if in == nil {
@@ -539,6 +540,18 @@ func ExpandDataSourceClusterSpec(in map[string]interface{}) kops.ClusterSpec {
 				}(in))
 			}(in)
 		}(in["ntp"]),
+		Packages: func(in interface{}) []string {
+			return func(in interface{}) []string {
+				if in == nil {
+					return nil
+				}
+				var out []string
+				for _, in := range in.([]interface{}) {
+					out = append(out, string(ExpandString(in)))
+				}
+				return out
+			}(in)
+		}(in["packages"]),
 		NodeProblemDetector: func(in interface{}) *kops.NodeProblemDetectorConfig {
 			return func(in interface{}) *kops.NodeProblemDetectorConfig {
 				if in == nil {
@@ -1038,18 +1051,6 @@ func FlattenDataSourceClusterSpecInto(in kops.ClusterSpec, out map[string]interf
 			return out
 		}(in)
 	}(in.EtcdClusters)
-	out["containerd"] = func(in *kops.ContainerdConfig) interface{} {
-		return func(in *kops.ContainerdConfig) interface{} {
-			if in == nil {
-				return nil
-			}
-			return func(in kops.ContainerdConfig) interface{} {
-				return func(in kops.ContainerdConfig) []interface{} {
-					return []interface{}{FlattenDataSourceContainerdConfig(in)}
-				}(in)
-			}(*in)
-		}(in)
-	}(in.Containerd)
 	out["docker"] = func(in *kops.DockerConfig) interface{} {
 		return func(in *kops.DockerConfig) interface{} {
 			if in == nil {
@@ -1062,6 +1063,18 @@ func FlattenDataSourceClusterSpecInto(in kops.ClusterSpec, out map[string]interf
 			}(*in)
 		}(in)
 	}(in.Docker)
+	out["containerd"] = func(in *kops.ContainerdConfig) interface{} {
+		return func(in *kops.ContainerdConfig) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in kops.ContainerdConfig) interface{} {
+				return func(in kops.ContainerdConfig) []interface{} {
+					return []interface{}{FlattenDataSourceContainerdConfig(in)}
+				}(in)
+			}(*in)
+		}(in)
+	}(in.Containerd)
 	out["kube_dns"] = func(in *kops.KubeDNSConfig) interface{} {
 		return func(in *kops.KubeDNSConfig) interface{} {
 			if in == nil {
@@ -1194,6 +1207,15 @@ func FlattenDataSourceClusterSpecInto(in kops.ClusterSpec, out map[string]interf
 			}(*in)
 		}(in)
 	}(in.NTP)
+	out["packages"] = func(in []string) interface{} {
+		return func(in []string) []interface{} {
+			var out []interface{}
+			for _, in := range in {
+				out = append(out, FlattenString(string(in)))
+			}
+			return out
+		}(in)
+	}(in.Packages)
 	out["node_problem_detector"] = func(in *kops.NodeProblemDetectorConfig) interface{} {
 		return func(in *kops.NodeProblemDetectorConfig) interface{} {
 			if in == nil {

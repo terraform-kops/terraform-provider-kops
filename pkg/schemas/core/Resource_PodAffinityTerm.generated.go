@@ -13,10 +13,12 @@ var _ = Schema
 func ResourcePodAffinityTerm() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"label_selector":     OptionalStruct(metaschemas.ResourceLabelSelector()),
-			"namespaces":         OptionalList(String()),
-			"topology_key":       OptionalString(),
-			"namespace_selector": OptionalStruct(metaschemas.ResourceLabelSelector()),
+			"label_selector":      OptionalStruct(metaschemas.ResourceLabelSelector()),
+			"namespaces":          OptionalList(String()),
+			"topology_key":        OptionalString(),
+			"namespace_selector":  OptionalStruct(metaschemas.ResourceLabelSelector()),
+			"match_label_keys":    OptionalList(String()),
+			"mismatch_label_keys": OptionalList(String()),
 		},
 	}
 
@@ -79,6 +81,30 @@ func ExpandResourcePodAffinityTerm(in map[string]interface{}) core.PodAffinityTe
 				}(in))
 			}(in)
 		}(in["namespace_selector"]),
+		MatchLabelKeys: func(in interface{}) []string {
+			return func(in interface{}) []string {
+				if in == nil {
+					return nil
+				}
+				var out []string
+				for _, in := range in.([]interface{}) {
+					out = append(out, string(ExpandString(in)))
+				}
+				return out
+			}(in)
+		}(in["match_label_keys"]),
+		MismatchLabelKeys: func(in interface{}) []string {
+			return func(in interface{}) []string {
+				if in == nil {
+					return nil
+				}
+				var out []string
+				for _, in := range in.([]interface{}) {
+					out = append(out, string(ExpandString(in)))
+				}
+				return out
+			}(in)
+		}(in["mismatch_label_keys"]),
 	}
 }
 
@@ -119,6 +145,24 @@ func FlattenResourcePodAffinityTermInto(in core.PodAffinityTerm, out map[string]
 			}(*in)
 		}(in)
 	}(in.NamespaceSelector)
+	out["match_label_keys"] = func(in []string) interface{} {
+		return func(in []string) []interface{} {
+			var out []interface{}
+			for _, in := range in {
+				out = append(out, FlattenString(string(in)))
+			}
+			return out
+		}(in)
+	}(in.MatchLabelKeys)
+	out["mismatch_label_keys"] = func(in []string) interface{} {
+		return func(in []string) []interface{} {
+			var out []interface{}
+			for _, in := range in {
+				out = append(out, FlattenString(string(in)))
+			}
+			return out
+		}(in)
+	}(in.MismatchLabelKeys)
 }
 
 func FlattenResourcePodAffinityTerm(in core.PodAffinityTerm) map[string]interface{} {

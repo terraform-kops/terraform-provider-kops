@@ -21,9 +21,10 @@ func TestExpandResourceAmazonVPCNetworkingSpec(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
-					"image":      "",
-					"init_image": "",
-					"env":        func() []interface{} { return nil }(),
+					"image":                      "",
+					"init_image":                 "",
+					"network_policy_agent_image": "",
+					"env":                        func() []interface{} { return nil }(),
 				},
 			},
 			want: _default,
@@ -41,9 +42,10 @@ func TestExpandResourceAmazonVPCNetworkingSpec(t *testing.T) {
 
 func TestFlattenResourceAmazonVPCNetworkingSpecInto(t *testing.T) {
 	_default := map[string]interface{}{
-		"image":      "",
-		"init_image": "",
-		"env":        func() []interface{} { return nil }(),
+		"image":                      "",
+		"init_image":                 "",
+		"network_policy_agent_image": "",
+		"env":                        func() []interface{} { return nil }(),
 	}
 	type args struct {
 		in kops.AmazonVPCNetworkingSpec
@@ -77,6 +79,17 @@ func TestFlattenResourceAmazonVPCNetworkingSpecInto(t *testing.T) {
 				in: func() kops.AmazonVPCNetworkingSpec {
 					subject := kops.AmazonVPCNetworkingSpec{}
 					subject.InitImage = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NetworkPolicyAgentImage - default",
+			args: args{
+				in: func() kops.AmazonVPCNetworkingSpec {
+					subject := kops.AmazonVPCNetworkingSpec{}
+					subject.NetworkPolicyAgentImage = ""
 					return subject
 				}(),
 			},
@@ -107,9 +120,10 @@ func TestFlattenResourceAmazonVPCNetworkingSpecInto(t *testing.T) {
 
 func TestFlattenResourceAmazonVPCNetworkingSpec(t *testing.T) {
 	_default := map[string]interface{}{
-		"image":      "",
-		"init_image": "",
-		"env":        func() []interface{} { return nil }(),
+		"image":                      "",
+		"init_image":                 "",
+		"network_policy_agent_image": "",
+		"env":                        func() []interface{} { return nil }(),
 	}
 	type args struct {
 		in kops.AmazonVPCNetworkingSpec
@@ -143,6 +157,17 @@ func TestFlattenResourceAmazonVPCNetworkingSpec(t *testing.T) {
 				in: func() kops.AmazonVPCNetworkingSpec {
 					subject := kops.AmazonVPCNetworkingSpec{}
 					subject.InitImage = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NetworkPolicyAgentImage - default",
+			args: args{
+				in: func() kops.AmazonVPCNetworkingSpec {
+					subject := kops.AmazonVPCNetworkingSpec{}
+					subject.NetworkPolicyAgentImage = ""
 					return subject
 				}(),
 			},

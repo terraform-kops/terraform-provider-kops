@@ -22,6 +22,7 @@ func TestExpandDataSourceContainerdConfig(t *testing.T) {
 			args: args{
 				in: map[string]interface{}{
 					"address":          nil,
+					"config_additions": func() []interface{} { return nil }(),
 					"config_override":  nil,
 					"log_level":        nil,
 					"packages":         nil,
@@ -33,6 +34,7 @@ func TestExpandDataSourceContainerdConfig(t *testing.T) {
 					"nvidia_gpu":       nil,
 					"runc":             nil,
 					"se_linux_enabled": false,
+					"nri":              nil,
 				},
 			},
 			want: _default,
@@ -51,6 +53,7 @@ func TestExpandDataSourceContainerdConfig(t *testing.T) {
 func TestFlattenDataSourceContainerdConfigInto(t *testing.T) {
 	_default := map[string]interface{}{
 		"address":          nil,
+		"config_additions": func() []interface{} { return nil }(),
 		"config_override":  nil,
 		"log_level":        nil,
 		"packages":         nil,
@@ -62,6 +65,7 @@ func TestFlattenDataSourceContainerdConfigInto(t *testing.T) {
 		"nvidia_gpu":       nil,
 		"runc":             nil,
 		"se_linux_enabled": false,
+		"nri":              nil,
 	}
 	type args struct {
 		in kops.ContainerdConfig
@@ -84,6 +88,17 @@ func TestFlattenDataSourceContainerdConfigInto(t *testing.T) {
 				in: func() kops.ContainerdConfig {
 					subject := kops.ContainerdConfig{}
 					subject.Address = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ConfigAdditions - default",
+			args: args{
+				in: func() kops.ContainerdConfig {
+					subject := kops.ContainerdConfig{}
+					subject.ConfigAdditions = nil
 					return subject
 				}(),
 			},
@@ -205,6 +220,17 @@ func TestFlattenDataSourceContainerdConfigInto(t *testing.T) {
 				in: func() kops.ContainerdConfig {
 					subject := kops.ContainerdConfig{}
 					subject.SeLinuxEnabled = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NRI - default",
+			args: args{
+				in: func() kops.ContainerdConfig {
+					subject := kops.ContainerdConfig{}
+					subject.NRI = nil
 					return subject
 				}(),
 			},
@@ -225,6 +251,7 @@ func TestFlattenDataSourceContainerdConfigInto(t *testing.T) {
 func TestFlattenDataSourceContainerdConfig(t *testing.T) {
 	_default := map[string]interface{}{
 		"address":          nil,
+		"config_additions": func() []interface{} { return nil }(),
 		"config_override":  nil,
 		"log_level":        nil,
 		"packages":         nil,
@@ -236,6 +263,7 @@ func TestFlattenDataSourceContainerdConfig(t *testing.T) {
 		"nvidia_gpu":       nil,
 		"runc":             nil,
 		"se_linux_enabled": false,
+		"nri":              nil,
 	}
 	type args struct {
 		in kops.ContainerdConfig
@@ -258,6 +286,17 @@ func TestFlattenDataSourceContainerdConfig(t *testing.T) {
 				in: func() kops.ContainerdConfig {
 					subject := kops.ContainerdConfig{}
 					subject.Address = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ConfigAdditions - default",
+			args: args{
+				in: func() kops.ContainerdConfig {
+					subject := kops.ContainerdConfig{}
+					subject.ConfigAdditions = nil
 					return subject
 				}(),
 			},
@@ -379,6 +418,17 @@ func TestFlattenDataSourceContainerdConfig(t *testing.T) {
 				in: func() kops.ContainerdConfig {
 					subject := kops.ContainerdConfig{}
 					subject.SeLinuxEnabled = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NRI - default",
+			args: args{
+				in: func() kops.ContainerdConfig {
+					subject := kops.ContainerdConfig{}
+					subject.NRI = nil
 					return subject
 				}(),
 			},

@@ -31,12 +31,19 @@ func TestExpandDataSourceKubeSchedulerConfig(t *testing.T) {
 					"max_persistent_volumes":           nil,
 					"qps":                              nil,
 					"burst":                            0,
+					"kube_api_qps":                     nil,
+					"kube_api_burst":                   nil,
 					"authentication_kubeconfig":        "",
 					"authorization_kubeconfig":         "",
 					"authorization_always_allow_paths": func() []interface{} { return nil }(),
 					"enable_profiling":                 nil,
+					"enable_contention_profiling":      nil,
 					"tls_cert_file":                    nil,
 					"tls_private_key_file":             "",
+					"cpu_request":                      nil,
+					"cpu_limit":                        nil,
+					"memory_request":                   nil,
+					"memory_limit":                     nil,
 				},
 			},
 			want: _default,
@@ -64,12 +71,19 @@ func TestFlattenDataSourceKubeSchedulerConfigInto(t *testing.T) {
 		"max_persistent_volumes":           nil,
 		"qps":                              nil,
 		"burst":                            0,
+		"kube_api_qps":                     nil,
+		"kube_api_burst":                   nil,
 		"authentication_kubeconfig":        "",
 		"authorization_kubeconfig":         "",
 		"authorization_always_allow_paths": func() []interface{} { return nil }(),
 		"enable_profiling":                 nil,
+		"enable_contention_profiling":      nil,
 		"tls_cert_file":                    nil,
 		"tls_private_key_file":             "",
+		"cpu_request":                      nil,
+		"cpu_limit":                        nil,
+		"memory_request":                   nil,
+		"memory_limit":                     nil,
 	}
 	type args struct {
 		in kops.KubeSchedulerConfig
@@ -197,6 +211,28 @@ func TestFlattenDataSourceKubeSchedulerConfigInto(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "KubeApiQPS - default",
+			args: args{
+				in: func() kops.KubeSchedulerConfig {
+					subject := kops.KubeSchedulerConfig{}
+					subject.KubeAPIQPS = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "KubeApiBurst - default",
+			args: args{
+				in: func() kops.KubeSchedulerConfig {
+					subject := kops.KubeSchedulerConfig{}
+					subject.KubeAPIBurst = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "AuthenticationKubeconfig - default",
 			args: args{
 				in: func() kops.KubeSchedulerConfig {
@@ -241,6 +277,17 @@ func TestFlattenDataSourceKubeSchedulerConfigInto(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "EnableContentionProfiling - default",
+			args: args{
+				in: func() kops.KubeSchedulerConfig {
+					subject := kops.KubeSchedulerConfig{}
+					subject.EnableContentionProfiling = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "TLSCertFile - default",
 			args: args{
 				in: func() kops.KubeSchedulerConfig {
@@ -257,6 +304,50 @@ func TestFlattenDataSourceKubeSchedulerConfigInto(t *testing.T) {
 				in: func() kops.KubeSchedulerConfig {
 					subject := kops.KubeSchedulerConfig{}
 					subject.TLSPrivateKeyFile = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CpuRequest - default",
+			args: args{
+				in: func() kops.KubeSchedulerConfig {
+					subject := kops.KubeSchedulerConfig{}
+					subject.CPURequest = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CpuLimit - default",
+			args: args{
+				in: func() kops.KubeSchedulerConfig {
+					subject := kops.KubeSchedulerConfig{}
+					subject.CPULimit = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryRequest - default",
+			args: args{
+				in: func() kops.KubeSchedulerConfig {
+					subject := kops.KubeSchedulerConfig{}
+					subject.MemoryRequest = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryLimit - default",
+			args: args{
+				in: func() kops.KubeSchedulerConfig {
+					subject := kops.KubeSchedulerConfig{}
+					subject.MemoryLimit = nil
 					return subject
 				}(),
 			},
@@ -286,12 +377,19 @@ func TestFlattenDataSourceKubeSchedulerConfig(t *testing.T) {
 		"max_persistent_volumes":           nil,
 		"qps":                              nil,
 		"burst":                            0,
+		"kube_api_qps":                     nil,
+		"kube_api_burst":                   nil,
 		"authentication_kubeconfig":        "",
 		"authorization_kubeconfig":         "",
 		"authorization_always_allow_paths": func() []interface{} { return nil }(),
 		"enable_profiling":                 nil,
+		"enable_contention_profiling":      nil,
 		"tls_cert_file":                    nil,
 		"tls_private_key_file":             "",
+		"cpu_request":                      nil,
+		"cpu_limit":                        nil,
+		"memory_request":                   nil,
+		"memory_limit":                     nil,
 	}
 	type args struct {
 		in kops.KubeSchedulerConfig
@@ -419,6 +517,28 @@ func TestFlattenDataSourceKubeSchedulerConfig(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "KubeApiQPS - default",
+			args: args{
+				in: func() kops.KubeSchedulerConfig {
+					subject := kops.KubeSchedulerConfig{}
+					subject.KubeAPIQPS = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "KubeApiBurst - default",
+			args: args{
+				in: func() kops.KubeSchedulerConfig {
+					subject := kops.KubeSchedulerConfig{}
+					subject.KubeAPIBurst = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "AuthenticationKubeconfig - default",
 			args: args{
 				in: func() kops.KubeSchedulerConfig {
@@ -463,6 +583,17 @@ func TestFlattenDataSourceKubeSchedulerConfig(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "EnableContentionProfiling - default",
+			args: args{
+				in: func() kops.KubeSchedulerConfig {
+					subject := kops.KubeSchedulerConfig{}
+					subject.EnableContentionProfiling = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "TLSCertFile - default",
 			args: args{
 				in: func() kops.KubeSchedulerConfig {
@@ -479,6 +610,50 @@ func TestFlattenDataSourceKubeSchedulerConfig(t *testing.T) {
 				in: func() kops.KubeSchedulerConfig {
 					subject := kops.KubeSchedulerConfig{}
 					subject.TLSPrivateKeyFile = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CpuRequest - default",
+			args: args{
+				in: func() kops.KubeSchedulerConfig {
+					subject := kops.KubeSchedulerConfig{}
+					subject.CPURequest = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CpuLimit - default",
+			args: args{
+				in: func() kops.KubeSchedulerConfig {
+					subject := kops.KubeSchedulerConfig{}
+					subject.CPULimit = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryRequest - default",
+			args: args{
+				in: func() kops.KubeSchedulerConfig {
+					subject := kops.KubeSchedulerConfig{}
+					subject.MemoryRequest = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryLimit - default",
+			args: args{
+				in: func() kops.KubeSchedulerConfig {
+					subject := kops.KubeSchedulerConfig{}
+					subject.MemoryLimit = nil
 					return subject
 				}(),
 			},

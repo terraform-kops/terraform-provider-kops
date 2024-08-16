@@ -21,26 +21,27 @@ func TestExpandResourceClusterAutoscalerConfig(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
-					"enabled":                          nil,
-					"expander":                         "",
-					"balance_similar_node_groups":      nil,
-					"aws_use_static_instance_list":     nil,
-					"ignore_daemon_sets_utilization":   nil,
-					"scale_down_utilization_threshold": nil,
-					"skip_nodes_with_system_pods":      nil,
-					"skip_nodes_with_local_storage":    nil,
-					"new_pod_scale_up_delay":           nil,
-					"scale_down_delay_after_add":       nil,
-					"scale_down_unneeded_time":         nil,
-					"scale_down_unready_time":          nil,
-					"cordon_node_before_terminating":   nil,
-					"image":                            nil,
-					"memory_request":                   nil,
-					"cpu_request":                      nil,
-					"max_node_provision_time":          "",
-					"pod_annotations":                  func() map[string]interface{} { return nil }(),
-					"create_priority_expender_config":  nil,
-					"custom_priority_expander_config":  func() []interface{} { return nil }(),
+					"enabled":                                nil,
+					"expander":                               "",
+					"balance_similar_node_groups":            nil,
+					"aws_use_static_instance_list":           nil,
+					"ignore_daemon_sets_utilization":         nil,
+					"scale_down_utilization_threshold":       nil,
+					"skip_nodes_with_custom_controller_pods": nil,
+					"skip_nodes_with_system_pods":            nil,
+					"skip_nodes_with_local_storage":          nil,
+					"new_pod_scale_up_delay":                 nil,
+					"scale_down_delay_after_add":             nil,
+					"scale_down_unneeded_time":               nil,
+					"scale_down_unready_time":                nil,
+					"cordon_node_before_terminating":         nil,
+					"image":                                  nil,
+					"memory_request":                         nil,
+					"cpu_request":                            nil,
+					"max_node_provision_time":                "",
+					"pod_annotations":                        func() map[string]interface{} { return nil }(),
+					"create_priority_expender_config":        nil,
+					"custom_priority_expander_config":        func() []interface{} { return nil }(),
 				},
 			},
 			want: _default,
@@ -58,26 +59,27 @@ func TestExpandResourceClusterAutoscalerConfig(t *testing.T) {
 
 func TestFlattenResourceClusterAutoscalerConfigInto(t *testing.T) {
 	_default := map[string]interface{}{
-		"enabled":                          nil,
-		"expander":                         "",
-		"balance_similar_node_groups":      nil,
-		"aws_use_static_instance_list":     nil,
-		"ignore_daemon_sets_utilization":   nil,
-		"scale_down_utilization_threshold": nil,
-		"skip_nodes_with_system_pods":      nil,
-		"skip_nodes_with_local_storage":    nil,
-		"new_pod_scale_up_delay":           nil,
-		"scale_down_delay_after_add":       nil,
-		"scale_down_unneeded_time":         nil,
-		"scale_down_unready_time":          nil,
-		"cordon_node_before_terminating":   nil,
-		"image":                            nil,
-		"memory_request":                   nil,
-		"cpu_request":                      nil,
-		"max_node_provision_time":          "",
-		"pod_annotations":                  func() map[string]interface{} { return nil }(),
-		"create_priority_expender_config":  nil,
-		"custom_priority_expander_config":  func() []interface{} { return nil }(),
+		"enabled":                                nil,
+		"expander":                               "",
+		"balance_similar_node_groups":            nil,
+		"aws_use_static_instance_list":           nil,
+		"ignore_daemon_sets_utilization":         nil,
+		"scale_down_utilization_threshold":       nil,
+		"skip_nodes_with_custom_controller_pods": nil,
+		"skip_nodes_with_system_pods":            nil,
+		"skip_nodes_with_local_storage":          nil,
+		"new_pod_scale_up_delay":                 nil,
+		"scale_down_delay_after_add":             nil,
+		"scale_down_unneeded_time":               nil,
+		"scale_down_unready_time":                nil,
+		"cordon_node_before_terminating":         nil,
+		"image":                                  nil,
+		"memory_request":                         nil,
+		"cpu_request":                            nil,
+		"max_node_provision_time":                "",
+		"pod_annotations":                        func() map[string]interface{} { return nil }(),
+		"create_priority_expender_config":        nil,
+		"custom_priority_expander_config":        func() []interface{} { return nil }(),
 	}
 	type args struct {
 		in kops.ClusterAutoscalerConfig
@@ -155,6 +157,17 @@ func TestFlattenResourceClusterAutoscalerConfigInto(t *testing.T) {
 				in: func() kops.ClusterAutoscalerConfig {
 					subject := kops.ClusterAutoscalerConfig{}
 					subject.ScaleDownUtilizationThreshold = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "SkipNodesWithCustomControllerPods - default",
+			args: args{
+				in: func() kops.ClusterAutoscalerConfig {
+					subject := kops.ClusterAutoscalerConfig{}
+					subject.SkipNodesWithCustomControllerPods = nil
 					return subject
 				}(),
 			},
@@ -328,26 +341,27 @@ func TestFlattenResourceClusterAutoscalerConfigInto(t *testing.T) {
 
 func TestFlattenResourceClusterAutoscalerConfig(t *testing.T) {
 	_default := map[string]interface{}{
-		"enabled":                          nil,
-		"expander":                         "",
-		"balance_similar_node_groups":      nil,
-		"aws_use_static_instance_list":     nil,
-		"ignore_daemon_sets_utilization":   nil,
-		"scale_down_utilization_threshold": nil,
-		"skip_nodes_with_system_pods":      nil,
-		"skip_nodes_with_local_storage":    nil,
-		"new_pod_scale_up_delay":           nil,
-		"scale_down_delay_after_add":       nil,
-		"scale_down_unneeded_time":         nil,
-		"scale_down_unready_time":          nil,
-		"cordon_node_before_terminating":   nil,
-		"image":                            nil,
-		"memory_request":                   nil,
-		"cpu_request":                      nil,
-		"max_node_provision_time":          "",
-		"pod_annotations":                  func() map[string]interface{} { return nil }(),
-		"create_priority_expender_config":  nil,
-		"custom_priority_expander_config":  func() []interface{} { return nil }(),
+		"enabled":                                nil,
+		"expander":                               "",
+		"balance_similar_node_groups":            nil,
+		"aws_use_static_instance_list":           nil,
+		"ignore_daemon_sets_utilization":         nil,
+		"scale_down_utilization_threshold":       nil,
+		"skip_nodes_with_custom_controller_pods": nil,
+		"skip_nodes_with_system_pods":            nil,
+		"skip_nodes_with_local_storage":          nil,
+		"new_pod_scale_up_delay":                 nil,
+		"scale_down_delay_after_add":             nil,
+		"scale_down_unneeded_time":               nil,
+		"scale_down_unready_time":                nil,
+		"cordon_node_before_terminating":         nil,
+		"image":                                  nil,
+		"memory_request":                         nil,
+		"cpu_request":                            nil,
+		"max_node_provision_time":                "",
+		"pod_annotations":                        func() map[string]interface{} { return nil }(),
+		"create_priority_expender_config":        nil,
+		"custom_priority_expander_config":        func() []interface{} { return nil }(),
 	}
 	type args struct {
 		in kops.ClusterAutoscalerConfig
@@ -425,6 +439,17 @@ func TestFlattenResourceClusterAutoscalerConfig(t *testing.T) {
 				in: func() kops.ClusterAutoscalerConfig {
 					subject := kops.ClusterAutoscalerConfig{}
 					subject.ScaleDownUtilizationThreshold = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "SkipNodesWithCustomControllerPods - default",
+			args: args{
+				in: func() kops.ClusterAutoscalerConfig {
+					subject := kops.ClusterAutoscalerConfig{}
+					subject.SkipNodesWithCustomControllerPods = nil
 					return subject
 				}(),
 			},

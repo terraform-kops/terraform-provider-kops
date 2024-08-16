@@ -31,6 +31,7 @@ func DataSourceCloudControllerManagerConfig() *schema.Resource {
 			"enable_leader_migration":         ComputedBool(),
 			"cpu_request":                     ComputedQuantity(),
 			"node_status_update_frequency":    ComputedDuration(),
+			"concurrent_node_syncs":           ComputedInt(),
 		},
 	}
 
@@ -242,6 +243,25 @@ func ExpandDataSourceCloudControllerManagerConfig(in map[string]interface{}) kop
 				}(ExpandDuration(in))
 			}(in)
 		}(in["node_status_update_frequency"]),
+		ConcurrentNodeSyncs: func(in interface{}) *int32 {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *int32 {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in int32) *int32 {
+					return &in
+				}(int32(ExpandInt(in)))
+			}(in)
+		}(in["concurrent_node_syncs"]),
 	}
 }
 
@@ -365,6 +385,16 @@ func FlattenDataSourceCloudControllerManagerConfigInto(in kops.CloudControllerMa
 			}(*in)
 		}(in)
 	}(in.NodeStatusUpdateFrequency)
+	out["concurrent_node_syncs"] = func(in *int32) interface{} {
+		return func(in *int32) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in int32) interface{} {
+				return FlattenInt(int(in))
+			}(*in)
+		}(in)
+	}(in.ConcurrentNodeSyncs)
 }
 
 func FlattenDataSourceCloudControllerManagerConfig(in kops.CloudControllerManagerConfig) map[string]interface{} {

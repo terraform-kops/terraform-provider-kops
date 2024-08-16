@@ -33,8 +33,8 @@ func ResourceCluster() *schema.Resource {
 			"additional_policies":               OptionalMap(String()),
 			"file_assets":                       OptionalList(kopsschemas.ResourceFileAssetSpec()),
 			"etcd_cluster":                      RequiredList(kopsschemas.ResourceEtcdClusterSpec()),
-			"containerd":                        OptionalStruct(kopsschemas.ResourceContainerdConfig()),
 			"docker":                            OptionalStruct(kopsschemas.ResourceDockerConfig()),
+			"containerd":                        OptionalStruct(kopsschemas.ResourceContainerdConfig()),
 			"kube_dns":                          OptionalStruct(kopsschemas.ResourceKubeDNSConfig()),
 			"kube_api_server":                   OptionalStruct(kopsschemas.ResourceKubeAPIServerConfig()),
 			"kube_controller_manager":           OptionalStruct(kopsschemas.ResourceKubeControllerManagerConfig()),
@@ -46,6 +46,7 @@ func ResourceCluster() *schema.Resource {
 			"cloud_config":                      OptionalStruct(kopsschemas.ResourceCloudConfiguration()),
 			"external_dns":                      OptionalStruct(kopsschemas.ResourceExternalDNSConfig()),
 			"ntp":                               OptionalStruct(kopsschemas.ResourceNTPConfig()),
+			"packages":                          OptionalList(String()),
 			"node_problem_detector":             OptionalStruct(kopsschemas.ResourceNodeProblemDetectorConfig()),
 			"metrics_server":                    OptionalStruct(kopsschemas.ResourceMetricsServerConfig()),
 			"cert_manager":                      OptionalStruct(kopsschemas.ResourceCertManagerConfig()),
@@ -72,6 +73,7 @@ func ResourceCluster() *schema.Resource {
 			"admin_ssh_key":                     Sensitive(OptionalString()),
 			"secrets":                           OptionalStruct(ResourceClusterSecrets()),
 			"revision":                          ComputedInt(),
+			"delete":                            OptionalStruct(ResourceDeleteOptions()),
 		},
 	}
 	res.SchemaVersion = 5
@@ -190,6 +192,14 @@ func ExpandResourceCluster(in map[string]interface{}) resources.Cluster {
 		Revision: func(in interface{}) int {
 			return int(ExpandInt(in))
 		}(in["revision"]),
+		Delete: func(in interface{}) resources.DeleteOptions {
+			return func(in interface{}) resources.DeleteOptions {
+				if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+					return ExpandResourceDeleteOptions(in[0].(map[string]interface{}))
+				}
+				return resources.DeleteOptions{}
+			}(in)
+		}(in["delete"]),
 	}
 }
 
@@ -240,6 +250,11 @@ func FlattenResourceClusterInto(in resources.Cluster, out map[string]interface{}
 	out["revision"] = func(in int) interface{} {
 		return FlattenInt(int(in))
 	}(in.Revision)
+	out["delete"] = func(in resources.DeleteOptions) interface{} {
+		return func(in resources.DeleteOptions) []interface{} {
+			return []interface{}{FlattenResourceDeleteOptions(in)}
+		}(in)
+	}(in.Delete)
 }
 
 func FlattenResourceCluster(in resources.Cluster) map[string]interface{} {

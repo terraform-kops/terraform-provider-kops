@@ -176,7 +176,7 @@ ExecContainerAction defines an hood action.
 
 The following arguments are supported:
 
-- `image` - (Computed) - String - Image is the docker image.
+- `image` - (Computed) - String - Image is the container image.
 - `command` - (Computed) - List(String) - Command is the command supplied to the above image.
 - `environment` - (Computed) - Map(String) - Environment is a map of environment variables added to the hook.
 
@@ -243,7 +243,7 @@ The following arguments are supported:
 - `resolver_config` - (Computed) - String - ResolverConfig is the resolver configuration file used as the basis for the container DNS resolution configuration."), [].
 - `reconcile_cidr` - (Computed) - Bool - ReconcileCIDR is Reconcile node CIDR with the CIDR specified by the<br />API server. No-op if register-node or configure-cbr0 is false.
 - `register_schedulable` - (Computed) - Bool - registerSchedulable tells the kubelet to register the node as schedulable. No-op if register-node is false.
-- `serialize_image_pulls` - (Computed) - Bool - // SerializeImagePulls when enabled, tells the Kubelet to pull images one<br />// at a time. We recommend *not* changing the default value on nodes that<br />// run docker daemon with version  < 1.9 or an Aufs storage backend.<br />// Issue #10959 has more details.
+- `serialize_image_pulls` - (Computed) - Bool - SerializeImagePulls when enabled, tells the Kubelet to pull images one at a time.
 - `node_labels` - (Computed) - Map(String) - NodeLabels to add when registering the node in the cluster.
 - `non_masquerade_cidr` - (Computed) - String - NonMasqueradeCIDR configures masquerading: traffic to IPs outside this range will use IP masquerade.
 - `enable_custom_metrics` - (Computed) - Bool - Enable gathering custom metrics.
@@ -274,7 +274,7 @@ The following arguments are supported:
 - `experimental_allowed_unsafe_sysctls` - (Computed) - List(String) - ExperimentalAllowedUnsafeSysctls are passed to the kubelet config to whitelist allowable sysctls<br />Was promoted to beta and renamed. https://github.com/kubernetes/kubernetes/pull/63717.
 - `allowed_unsafe_sysctls` - (Computed) - List(String) - AllowedUnsafeSysctls are passed to the kubelet config to whitelist allowable sysctls.
 - `streaming_connection_idle_timeout` - (Computed) - Duration - StreamingConnectionIdleTimeout is the maximum time a streaming connection can be idle before the connection is automatically closed.
-- `docker_disable_shared_pid` - (Computed) - Bool - DockerDisableSharedPID uses a shared PID namespace for containers in a pod.
+- `docker_disable_shared_pid` - (Computed) - Bool - DockerDisableSharedPID was removed.
 - `root_dir` - (Computed) - String - RootDir is the directory path for managing kubelet files (volume mounts,etc).
 - `authentication_token_webhook` - (Computed) - Bool - AuthenticationTokenWebhook uses the TokenReview API to determine authentication for bearer tokens.
 - `authentication_token_webhook_cache_ttl` - (Computed) - Duration - AuthenticationTokenWebhook sets the duration to cache responses from the webhook token authenticator. Default is 2m. (default 2m0s).
@@ -408,6 +408,7 @@ ContainerdConfig is the configuration for containerd.
 The following arguments are supported:
 
 - `address` - (Computed) - String - Address of containerd's GRPC server (default "/run/containerd/containerd.sock").
+- `config_additions` - (Computed) - Map(IntOrString) - ConfigAdditions adds additional config entries to the generated config file.
 - `config_override` - (Computed) - String - ConfigOverride is the complete containerd config file provided by the user.
 - `log_level` - (Computed) - String - LogLevel controls the logging details [trace, debug, info, warn, error, fatal, panic] (default "info").
 - `packages` - (Computed) - [packages_config](#packages_config) - Packages overrides the URL and hash for the packages.
@@ -419,6 +420,7 @@ The following arguments are supported:
 - `nvidia_gpu` - (Computed) - [nvidia_gpu_config](#nvidia_gpu_config) - NvidiaGPU configures the Nvidia GPU runtime.
 - `runc` - (Computed) - [runc](#runc) - Runc configures the runc runtime.
 - `se_linux_enabled` - (Computed) - Bool - SelinuxEnabled enables SELinux support.
+- `nri` - (Computed) - [nri_config](#nri_config) - NRI configures the Node Resource Interface.
 
 ### packages_config
 
@@ -459,6 +461,16 @@ The following arguments are supported:
 
 - `version` - (Computed) - String - Version used to pick the runc package.
 - `packages` - (Computed) - [packages_config](#packages_config) - Packages overrides the URL and hash for the packages.
+
+### nri_config
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `enabled` - (Computed) - Bool - Enable NRI support in containerd.
+- `plugin_registration_timeout` - (Computed) - Duration - PluginRegistrationTimeout is the timeout for plugin registration.
+- `plugin_request_timeout` - (Computed) - Duration - PluginRequestTimeout is the timeout for a plugin to handle a request.
 
 ### accelerator_config
 

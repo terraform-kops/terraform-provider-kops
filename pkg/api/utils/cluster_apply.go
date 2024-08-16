@@ -33,7 +33,7 @@ func ParseLifecycleOverrides(lifecycleOverrides map[string]string) (map[string]f
 	}
 }
 
-func ClusterApply(clientset simple.Clientset, clusterName string, allowKopsDowngrade bool, lifecycleOverrides map[string]fi.Lifecycle) error {
+func ClusterApply(clientset simple.Clientset, clusterName string, allowKopsDowngrade bool, lifecycleOverrides map[string]fi.Lifecycle, prune bool) error {
 	kc, err := clientset.GetCluster(context.Background(), clusterName)
 	if err != nil {
 		return err
@@ -42,6 +42,10 @@ func ClusterApply(clientset simple.Clientset, clusterName string, allowKopsDowng
 	if err != nil {
 		return err
 	}
+	deletionProcessing := fi.DeletionProcessingModeDeleteIfNotDeferrred
+	if prune {
+		deletionProcessing = fi.DeletionProcessingModeDeleteIncludingDeferred
+	}
 	apply := &cloudup.ApplyClusterCmd{
 		Cloud:              cloud,
 		Cluster:            kc,
@@ -49,6 +53,7 @@ func ClusterApply(clientset simple.Clientset, clusterName string, allowKopsDowng
 		TargetName:         cloudup.TargetDirect,
 		AllowKopsDowngrade: allowKopsDowngrade,
 		LifecycleOverrides: lifecycleOverrides,
+		DeletionProcessing: deletionProcessing,
 	}
 	return apply.Run(context.Background())
 }

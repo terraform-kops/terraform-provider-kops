@@ -3,6 +3,7 @@ package resources
 import (
 	"context"
 	"fmt"
+	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/kops/pkg/apis/kops"
@@ -32,6 +33,8 @@ type Cluster struct {
 	Secrets *ClusterSecrets
 	// Revision is incremented every time the resource changes, this is useful for triggering cluster updater
 	Revision int
+	// Delete holds cluster delete options
+	Delete DeleteOptions
 }
 
 func makeCluster(adminSshKey string, secrets *ClusterSecrets, cluster *kops.Cluster) *Cluster {
@@ -183,7 +186,7 @@ func UpdateCluster(name string, labels map[string]string, annotations map[string
 	return makeCluster(adminSshKey, secrets, kc), nil
 }
 
-func DeleteCluster(name string, clientset simple.Clientset) error {
+func DeleteCluster(name string, clientset simple.Clientset, count int, interval, wait time.Duration) error {
 	kc, err := clientset.GetCluster(context.Background(), name)
 	if err != nil {
 		return err
@@ -204,7 +207,7 @@ func DeleteCluster(name string, clientset simple.Clientset) error {
 		clusterResources[k] = resource
 	}
 	if len(clusterResources) != 0 {
-		err = ops.DeleteResources(cloud, clusterResources)
+		err = ops.DeleteResources(cloud, clusterResources, count, interval, wait)
 		if err != nil {
 			return err
 		}

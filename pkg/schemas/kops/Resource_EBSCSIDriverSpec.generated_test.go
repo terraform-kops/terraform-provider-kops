@@ -24,6 +24,9 @@ func TestExpandResourceEBSCSIDriverSpec(t *testing.T) {
 					"enabled":             nil,
 					"managed":             nil,
 					"version":             nil,
+					"kube_api_qps":        nil,
+					"kube_api_burst":      nil,
+					"host_network":        false,
 					"volume_attach_limit": nil,
 					"pod_annotations":     func() map[string]interface{} { return nil }(),
 				},
@@ -46,6 +49,9 @@ func TestFlattenResourceEBSCSIDriverSpecInto(t *testing.T) {
 		"enabled":             nil,
 		"managed":             nil,
 		"version":             nil,
+		"kube_api_qps":        nil,
+		"kube_api_burst":      nil,
+		"host_network":        false,
 		"volume_attach_limit": nil,
 		"pod_annotations":     func() map[string]interface{} { return nil }(),
 	}
@@ -92,6 +98,39 @@ func TestFlattenResourceEBSCSIDriverSpecInto(t *testing.T) {
 				in: func() kops.EBSCSIDriverSpec {
 					subject := kops.EBSCSIDriverSpec{}
 					subject.Version = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "KubeApiQPS - default",
+			args: args{
+				in: func() kops.EBSCSIDriverSpec {
+					subject := kops.EBSCSIDriverSpec{}
+					subject.KubeAPIQPS = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "KubeApiBurst - default",
+			args: args{
+				in: func() kops.EBSCSIDriverSpec {
+					subject := kops.EBSCSIDriverSpec{}
+					subject.KubeAPIBurst = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "HostNetwork - default",
+			args: args{
+				in: func() kops.EBSCSIDriverSpec {
+					subject := kops.EBSCSIDriverSpec{}
+					subject.HostNetwork = false
 					return subject
 				}(),
 			},
@@ -136,6 +175,9 @@ func TestFlattenResourceEBSCSIDriverSpec(t *testing.T) {
 		"enabled":             nil,
 		"managed":             nil,
 		"version":             nil,
+		"kube_api_qps":        nil,
+		"kube_api_burst":      nil,
+		"host_network":        false,
 		"volume_attach_limit": nil,
 		"pod_annotations":     func() map[string]interface{} { return nil }(),
 	}
@@ -182,6 +224,39 @@ func TestFlattenResourceEBSCSIDriverSpec(t *testing.T) {
 				in: func() kops.EBSCSIDriverSpec {
 					subject := kops.EBSCSIDriverSpec{}
 					subject.Version = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "KubeApiQPS - default",
+			args: args{
+				in: func() kops.EBSCSIDriverSpec {
+					subject := kops.EBSCSIDriverSpec{}
+					subject.KubeAPIQPS = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "KubeApiBurst - default",
+			args: args{
+				in: func() kops.EBSCSIDriverSpec {
+					subject := kops.EBSCSIDriverSpec{}
+					subject.KubeAPIBurst = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "HostNetwork - default",
+			args: args{
+				in: func() kops.EBSCSIDriverSpec {
+					subject := kops.EBSCSIDriverSpec{}
+					subject.HostNetwork = false
 					return subject
 				}(),
 			},

@@ -5,7 +5,9 @@ import (
 	"sort"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/terraform-kops/terraform-provider-kops/pkg/schemas"
 	. "github.com/terraform-kops/terraform-provider-kops/pkg/schemas"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/kops/pkg/apis/kops"
 )
 
@@ -15,6 +17,7 @@ func ResourceContainerdConfig() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"address":          OptionalString(),
+			"config_additions": OptionalComplexMap(schemas.ResourceIntOrString()),
 			"config_override":  OptionalString(),
 			"log_level":        OptionalString(),
 			"packages":         OptionalStruct(ResourcePackagesConfig()),
@@ -26,6 +29,7 @@ func ResourceContainerdConfig() *schema.Resource {
 			"nvidia_gpu":       OptionalStruct(ResourceNvidiaGPUConfig()),
 			"runc":             OptionalStruct(ResourceRunc()),
 			"se_linux_enabled": OptionalBool(),
+			"nri":              OptionalStruct(ResourceNRIConfig()),
 		},
 	}
 
@@ -56,6 +60,29 @@ func ExpandResourceContainerdConfig(in map[string]interface{}) kops.ContainerdCo
 				}(string(ExpandString(in)))
 			}(in)
 		}(in["address"]),
+		ConfigAdditions: func(in interface{}) map[string]intstr.IntOrString {
+			return func(in interface{}) map[string]intstr.IntOrString {
+				if in == nil {
+					return nil
+				}
+				if in, ok := in.([]interface{}); ok {
+					if len(in) > 0 {
+						out := map[string]intstr.IntOrString{}
+						for _, in := range in {
+							if in, ok := in.(map[string]interface{}); ok {
+								key := ExpandString(in["key"])
+								value := func(in interface{}) intstr.IntOrString {
+									return ExpandIntOrString(in)
+								}(in["value"])
+								out[key] = value
+							}
+						}
+						return out
+					}
+				}
+				return nil
+			}(in)
+		}(in["config_additions"]),
 		ConfigOverride: func(in interface{}) *string {
 			if in == nil {
 				return nil
@@ -243,6 +270,24 @@ func ExpandResourceContainerdConfig(in map[string]interface{}) kops.ContainerdCo
 		SeLinuxEnabled: func(in interface{}) bool {
 			return bool(ExpandBool(in))
 		}(in["se_linux_enabled"]),
+		NRI: func(in interface{}) *kops.NRIConfig {
+			return func(in interface{}) *kops.NRIConfig {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in kops.NRIConfig) *kops.NRIConfig {
+					return &in
+				}(func(in interface{}) kops.NRIConfig {
+					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+						return ExpandResourceNRIConfig(in[0].(map[string]interface{}))
+					}
+					return kops.NRIConfig{}
+				}(in))
+			}(in)
+		}(in["nri"]),
 	}
 }
 
@@ -257,6 +302,29 @@ func FlattenResourceContainerdConfigInto(in kops.ContainerdConfig, out map[strin
 			}(*in)
 		}(in)
 	}(in.Address)
+	out["config_additions"] = func(in map[string]intstr.IntOrString) interface{} {
+		return func(in map[string]intstr.IntOrString) []interface{} {
+			if in == nil {
+				return nil
+			}
+			keys := make([]string, 0, len(in))
+			for key := range in {
+				keys = append(keys, key)
+			}
+			sort.SliceStable(keys, func(i, j int) bool {
+				return keys[i] < keys[j]
+			})
+			var out []interface{}
+			for _, key := range keys {
+				in := in[key]
+				out = append(out, map[string]interface{}{
+					"key":   key,
+					"value": FlattenIntOrString(in),
+				})
+			}
+			return out
+		}(in)
+	}(in.ConfigAdditions)
 	out["config_override"] = func(in *string) interface{} {
 		return func(in *string) interface{} {
 			if in == nil {
@@ -378,6 +446,18 @@ func FlattenResourceContainerdConfigInto(in kops.ContainerdConfig, out map[strin
 	out["se_linux_enabled"] = func(in bool) interface{} {
 		return FlattenBool(bool(in))
 	}(in.SeLinuxEnabled)
+	out["nri"] = func(in *kops.NRIConfig) interface{} {
+		return func(in *kops.NRIConfig) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in kops.NRIConfig) interface{} {
+				return func(in kops.NRIConfig) []interface{} {
+					return []interface{}{FlattenResourceNRIConfig(in)}
+				}(in)
+			}(*in)
+		}(in)
+	}(in.NRI)
 }
 
 func FlattenResourceContainerdConfig(in kops.ContainerdConfig) map[string]interface{} {
