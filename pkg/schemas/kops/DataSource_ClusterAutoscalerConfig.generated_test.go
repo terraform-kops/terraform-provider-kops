@@ -24,6 +24,7 @@ func TestExpandDataSourceClusterAutoscalerConfig(t *testing.T) {
 					"enabled":                                nil,
 					"expander":                               "",
 					"balance_similar_node_groups":            nil,
+					"emit_per_nodegroup_metrics":             nil,
 					"aws_use_static_instance_list":           nil,
 					"ignore_daemon_sets_utilization":         nil,
 					"scale_down_utilization_threshold":       nil,
@@ -62,6 +63,7 @@ func TestFlattenDataSourceClusterAutoscalerConfigInto(t *testing.T) {
 		"enabled":                                nil,
 		"expander":                               "",
 		"balance_similar_node_groups":            nil,
+		"emit_per_nodegroup_metrics":             nil,
 		"aws_use_static_instance_list":           nil,
 		"ignore_daemon_sets_utilization":         nil,
 		"scale_down_utilization_threshold":       nil,
@@ -124,6 +126,17 @@ func TestFlattenDataSourceClusterAutoscalerConfigInto(t *testing.T) {
 				in: func() kops.ClusterAutoscalerConfig {
 					subject := kops.ClusterAutoscalerConfig{}
 					subject.BalanceSimilarNodeGroups = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EmitPerNodegroupMetrics - default",
+			args: args{
+				in: func() kops.ClusterAutoscalerConfig {
+					subject := kops.ClusterAutoscalerConfig{}
+					subject.EmitPerNodegroupMetrics = nil
 					return subject
 				}(),
 			},
@@ -344,6 +357,7 @@ func TestFlattenDataSourceClusterAutoscalerConfig(t *testing.T) {
 		"enabled":                                nil,
 		"expander":                               "",
 		"balance_similar_node_groups":            nil,
+		"emit_per_nodegroup_metrics":             nil,
 		"aws_use_static_instance_list":           nil,
 		"ignore_daemon_sets_utilization":         nil,
 		"scale_down_utilization_threshold":       nil,
@@ -406,6 +420,17 @@ func TestFlattenDataSourceClusterAutoscalerConfig(t *testing.T) {
 				in: func() kops.ClusterAutoscalerConfig {
 					subject := kops.ClusterAutoscalerConfig{}
 					subject.BalanceSimilarNodeGroups = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EmitPerNodegroupMetrics - default",
+			args: args{
+				in: func() kops.ClusterAutoscalerConfig {
+					subject := kops.ClusterAutoscalerConfig{}
+					subject.EmitPerNodegroupMetrics = nil
 					return subject
 				}(),
 			},

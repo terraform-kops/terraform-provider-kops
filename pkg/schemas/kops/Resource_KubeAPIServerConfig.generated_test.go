@@ -70,6 +70,7 @@ func TestExpandResourceKubeAPIServerConfig(t *testing.T) {
 					"oidc_client_id":                               nil,
 					"oidc_required_claim":                          func() []interface{} { return nil }(),
 					"oidc_ca_file":                                 nil,
+					"authentication_config_file":                   "",
 					"proxy_client_cert_file":                       nil,
 					"proxy_client_key_file":                        nil,
 					"audit_log_format":                             nil,
@@ -192,6 +193,7 @@ func TestFlattenResourceKubeAPIServerConfigInto(t *testing.T) {
 		"oidc_client_id":                               nil,
 		"oidc_required_claim":                          func() []interface{} { return nil }(),
 		"oidc_ca_file":                                 nil,
+		"authentication_config_file":                   "",
 		"proxy_client_cert_file":                       nil,
 		"proxy_client_key_file":                        nil,
 		"audit_log_format":                             nil,
@@ -798,6 +800,17 @@ func TestFlattenResourceKubeAPIServerConfigInto(t *testing.T) {
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
 					subject.OIDCCAFile = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "AuthenticationConfigFile - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.AuthenticationConfigFile = ""
 					return subject
 				}(),
 			},
@@ -1482,6 +1495,7 @@ func TestFlattenResourceKubeAPIServerConfig(t *testing.T) {
 		"oidc_client_id":                               nil,
 		"oidc_required_claim":                          func() []interface{} { return nil }(),
 		"oidc_ca_file":                                 nil,
+		"authentication_config_file":                   "",
 		"proxy_client_cert_file":                       nil,
 		"proxy_client_key_file":                        nil,
 		"audit_log_format":                             nil,
@@ -2088,6 +2102,17 @@ func TestFlattenResourceKubeAPIServerConfig(t *testing.T) {
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
 					subject.OIDCCAFile = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "AuthenticationConfigFile - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.AuthenticationConfigFile = ""
 					return subject
 				}(),
 			},
