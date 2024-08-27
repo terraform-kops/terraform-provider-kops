@@ -7,10 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ec2"
-	"github.com/aws/aws-sdk-go/service/sts"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/ec2"
+	"github.com/aws/aws-sdk-go-v2/service/sts"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/terraform-kops/terraform-provider-kops/pkg/api/config"
@@ -37,7 +36,7 @@ type options struct {
 	clientset simple.Clientset
 }
 
-func ConfigureProvider(_ context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
+func ConfigureProvider(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	providerConfig := configschemas.ExpandConfigProvider(d.Get("").(map[string]interface{}))
 	if err := initKlog(providerConfig.Klog); err != nil {
 		return nil, diag.FromErr(err)
@@ -45,14 +44,14 @@ func ConfigureProvider(_ context.Context, d *schema.ResourceData) (interface{}, 
 	if err := initFeatureFlags(providerConfig.FeatureFlags); err != nil {
 		return nil, diag.FromErr(err)
 	}
-	if err := initAwsCredentials(providerConfig.Aws); err != nil {
+	if err := initAwsCredentials(ctx, providerConfig.Aws); err != nil {
 		return nil, diag.FromErr(err)
 	}
 	if err := initOpenstackCredentials(providerConfig.Openstack); err != nil {
 		return nil, diag.FromErr(err)
 	}
 	if providerConfig.Mock {
-		initMock()
+		initMock(ctx)
 	}
 	basePath, err := vfs.Context.BuildVfsPath(providerConfig.StateStore)
 	if err != nil {
@@ -76,7 +75,7 @@ func setEnvVarSimple(name, value string) {
 	}
 }
 
-func initAwsCredentials(config *config.Aws) error {
+func initAwsCredentials(ctx context.Context, config *config.Aws) error {
 	if config == nil {
 		return nil
 	}
@@ -95,16 +94,12 @@ func initAwsCredentials(config *config.Aws) error {
 		os.Setenv("AWS_PROFILE", config.Profile)
 	}
 	if config.AssumeRole != nil {
-		ses, err := session.NewSession()
-		if err != nil {
-			return err
-		}
-		svc := sts.New(ses)
+		svc := sts.New(sts.Options{})
 		input := &sts.AssumeRoleInput{
 			RoleArn:         aws.String(config.AssumeRole.RoleArn),
 			RoleSessionName: aws.String("TF-PROVIDER-KOPS"),
 		}
-		result, err := svc.AssumeRole(input)
+		result, err := svc.AssumeRole(ctx, input)
 		if err != nil {
 			return err
 		}
@@ -157,7 +152,7 @@ func initFeatureFlags(config []string) error {
 }
 
 // nolint
-func initMock() {
+func initMock(ctx context.Context) {
 	h := &testutils.IntegrationTestHarness{}
 
 	h.SetupMockAWS()
@@ -169,13 +164,13 @@ func initMock() {
 		CidrBlock: aws.String("10.0.0.0/12"),
 	}, "vpc-12345678")
 
-	awsCloud.EC2().CreateSubnet(&ec2.CreateSubnetInput{
+	awsCloud.EC2().CreateSubnet(ctx, &ec2.CreateSubnetInput{
 		AvailabilityZone: aws.String("us-test-1a"),
 		VpcId:            aws.String("vpc-12345678"),
 		CidrBlock:        aws.String("10.10.0.0/24"),
 	})
 
-	awsCloud.EC2().CreateSubnet(&ec2.CreateSubnetInput{
+	awsCloud.EC2().CreateSubnet(ctx, &ec2.CreateSubnetInput{
 		AvailabilityZone: aws.String("us-test-1a"),
 		VpcId:            aws.String("vpc-12345678"),
 		CidrBlock:        aws.String("10.11.0.0/24"),

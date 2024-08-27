@@ -6,7 +6,9 @@ toolchain go1.23.0
 
 require (
 	github.com/Masterminds/sprig v2.22.0+incompatible
-	github.com/aws/aws-sdk-go v1.55.5
+	github.com/aws/aws-sdk-go-v2 v1.30.0
+	github.com/aws/aws-sdk-go-v2/service/ec2 v1.165.1
+	github.com/aws/aws-sdk-go-v2/service/sts v1.29.1
 	github.com/google/go-cmp v0.6.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.34.0
 	golang.org/x/tools v0.24.0
@@ -41,7 +43,7 @@ require (
 	github.com/agext/levenshtein v1.2.2 // indirect
 	github.com/apparentlymart/go-cidr v1.1.0 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
-	github.com/aws/aws-sdk-go-v2 v1.30.0 // indirect
+	github.com/aws/aws-sdk-go v1.55.5 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.2 // indirect
 	github.com/aws/aws-sdk-go-v2/config v1.27.21 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.21 // indirect
@@ -51,7 +53,6 @@ require (
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.8.0 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.3.12 // indirect
 	github.com/aws/aws-sdk-go-v2/service/autoscaling v1.41.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/ec2 v1.165.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing v1.25.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.32.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/eventbridge v1.32.1 // indirect
@@ -66,7 +67,6 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssm v1.51.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.21.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.25.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sts v1.29.1 // indirect
 	github.com/aws/smithy-go v1.20.2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blang/semver/v4 v4.0.0 // indirect
