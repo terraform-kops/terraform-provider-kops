@@ -12,9 +12,9 @@ require (
 	github.com/google/go-cmp v0.6.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.34.0
 	golang.org/x/tools v0.24.0
-	k8s.io/api v0.30.2
-	k8s.io/apimachinery v0.30.2
-	k8s.io/client-go v0.30.2
+	k8s.io/api v0.30.3
+	k8s.io/apimachinery v0.30.3
+	k8s.io/client-go v0.30.3
 	k8s.io/klog v1.0.0
 	k8s.io/kops v1.30.0
 )
