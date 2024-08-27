@@ -12,6 +12,7 @@ func DataSourceAzureSpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"subscription_id":     ComputedString(),
+			"storage_account_id":  ComputedString(),
 			"tenant_id":           ComputedString(),
 			"resource_group_name": ComputedString(),
 			"route_table_name":    ComputedString(),
@@ -30,6 +31,9 @@ func ExpandDataSourceAzureSpec(in map[string]interface{}) kops.AzureSpec {
 		SubscriptionID: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["subscription_id"]),
+		StorageAccountID: func(in interface{}) string {
+			return string(ExpandString(in))
+		}(in["storage_account_id"]),
 		TenantID: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["tenant_id"]),
@@ -49,6 +53,9 @@ func FlattenDataSourceAzureSpecInto(in kops.AzureSpec, out map[string]interface{
 	out["subscription_id"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.SubscriptionID)
+	out["storage_account_id"] = func(in string) interface{} {
+		return FlattenString(string(in))
+	}(in.StorageAccountID)
 	out["tenant_id"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.TenantID)

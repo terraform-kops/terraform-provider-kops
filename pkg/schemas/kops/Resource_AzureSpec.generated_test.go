@@ -22,6 +22,7 @@ func TestExpandResourceAzureSpec(t *testing.T) {
 			args: args{
 				in: map[string]interface{}{
 					"subscription_id":     "",
+					"storage_account_id":  "",
 					"tenant_id":           "",
 					"resource_group_name": "",
 					"route_table_name":    "",
@@ -44,6 +45,7 @@ func TestExpandResourceAzureSpec(t *testing.T) {
 func TestFlattenResourceAzureSpecInto(t *testing.T) {
 	_default := map[string]interface{}{
 		"subscription_id":     "",
+		"storage_account_id":  "",
 		"tenant_id":           "",
 		"resource_group_name": "",
 		"route_table_name":    "",
@@ -70,6 +72,17 @@ func TestFlattenResourceAzureSpecInto(t *testing.T) {
 				in: func() kops.AzureSpec {
 					subject := kops.AzureSpec{}
 					subject.SubscriptionID = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "StorageAccountId - default",
+			args: args{
+				in: func() kops.AzureSpec {
+					subject := kops.AzureSpec{}
+					subject.StorageAccountID = ""
 					return subject
 				}(),
 			},
@@ -134,6 +147,7 @@ func TestFlattenResourceAzureSpecInto(t *testing.T) {
 func TestFlattenResourceAzureSpec(t *testing.T) {
 	_default := map[string]interface{}{
 		"subscription_id":     "",
+		"storage_account_id":  "",
 		"tenant_id":           "",
 		"resource_group_name": "",
 		"route_table_name":    "",
@@ -160,6 +174,17 @@ func TestFlattenResourceAzureSpec(t *testing.T) {
 				in: func() kops.AzureSpec {
 					subject := kops.AzureSpec{}
 					subject.SubscriptionID = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "StorageAccountId - default",
+			args: args{
+				in: func() kops.AzureSpec {
+					subject := kops.AzureSpec{}
+					subject.StorageAccountID = ""
 					return subject
 				}(),
 			},
