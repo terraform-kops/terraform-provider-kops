@@ -257,6 +257,7 @@ AzureSpec defines Azure specific cluster configuration.
 The following arguments are supported:
 
 - `subscription_id` - (Computed) - String - SubscriptionID specifies the subscription used for the cluster installation.
+- `storage_account_id` - (Computed) - String - StorageAccountID specifies the storage account used for the cluster installation.
 - `tenant_id` - (Computed) - String - TenantID is the ID of the tenant that the cluster is deployed in.
 - `resource_group_name` - (Computed) - String - ResourceGroupName specifies the name of the resource group<br />where the cluster is built.<br />If this is empty, kops will create a new resource group<br />whose name is same as the cluster name. If this is not<br />empty, kops will not create a new resource group, and<br />it will just reuse the existing resource group of the name.<br />This follows the model that kops takes for AWS VPC.
 - `route_table_name` - (Computed) - String - RouteTableName is the name of the route table attached to the subnet that the cluster is deployed in.
@@ -720,7 +721,7 @@ Node affinity is a group of node affinity scheduling rules.
 The following arguments are supported:
 
 - `required_during_scheduling_ignored_during_execution` - (Computed) - [node_selector](#node_selector) - If the affinity requirements specified by this field are not met at<br />scheduling time, the pod will not be scheduled onto the node.<br />If the affinity requirements specified by this field cease to be met<br />at some point during pod execution (e.g. due to an update), the system<br />may or may not try to eventually evict the pod from its node.<br />+optional.
-- `preferred_during_scheduling_ignored_during_execution` - (Computed) - List([preferred_scheduling_term](#preferred_scheduling_term)) - The scheduler will prefer to schedule pods to nodes that satisfy<br />the affinity expressions specified by this field, but it may choose<br />a node that violates one or more of the expressions. The node that is<br />most preferred is the one with the greatest sum of weights, i.e.<br />for each node that meets all of the scheduling requirements (resource<br />request, requiredDuringScheduling affinity expressions, etc.),<br />compute a sum by iterating through the elements of this field and adding<br />"weight" to the sum if the node matches the corresponding matchExpressions; the<br />node(s) with the highest sum are the most preferred.<br />+optional.
+- `preferred_during_scheduling_ignored_during_execution` - (Computed) - List([preferred_scheduling_term](#preferred_scheduling_term)) - The scheduler will prefer to schedule pods to nodes that satisfy<br />the affinity expressions specified by this field, but it may choose<br />a node that violates one or more of the expressions. The node that is<br />most preferred is the one with the greatest sum of weights, i.e.<br />for each node that meets all of the scheduling requirements (resource<br />request, requiredDuringScheduling affinity expressions, etc.),<br />compute a sum by iterating through the elements of this field and adding<br />"weight" to the sum if the node matches the corresponding matchExpressions; the<br />node(s) with the highest sum are the most preferred.<br />+optional<br />+listType=atomic.
 
 ### node_selector
 
@@ -730,7 +731,7 @@ A node selector represents the union of the results of one or more label queries
 
 The following arguments are supported:
 
-- `node_selector_terms` - (Computed) - List([node_selector_term](#node_selector_term)) - Required. A list of node selector terms. The terms are ORed.
+- `node_selector_terms` - (Computed) - List([node_selector_term](#node_selector_term)) - Required. A list of node selector terms. The terms are ORed.<br />+listType=atomic.
 
 ### node_selector_term
 
@@ -740,8 +741,8 @@ A null or empty node selector term matches no objects. The requirements of<br />
 
 The following arguments are supported:
 
-- `match_expressions` - (Computed) - List([node_selector_requirement](#node_selector_requirement)) - A list of node selector requirements by node's labels.<br />+optional.
-- `match_fields` - (Computed) - List([node_selector_requirement](#node_selector_requirement)) - A list of node selector requirements by node's fields.<br />+optional.
+- `match_expressions` - (Computed) - List([node_selector_requirement](#node_selector_requirement)) - A list of node selector requirements by node's labels.<br />+optional<br />+listType=atomic.
+- `match_fields` - (Computed) - List([node_selector_requirement](#node_selector_requirement)) - A list of node selector requirements by node's fields.<br />+optional<br />+listType=atomic.
 
 ### node_selector_requirement
 
@@ -753,7 +754,7 @@ The following arguments are supported:
 
 - `key` - (Computed) - String - The label key that the selector applies to.
 - `operator` - (Computed) - String - Represents a key's relationship to a set of values.<br />Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
-- `values` - (Computed) - List(String) - An array of string values. If the operator is In or NotIn,<br />the values array must be non-empty. If the operator is Exists or DoesNotExist,<br />the values array must be empty. If the operator is Gt or Lt, the values<br />array must have a single element, which will be interpreted as an integer.<br />This array is replaced during a strategic merge patch.<br />+optional.
+- `values` - (Computed) - List(String) - An array of string values. If the operator is In or NotIn,<br />the values array must be non-empty. If the operator is Exists or DoesNotExist,<br />the values array must be empty. If the operator is Gt or Lt, the values<br />array must have a single element, which will be interpreted as an integer.<br />This array is replaced during a strategic merge patch.<br />+optional<br />+listType=atomic.
 
 ### preferred_scheduling_term
 
@@ -774,8 +775,8 @@ Pod affinity is a group of inter pod affinity scheduling rules.
 
 The following arguments are supported:
 
-- `required_during_scheduling_ignored_during_execution` - (Computed) - List([pod_affinity_term](#pod_affinity_term)) - If the affinity requirements specified by this field are not met at<br />scheduling time, the pod will not be scheduled onto the node.<br />If the affinity requirements specified by this field cease to be met<br />at some point during pod execution (e.g. due to a pod label update), the<br />system may or may not try to eventually evict the pod from its node.<br />When there are multiple elements, the lists of nodes corresponding to each<br />podAffinityTerm are intersected, i.e. all terms must be satisfied.<br />+optional.
-- `preferred_during_scheduling_ignored_during_execution` - (Computed) - List([weighted_pod_affinity_term](#weighted_pod_affinity_term)) - The scheduler will prefer to schedule pods to nodes that satisfy<br />the affinity expressions specified by this field, but it may choose<br />a node that violates one or more of the expressions. The node that is<br />most preferred is the one with the greatest sum of weights, i.e.<br />for each node that meets all of the scheduling requirements (resource<br />request, requiredDuringScheduling affinity expressions, etc.),<br />compute a sum by iterating through the elements of this field and adding<br />"weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the<br />node(s) with the highest sum are the most preferred.<br />+optional.
+- `required_during_scheduling_ignored_during_execution` - (Computed) - List([pod_affinity_term](#pod_affinity_term)) - If the affinity requirements specified by this field are not met at<br />scheduling time, the pod will not be scheduled onto the node.<br />If the affinity requirements specified by this field cease to be met<br />at some point during pod execution (e.g. due to a pod label update), the<br />system may or may not try to eventually evict the pod from its node.<br />When there are multiple elements, the lists of nodes corresponding to each<br />podAffinityTerm are intersected, i.e. all terms must be satisfied.<br />+optional<br />+listType=atomic.
+- `preferred_during_scheduling_ignored_during_execution` - (Computed) - List([weighted_pod_affinity_term](#weighted_pod_affinity_term)) - The scheduler will prefer to schedule pods to nodes that satisfy<br />the affinity expressions specified by this field, but it may choose<br />a node that violates one or more of the expressions. The node that is<br />most preferred is the one with the greatest sum of weights, i.e.<br />for each node that meets all of the scheduling requirements (resource<br />request, requiredDuringScheduling affinity expressions, etc.),<br />compute a sum by iterating through the elements of this field and adding<br />"weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the<br />node(s) with the highest sum are the most preferred.<br />+optional<br />+listType=atomic.
 
 ### pod_affinity_term
 
@@ -786,11 +787,11 @@ Defines a set of pods (namely those matching the labelSelector<br />relative to 
 The following arguments are supported:
 
 - `label_selector` - (Computed) - [label_selector](#label_selector) - A label query over a set of resources, in this case pods.<br />If it's null, this PodAffinityTerm matches with no Pods.<br />+optional.
-- `namespaces` - (Computed) - List(String) - namespaces specifies a static list of namespace names that the term applies to.<br />The term is applied to the union of the namespaces listed in this field<br />and the ones selected by namespaceSelector.<br />null or empty namespaces list and null namespaceSelector means "this pod's namespace".<br />+optional.
+- `namespaces` - (Computed) - List(String) - namespaces specifies a static list of namespace names that the term applies to.<br />The term is applied to the union of the namespaces listed in this field<br />and the ones selected by namespaceSelector.<br />null or empty namespaces list and null namespaceSelector means "this pod's namespace".<br />+optional<br />+listType=atomic.
 - `topology_key` - (Computed) - String - This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching<br />the labelSelector in the specified namespaces, where co-located is defined as running on a node<br />whose value of the label with key topologyKey matches that of any node on which any of the<br />selected pods is running.<br />Empty topologyKey is not allowed.
 - `namespace_selector` - (Computed) - [label_selector](#label_selector) - A label query over the set of namespaces that the term applies to.<br />The term is applied to the union of the namespaces selected by this field<br />and the ones listed in the namespaces field.<br />null selector and null or empty namespaces list means "this pod's namespace".<br />An empty selector ({}) matches all namespaces.<br />+optional.
-- `match_label_keys` - (Computed) - List(String) - MatchLabelKeys is a set of pod label keys to select which pods will<br />be taken into consideration. The keys are used to lookup values from the<br />incoming pod labels, those key-value labels are merged with `LabelSelector` as `key in (value)`<br />to select the group of existing pods which pods will be taken into consideration<br />for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming<br />pod labels will be ignored. The default value is empty.<br />The same key is forbidden to exist in both MatchLabelKeys and LabelSelector.<br />Also, MatchLabelKeys cannot be set when LabelSelector isn't set.<br />This is an alpha field and requires enabling MatchLabelKeysInPodAffinity feature gate.<br />+listType=atomic<br />+optional.
-- `mismatch_label_keys` - (Computed) - List(String) - MismatchLabelKeys is a set of pod label keys to select which pods will<br />be taken into consideration. The keys are used to lookup values from the<br />incoming pod labels, those key-value labels are merged with `LabelSelector` as `key notin (value)`<br />to select the group of existing pods which pods will be taken into consideration<br />for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming<br />pod labels will be ignored. The default value is empty.<br />The same key is forbidden to exist in both MismatchLabelKeys and LabelSelector.<br />Also, MismatchLabelKeys cannot be set when LabelSelector isn't set.<br />This is an alpha field and requires enabling MatchLabelKeysInPodAffinity feature gate.<br />+listType=atomic<br />+optional.
+- `match_label_keys` - (Computed) - List(String) - MatchLabelKeys is a set of pod label keys to select which pods will<br />be taken into consideration. The keys are used to lookup values from the<br />incoming pod labels, those key-value labels are merged with `labelSelector` as `key in (value)`<br />to select the group of existing pods which pods will be taken into consideration<br />for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming<br />pod labels will be ignored. The default value is empty.<br />The same key is forbidden to exist in both matchLabelKeys and labelSelector.<br />Also, matchLabelKeys cannot be set when labelSelector isn't set.<br />This is an alpha field and requires enabling MatchLabelKeysInPodAffinity feature gate.<br />+listType=atomic<br />+optional.
+- `mismatch_label_keys` - (Computed) - List(String) - MismatchLabelKeys is a set of pod label keys to select which pods will<br />be taken into consideration. The keys are used to lookup values from the<br />incoming pod labels, those key-value labels are merged with `labelSelector` as `key notin (value)`<br />to select the group of existing pods which pods will be taken into consideration<br />for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming<br />pod labels will be ignored. The default value is empty.<br />The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.<br />Also, mismatchLabelKeys cannot be set when labelSelector isn't set.<br />This is an alpha field and requires enabling MatchLabelKeysInPodAffinity feature gate.<br />+listType=atomic<br />+optional.
 
 ### label_selector
 
@@ -801,7 +802,7 @@ A label selector is a label query over a set of resources. The result of matchLa
 The following arguments are supported:
 
 - `match_labels` - (Computed) - Map(String) - matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels<br />map is equivalent to an element of matchExpressions, whose key field is "key", the<br />operator is "In", and the values array contains only "value". The requirements are ANDed.<br />+optional.
-- `match_expressions` - (Computed) - List([label_selector_requirement](#label_selector_requirement)) - matchExpressions is a list of label selector requirements. The requirements are ANDed.<br />+optional.
+- `match_expressions` - (Computed) - List([label_selector_requirement](#label_selector_requirement)) - matchExpressions is a list of label selector requirements. The requirements are ANDed.<br />+optional<br />+listType=atomic.
 
 ### label_selector_requirement
 
@@ -813,7 +814,7 @@ The following arguments are supported:
 
 - `key` - (Computed) - String - key is the label key that the selector applies to.
 - `operator` - (Computed) - String - operator represents a key's relationship to a set of values.<br />Valid operators are In, NotIn, Exists and DoesNotExist.
-- `values` - (Computed) - List(String) - values is an array of string values. If the operator is In or NotIn,<br />the values array must be non-empty. If the operator is Exists or DoesNotExist,<br />the values array must be empty. This array is replaced during a strategic<br />merge patch.<br />+optional.
+- `values` - (Computed) - List(String) - values is an array of string values. If the operator is In or NotIn,<br />the values array must be non-empty. If the operator is Exists or DoesNotExist,<br />the values array must be empty. This array is replaced during a strategic<br />merge patch.<br />+optional<br />+listType=atomic.
 
 ### weighted_pod_affinity_term
 
@@ -834,8 +835,8 @@ Pod anti affinity is a group of inter pod anti affinity scheduling rules.
 
 The following arguments are supported:
 
-- `required_during_scheduling_ignored_during_execution` - (Computed) - List([pod_affinity_term](#pod_affinity_term)) - If the anti-affinity requirements specified by this field are not met at<br />scheduling time, the pod will not be scheduled onto the node.<br />If the anti-affinity requirements specified by this field cease to be met<br />at some point during pod execution (e.g. due to a pod label update), the<br />system may or may not try to eventually evict the pod from its node.<br />When there are multiple elements, the lists of nodes corresponding to each<br />podAffinityTerm are intersected, i.e. all terms must be satisfied.<br />+optional.
-- `preferred_during_scheduling_ignored_during_execution` - (Computed) - List([weighted_pod_affinity_term](#weighted_pod_affinity_term)) - The scheduler will prefer to schedule pods to nodes that satisfy<br />the anti-affinity expressions specified by this field, but it may choose<br />a node that violates one or more of the expressions. The node that is<br />most preferred is the one with the greatest sum of weights, i.e.<br />for each node that meets all of the scheduling requirements (resource<br />request, requiredDuringScheduling anti-affinity expressions, etc.),<br />compute a sum by iterating through the elements of this field and adding<br />"weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the<br />node(s) with the highest sum are the most preferred.<br />+optional.
+- `required_during_scheduling_ignored_during_execution` - (Computed) - List([pod_affinity_term](#pod_affinity_term)) - If the anti-affinity requirements specified by this field are not met at<br />scheduling time, the pod will not be scheduled onto the node.<br />If the anti-affinity requirements specified by this field cease to be met<br />at some point during pod execution (e.g. due to a pod label update), the<br />system may or may not try to eventually evict the pod from its node.<br />When there are multiple elements, the lists of nodes corresponding to each<br />podAffinityTerm are intersected, i.e. all terms must be satisfied.<br />+optional<br />+listType=atomic.
+- `preferred_during_scheduling_ignored_during_execution` - (Computed) - List([weighted_pod_affinity_term](#weighted_pod_affinity_term)) - The scheduler will prefer to schedule pods to nodes that satisfy<br />the anti-affinity expressions specified by this field, but it may choose<br />a node that violates one or more of the expressions. The node that is<br />most preferred is the one with the greatest sum of weights, i.e.<br />for each node that meets all of the scheduling requirements (resource<br />request, requiredDuringScheduling anti-affinity expressions, etc.),<br />compute a sum by iterating through the elements of this field and adding<br />"weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the<br />node(s) with the highest sum are the most preferred.<br />+optional<br />+listType=atomic.
 
 ### node_local_dns_config
 
@@ -912,6 +913,7 @@ The following arguments are supported:
 - `oidc_client_id` - (Computed) - String - OIDCClientID is the client ID for the OpenID Connect client, must be set<br />if oidc-issuer-url is set.
 - `oidc_required_claim` - (Computed) - List(String) - A key=value pair that describes a required claim in the ID Token.<br />If set, the claim is verified to be present in the ID Token with a matching value.<br />Repeat this flag to specify multiple claims.
 - `oidc_ca_file` - (Computed) - String - OIDCCAFile if set, the OpenID server's certificate will be verified by one<br />of the authorities in the oidc-ca-file.
+- `authentication_config_file` - (Computed) - String - AuthenticationConfigFile is the location of the authentication-config<br />this option is mutually exclusive with all OIDC options.
 - `proxy_client_cert_file` - (Computed) - String - The apiserver's client certificate used for outbound requests.
 - `proxy_client_key_file` - (Computed) - String - The apiserver's client key used for outbound requests.
 - `audit_log_format` - (Computed) - String - AuditLogFormat flag specifies the format type for audit log files.
@@ -1955,6 +1957,7 @@ The following arguments are supported:
 - `enabled` - (Computed) - Bool - Enabled enables the cluster autoscaler.<br />Default: false.
 - `expander` - (Computed) - String - Expander determines the strategy for which instance group gets expanded.<br />Supported values: least-waste, most-pods, random, price, priority.<br />The price expander is only supported on GCE.<br />By default, kOps will generate the priority expander ConfigMap based on the `autoscale` and `autoscalePriority` fields in the InstanceGroup specs.<br />Default: least-waste.
 - `balance_similar_node_groups` - (Computed) - Bool - BalanceSimilarNodeGroups makes the cluster autoscaler treat similar node groups as one.<br />Default: false.
+- `emit_per_nodegroup_metrics` - (Computed) - Bool - EmitPerNodegroupMetrics If true, publishes the node groups min and max metrics count set on the cluster autoscaler.<br />Default: false.
 - `aws_use_static_instance_list` - (Computed) - Bool - AWSUseStaticInstanceList makes cluster autoscaler to use statically defined set of AWS EC2 Instance List.<br />Default: false.
 - `ignore_daemon_sets_utilization` - (Computed) - Bool - IgnoreDaemonSetsUtilization causes the cluster autoscaler to ignore DaemonSet-managed pods when calculating resource utilization for scaling down.<br />Default: false.
 - `scale_down_utilization_threshold` - (Computed) - String - ScaleDownUtilizationThreshold determines the utilization threshold for node scale-down.<br />Default: 0.5.

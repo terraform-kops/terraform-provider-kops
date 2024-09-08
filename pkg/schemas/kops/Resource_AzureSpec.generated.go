@@ -12,6 +12,7 @@ func ResourceAzureSpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"subscription_id":     OptionalString(),
+			"storage_account_id":  OptionalString(),
 			"tenant_id":           OptionalString(),
 			"resource_group_name": OptionalString(),
 			"route_table_name":    OptionalString(),
@@ -30,6 +31,9 @@ func ExpandResourceAzureSpec(in map[string]interface{}) kops.AzureSpec {
 		SubscriptionID: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["subscription_id"]),
+		StorageAccountID: func(in interface{}) string {
+			return string(ExpandString(in))
+		}(in["storage_account_id"]),
 		TenantID: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["tenant_id"]),
@@ -49,6 +53,9 @@ func FlattenResourceAzureSpecInto(in kops.AzureSpec, out map[string]interface{})
 	out["subscription_id"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.SubscriptionID)
+	out["storage_account_id"] = func(in string) interface{} {
+		return FlattenString(string(in))
+	}(in.StorageAccountID)
 	out["tenant_id"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.TenantID)
