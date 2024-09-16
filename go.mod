@@ -16,7 +16,7 @@ require (
 	k8s.io/apimachinery v0.30.3
 	k8s.io/client-go v0.30.3
 	k8s.io/klog v1.0.0
-	k8s.io/kops v1.30.0
+	k8s.io/kops v1.30.1
 )
 
 require (
