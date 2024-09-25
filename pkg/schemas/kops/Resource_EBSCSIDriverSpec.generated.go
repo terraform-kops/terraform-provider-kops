@@ -14,8 +14,8 @@ var _ = Schema
 func ResourceEBSCSIDriverSpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"enabled":             OptionalBool(),
-			"managed":             OptionalBool(),
+			"enabled":             RequiredBool(),
+			"managed":             RequiredBool(),
 			"version":             OptionalString(),
 			"kube_api_qps":        OptionalQuantity(),
 			"kube_api_burst":      OptionalInt(),
@@ -34,12 +34,6 @@ func ExpandResourceEBSCSIDriverSpec(in map[string]interface{}) kops.EBSCSIDriver
 	}
 	return kops.EBSCSIDriverSpec{
 		Enabled: func(in interface{}) *bool {
-			if in == nil {
-				return nil
-			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
-			}
 			return func(in interface{}) *bool {
 				if in == nil {
 					return nil
@@ -53,12 +47,6 @@ func ExpandResourceEBSCSIDriverSpec(in map[string]interface{}) kops.EBSCSIDriver
 			}(in)
 		}(in["enabled"]),
 		Managed: func(in interface{}) *bool {
-			if in == nil {
-				return nil
-			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
-			}
 			return func(in interface{}) *bool {
 				if in == nil {
 					return nil

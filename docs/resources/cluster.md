@@ -263,8 +263,8 @@ EBSCSIDriverSpec is the config for the AWS EBS CSI driver.
 
 The following arguments are supported:
 
-- `enabled` - (Optional) - Bool - Enabled enables the AWS EBS CSI driver. Can only be set to true.<br />Default: true.
-- `managed` - (Optional) - Bool - Managed controls if aws-ebs-csi-driver is manged and deployed by kOps.<br />The deployment of aws-ebs-csi-driver is skipped if this is set to false.
+- `enabled` - (Required) - Bool - Enabled enables the AWS EBS CSI driver. Can only be set to true.<br />Default: true.
+- `managed` - (Required) - Bool - Managed controls if aws-ebs-csi-driver is manged and deployed by kOps.<br />The deployment of aws-ebs-csi-driver is skipped if this is set to false.
 - `version` - (Optional) - String - Version is the container image tag used.<br />Default: The latest stable release which is compatible with your Kubernetes version.
 - `kube_api_qps` - (Optional) - Quantity - KubeAPIQPS QPS to use while talking with Kubernetes API server. (default 20).
 - `kube_api_burst` - (Optional) - Int - KubeAPIBurst Burst to use while talking with Kubernetes API server. (default 100).
