@@ -289,7 +289,9 @@ func main() {
 		generate(kops.RollingUpdate{}),
 		// 1.20
 		generate(resources.RollingUpdateOptions{}),
-		generate(kops.EBSCSIDriverSpec{}),
+		generate(kops.EBSCSIDriverSpec{},
+			required("Enabled", "Managed"),
+		),
 		generate(kops.NTPConfig{}),
 		generate(kops.CertManagerConfig{},
 			required("Enabled", "Managed"),
@@ -507,7 +509,9 @@ func main() {
 		generate(kops.RollingUpdate{}),
 		generate(kops.ExecContainerAction{}),
 		// 1.20
-		generate(kops.EBSCSIDriverSpec{}),
+		generate(kops.EBSCSIDriverSpec{},
+			required("Enabled", "Managed"),
+		),
 		generate(kops.NTPConfig{}),
 		generate(kops.CertManagerConfig{}),
 		generate(kops.LoadBalancerControllerSpec{}),
