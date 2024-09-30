@@ -7,7 +7,7 @@ toolchain go1.23.0
 require (
 	github.com/Masterminds/sprig v2.22.0+incompatible
 	github.com/aws/aws-sdk-go-v2 v1.31.0
-	github.com/aws/aws-sdk-go-v2/service/ec2 v1.165.1
+	github.com/aws/aws-sdk-go-v2/service/ec2 v1.179.2
 	github.com/aws/aws-sdk-go-v2/service/sts v1.31.0
 	github.com/google/go-cmp v0.6.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.34.0
