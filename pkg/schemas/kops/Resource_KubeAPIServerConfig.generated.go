@@ -103,7 +103,8 @@ func ResourceKubeAPIServerConfig() *schema.Resource {
 			"etcd_quorum_read":                             OptionalBool(),
 			"request_timeout":                              OptionalDuration(),
 			"min_request_timeout":                          OptionalInt(),
-			"target_ram_mb":                                OptionalInt(),
+			"watch_cache":                                  OptionalBool(),
+			"watch_cache_sizes":                            OptionalList(String()),
 			"service_account_key_file":                     OptionalList(String()),
 			"service_account_signing_key_file":             OptionalString(),
 			"service_account_issuer":                       OptionalString(),
@@ -1215,9 +1216,37 @@ func ExpandResourceKubeAPIServerConfig(in map[string]interface{}) kops.KubeAPISe
 				}(int32(ExpandInt(in)))
 			}(in)
 		}(in["min_request_timeout"]),
-		TargetRamMB: func(in interface{}) int32 {
-			return int32(ExpandInt(in))
-		}(in["target_ram_mb"]),
+		WatchCache: func(in interface{}) *bool {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
+		}(in["watch_cache"]),
+		WatchCacheSizes: func(in interface{}) []string {
+			return func(in interface{}) []string {
+				if in == nil {
+					return nil
+				}
+				var out []string
+				for _, in := range in.([]interface{}) {
+					out = append(out, string(ExpandString(in)))
+				}
+				return out
+			}(in)
+		}(in["watch_cache_sizes"]),
 		ServiceAccountKeyFile: func(in interface{}) []string {
 			return func(in interface{}) []string {
 				if in == nil {
@@ -2174,9 +2203,25 @@ func FlattenResourceKubeAPIServerConfigInto(in kops.KubeAPIServerConfig, out map
 			}(*in)
 		}(in)
 	}(in.MinRequestTimeout)
-	out["target_ram_mb"] = func(in int32) interface{} {
-		return FlattenInt(int(in))
-	}(in.TargetRamMB)
+	out["watch_cache"] = func(in *bool) interface{} {
+		return func(in *bool) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in bool) interface{} {
+				return FlattenBool(bool(in))
+			}(*in)
+		}(in)
+	}(in.WatchCache)
+	out["watch_cache_sizes"] = func(in []string) interface{} {
+		return func(in []string) []interface{} {
+			var out []interface{}
+			for _, in := range in {
+				out = append(out, FlattenString(string(in)))
+			}
+			return out
+		}(in)
+	}(in.WatchCacheSizes)
 	out["service_account_key_file"] = func(in []string) interface{} {
 		return func(in []string) []interface{} {
 			var out []interface{}

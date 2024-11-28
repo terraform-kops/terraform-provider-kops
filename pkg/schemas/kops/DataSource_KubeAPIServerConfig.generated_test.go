@@ -109,7 +109,8 @@ func TestExpandDataSourceKubeAPIServerConfig(t *testing.T) {
 					"etcd_quorum_read":                             nil,
 					"request_timeout":                              nil,
 					"min_request_timeout":                          nil,
-					"target_ram_mb":                                0,
+					"watch_cache":                                  nil,
+					"watch_cache_sizes":                            func() []interface{} { return nil }(),
 					"service_account_key_file":                     func() []interface{} { return nil }(),
 					"service_account_signing_key_file":             nil,
 					"service_account_issuer":                       nil,
@@ -232,7 +233,8 @@ func TestFlattenDataSourceKubeAPIServerConfigInto(t *testing.T) {
 		"etcd_quorum_read":                             nil,
 		"request_timeout":                              nil,
 		"min_request_timeout":                          nil,
-		"target_ram_mb":                                0,
+		"watch_cache":                                  nil,
+		"watch_cache_sizes":                            func() []interface{} { return nil }(),
 		"service_account_key_file":                     func() []interface{} { return nil }(),
 		"service_account_signing_key_file":             nil,
 		"service_account_issuer":                       nil,
@@ -1235,11 +1237,22 @@ func TestFlattenDataSourceKubeAPIServerConfigInto(t *testing.T) {
 			want: _default,
 		},
 		{
-			name: "TargetRamMB - default",
+			name: "WatchCache - default",
 			args: args{
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
-					subject.TargetRamMB = 0
+					subject.WatchCache = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "WatchCacheSizes - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.WatchCacheSizes = nil
 					return subject
 				}(),
 			},
@@ -1534,7 +1547,8 @@ func TestFlattenDataSourceKubeAPIServerConfig(t *testing.T) {
 		"etcd_quorum_read":                             nil,
 		"request_timeout":                              nil,
 		"min_request_timeout":                          nil,
-		"target_ram_mb":                                0,
+		"watch_cache":                                  nil,
+		"watch_cache_sizes":                            func() []interface{} { return nil }(),
 		"service_account_key_file":                     func() []interface{} { return nil }(),
 		"service_account_signing_key_file":             nil,
 		"service_account_issuer":                       nil,
@@ -2537,11 +2551,22 @@ func TestFlattenDataSourceKubeAPIServerConfig(t *testing.T) {
 			want: _default,
 		},
 		{
-			name: "TargetRamMB - default",
+			name: "WatchCache - default",
 			args: args{
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
-					subject.TargetRamMB = 0
+					subject.WatchCache = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "WatchCacheSizes - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.WatchCacheSizes = nil
 					return subject
 				}(),
 			},
