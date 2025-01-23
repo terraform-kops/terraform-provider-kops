@@ -1038,7 +1038,8 @@ The following arguments are supported:
 - `etcd_quorum_read` - (Optional) - Bool - EtcdQuorumRead configures the etcd-quorum-read flag, which forces consistent reads from etcd.
 - `request_timeout` - (Optional) - Duration - RequestTimeout configures the duration a handler must keep a request open before timing it out. (default 1m0s).
 - `min_request_timeout` - (Optional) - Int - MinRequestTimeout configures the minimum number of seconds a handler must keep a request open before timing it out.<br />Currently only honored by the watch request handler.
-- `target_ram_mb` - (Optional) - Int - Memory limit for apiserver in MB (used to configure sizes of caches, etc.).
+- `watch_cache` - (Optional) - Bool - Used to disable watch caching in the apiserver, defaults to enabling caching by omission.
+- `watch_cache_sizes` - (Optional) - List(String) - Set the watch-cache-sizes parameter for the apiserver<br />The only meaningful value is setting to 0, which disable caches for specific object types.<br />Setting any values other than 0 for a resource will yield no effect since the caches are dynamic.
 - `service_account_key_file` - (Optional) - List(String) - File containing PEM-encoded x509 RSA or ECDSA private or public keys, used to verify ServiceAccount tokens.<br />The specified file can contain multiple keys, and the flag can be specified multiple times with different files.<br />If unspecified, --tls-private-key-file is used.
 - `service_account_signing_key_file` - (Optional) - String - Path to the file that contains the current private key of the service account token issuer.<br />The issuer will sign issued ID tokens with this private key. (Requires the 'TokenRequest' feature gate.).
 - `service_account_issuer` - (Optional) - String - Identifier of the service account token issuer. The issuer will assert this identifier<br />in "iss" claim of issued tokens. This value is a string or URI.
