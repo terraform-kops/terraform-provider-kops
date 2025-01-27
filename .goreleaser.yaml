@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+version: 2
 project_name: terraform-provider-kops
 before:
   hooks:
@@ -27,7 +29,7 @@ builds:
       - -X 'github.com/terraform-kops/terraform-provider-kops/pkg/version.BuiltBy=goreleaser'
 archives:
   - id: terraform-provider-kops
-    format: zip
+    formats: [ 'zip' ]
     name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
     builds:
       - terraform-provider-kops
