@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        tf-version: [1.5.7, 1.6.6, 1.7.5]
+        tf-version: [1.6.6, 1.7.5, 1.8.5]
     runs-on: ubuntu-latest
     steps:
       - name: Install terraform
@@ -25,16 +25,57 @@ jobs:
           unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
           sudo mv terraform /usr/local/bin
           rm *
+
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.21
+          go-version: 1.23
+
       - name: Checkout code
         uses: actions/checkout@v4
+
       - uses: actions/cache@v4
         with:
           path: /home/runner/go/pkg/mod
           key: go-mod
+
       - name: Build install and validate against examples
         run: |
           make examples
+
+  goreleaserbuild:
+    runs-on: ubuntu-latest
+    steps:
+      # cleanup Runner to avoid "no space left on device" error
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: false
+
+          # remove items we don't need
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Unshallow
+        run: git fetch --prune --unshallow
+
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+
+      - name: Test goreleaser build
+        uses: goreleaser/goreleaser-action@v6.1.0
+        with:
+          version: latest
+          args: build --clean --timeout 60m -p 2 --snapshot
