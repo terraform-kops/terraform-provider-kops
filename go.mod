@@ -1,8 +1,6 @@
 module github.com/terraform-kops/terraform-provider-kops
 
-go 1.23.4
-
-toolchain go1.23.0
+go 1.23.5
 
 require (
 	github.com/Masterminds/sprig v2.22.0+incompatible
@@ -16,7 +14,7 @@ require (
 	k8s.io/apimachinery v0.30.7
 	k8s.io/client-go v0.30.7
 	k8s.io/klog v1.0.0
-	k8s.io/kops v1.30.3
+	k8s.io/kops v1.30.4
 )
 
 require (
