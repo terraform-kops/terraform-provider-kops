@@ -27,6 +27,7 @@ func TestExpandResourceGCESpec(t *testing.T) {
 					"node_tags":            nil,
 					"node_instance_prefix": nil,
 					"pd_csi_driver":        nil,
+					"use_startup_script":   nil,
 					"binaries_location":    nil,
 				},
 			},
@@ -51,6 +52,7 @@ func TestFlattenResourceGCESpecInto(t *testing.T) {
 		"node_tags":            nil,
 		"node_instance_prefix": nil,
 		"pd_csi_driver":        nil,
+		"use_startup_script":   nil,
 		"binaries_location":    nil,
 	}
 	type args struct {
@@ -129,6 +131,17 @@ func TestFlattenResourceGCESpecInto(t *testing.T) {
 				in: func() kops.GCESpec {
 					subject := kops.GCESpec{}
 					subject.PDCSIDriver = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "UseStartupScript - default",
+			args: args{
+				in: func() kops.GCESpec {
+					subject := kops.GCESpec{}
+					subject.UseStartupScript = nil
 					return subject
 				}(),
 			},
@@ -165,6 +178,7 @@ func TestFlattenResourceGCESpec(t *testing.T) {
 		"node_tags":            nil,
 		"node_instance_prefix": nil,
 		"pd_csi_driver":        nil,
+		"use_startup_script":   nil,
 		"binaries_location":    nil,
 	}
 	type args struct {
@@ -243,6 +257,17 @@ func TestFlattenResourceGCESpec(t *testing.T) {
 				in: func() kops.GCESpec {
 					subject := kops.GCESpec{}
 					subject.PDCSIDriver = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "UseStartupScript - default",
+			args: args{
+				in: func() kops.GCESpec {
+					subject := kops.GCESpec{}
+					subject.UseStartupScript = nil
 					return subject
 				}(),
 			},

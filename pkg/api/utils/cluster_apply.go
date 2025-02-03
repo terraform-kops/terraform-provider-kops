@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"k8s.io/kops/pkg/apis/kops"
 	"k8s.io/kops/pkg/client/simple"
 	"k8s.io/kops/upup/pkg/fi"
 	"k8s.io/kops/upup/pkg/fi/cloudup"
@@ -33,14 +34,14 @@ func ParseLifecycleOverrides(lifecycleOverrides map[string]string) (map[string]f
 	}
 }
 
-func ClusterApply(clientset simple.Clientset, clusterName string, allowKopsDowngrade bool, lifecycleOverrides map[string]fi.Lifecycle, prune bool) error {
+func ClusterApply(clientset simple.Clientset, clusterName string, allowKopsDowngrade bool, lifecycleOverrides map[string]fi.Lifecycle, prune bool, controlPlaneOnly bool) (*cloudup.ApplyResults, error) {
 	kc, err := clientset.GetCluster(context.Background(), clusterName)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	cloud, err := cloudup.BuildCloud(kc)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	deletionProcessing := fi.DeletionProcessingModeDeleteIfNotDeferrred
 	if prune {
@@ -54,6 +55,16 @@ func ClusterApply(clientset simple.Clientset, clusterName string, allowKopsDowng
 		AllowKopsDowngrade: allowKopsDowngrade,
 		LifecycleOverrides: lifecycleOverrides,
 		DeletionProcessing: deletionProcessing,
+	}
+	if controlPlaneOnly {
+		apply.InstanceGroupFilter = func(group *kops.InstanceGroup) bool {
+			for _, role := range []kops.InstanceGroupRole{kops.InstanceGroupRoleControlPlane, kops.InstanceGroupRoleAPIServer} {
+				if group.Spec.Role == role {
+					return true
+				}
+			}
+			return false
+		}
 	}
 	return apply.Run(context.Background())
 }
