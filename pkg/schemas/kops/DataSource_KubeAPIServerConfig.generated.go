@@ -5,6 +5,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	. "github.com/terraform-kops/terraform-provider-kops/pkg/schemas"
+	coreschemas "github.com/terraform-kops/terraform-provider-kops/pkg/schemas/core"
+	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/kops/pkg/apis/kops"
@@ -122,6 +124,7 @@ func DataSourceKubeAPIServerConfig() *schema.Resource {
 			"cors_allowed_origins":                         ComputedList(String()),
 			"default_not_ready_toleration_seconds":         ComputedInt(),
 			"default_unreachable_toleration_seconds":       ComputedInt(),
+			"env":                                          ComputedList(coreschemas.DataSourceEnvVar()),
 		},
 	}
 
@@ -1542,6 +1545,23 @@ func ExpandDataSourceKubeAPIServerConfig(in map[string]interface{}) kops.KubeAPI
 				}(int64(ExpandInt(in)))
 			}(in)
 		}(in["default_unreachable_toleration_seconds"]),
+		Env: func(in interface{}) []core.EnvVar {
+			return func(in interface{}) []core.EnvVar {
+				if in == nil {
+					return nil
+				}
+				var out []core.EnvVar
+				for _, in := range in.([]interface{}) {
+					out = append(out, func(in interface{}) core.EnvVar {
+						if in == nil {
+							return core.EnvVar{}
+						}
+						return coreschemas.ExpandDataSourceEnvVar(in.(map[string]interface{}))
+					}(in))
+				}
+				return out
+			}(in)
+		}(in["env"]),
 	}
 }
 
@@ -2388,6 +2408,17 @@ func FlattenDataSourceKubeAPIServerConfigInto(in kops.KubeAPIServerConfig, out m
 			}(*in)
 		}(in)
 	}(in.DefaultUnreachableTolerationSeconds)
+	out["env"] = func(in []core.EnvVar) interface{} {
+		return func(in []core.EnvVar) []interface{} {
+			var out []interface{}
+			for _, in := range in {
+				out = append(out, func(in core.EnvVar) interface{} {
+					return coreschemas.FlattenDataSourceEnvVar(in)
+				}(in))
+			}
+			return out
+		}(in)
+	}(in.Env)
 }
 
 func FlattenDataSourceKubeAPIServerConfig(in kops.KubeAPIServerConfig) map[string]interface{} {

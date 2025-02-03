@@ -284,6 +284,7 @@ The following arguments are supported:
 - `node_tags` - (Computed) - String
 - `node_instance_prefix` - (Computed) - String
 - `pd_csi_driver` - (Computed) - [pd_csi_driver](#pd_csi_driver) - PDCSIDriver is the config for the PD CSI driver.
+- `use_startup_script` - (Computed) - Bool - UseStartupScript specifies enables using startup-script instead of user-data metadata.
 - `binaries_location` - (Computed) - String - BinariesLocation is the location of the GCE cloud provider binaries.
 
 ### pd_csi_driver
@@ -790,8 +791,8 @@ The following arguments are supported:
 - `namespaces` - (Computed) - List(String) - namespaces specifies a static list of namespace names that the term applies to.<br />The term is applied to the union of the namespaces listed in this field<br />and the ones selected by namespaceSelector.<br />null or empty namespaces list and null namespaceSelector means "this pod's namespace".<br />+optional<br />+listType=atomic.
 - `topology_key` - (Computed) - String - This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching<br />the labelSelector in the specified namespaces, where co-located is defined as running on a node<br />whose value of the label with key topologyKey matches that of any node on which any of the<br />selected pods is running.<br />Empty topologyKey is not allowed.
 - `namespace_selector` - (Computed) - [label_selector](#label_selector) - A label query over the set of namespaces that the term applies to.<br />The term is applied to the union of the namespaces selected by this field<br />and the ones listed in the namespaces field.<br />null selector and null or empty namespaces list means "this pod's namespace".<br />An empty selector ({}) matches all namespaces.<br />+optional.
-- `match_label_keys` - (Computed) - List(String) - MatchLabelKeys is a set of pod label keys to select which pods will<br />be taken into consideration. The keys are used to lookup values from the<br />incoming pod labels, those key-value labels are merged with `labelSelector` as `key in (value)`<br />to select the group of existing pods which pods will be taken into consideration<br />for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming<br />pod labels will be ignored. The default value is empty.<br />The same key is forbidden to exist in both matchLabelKeys and labelSelector.<br />Also, matchLabelKeys cannot be set when labelSelector isn't set.<br />This is an alpha field and requires enabling MatchLabelKeysInPodAffinity feature gate.<br />+listType=atomic<br />+optional.
-- `mismatch_label_keys` - (Computed) - List(String) - MismatchLabelKeys is a set of pod label keys to select which pods will<br />be taken into consideration. The keys are used to lookup values from the<br />incoming pod labels, those key-value labels are merged with `labelSelector` as `key notin (value)`<br />to select the group of existing pods which pods will be taken into consideration<br />for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming<br />pod labels will be ignored. The default value is empty.<br />The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.<br />Also, mismatchLabelKeys cannot be set when labelSelector isn't set.<br />This is an alpha field and requires enabling MatchLabelKeysInPodAffinity feature gate.<br />+listType=atomic<br />+optional.
+- `match_label_keys` - (Computed) - List(String) - MatchLabelKeys is a set of pod label keys to select which pods will<br />be taken into consideration. The keys are used to lookup values from the<br />incoming pod labels, those key-value labels are merged with `labelSelector` as `key in (value)`<br />to select the group of existing pods which pods will be taken into consideration<br />for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming<br />pod labels will be ignored. The default value is empty.<br />The same key is forbidden to exist in both matchLabelKeys and labelSelector.<br />Also, matchLabelKeys cannot be set when labelSelector isn't set.<br />This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).<br /><br />+listType=atomic<br />+optional.
+- `mismatch_label_keys` - (Computed) - List(String) - MismatchLabelKeys is a set of pod label keys to select which pods will<br />be taken into consideration. The keys are used to lookup values from the<br />incoming pod labels, those key-value labels are merged with `labelSelector` as `key notin (value)`<br />to select the group of existing pods which pods will be taken into consideration<br />for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming<br />pod labels will be ignored. The default value is empty.<br />The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.<br />Also, mismatchLabelKeys cannot be set when labelSelector isn't set.<br />This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).<br /><br />+listType=atomic<br />+optional.
 
 ### label_selector
 
@@ -971,6 +972,78 @@ The following arguments are supported:
 - `cors_allowed_origins` - (Computed) - List(String) - CorsAllowedOrigins is a list of origins for CORS. An allowed origin can be a regular<br />expression to support subdomain matching. If this list is empty CORS will not be enabled.
 - `default_not_ready_toleration_seconds` - (Computed) - Int - DefaultNotReadyTolerationSeconds indicates the tolerationSeconds of the toleration for notReady:NoExecute that is added by default to every pod that does not already have such a toleration.
 - `default_unreachable_toleration_seconds` - (Computed) - Int - DefaultUnreachableTolerationSeconds indicates the tolerationSeconds of the toleration for unreachable:NoExecute that is added by default to every pod that does not already have such a toleration.
+- `env` - (Computed) - List([env_var](#env_var)) - Env allows users to pass in env variables to the apiserver container.<br />This can be useful to control some environment runtime settings, such as GOMEMLIMIT and GOCG to tweak the memory settings of the apiserver<br />This also allows the flexibility for adding any other variables for future use cases.
+
+### env_var
+
+EnvVar represents an environment variable present in a Container.
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `name` - (Required) - String - Name of the environment variable. Must be a C_IDENTIFIER.
+- `value` - (Computed) - String - Variable references $(VAR_NAME) are expanded<br />using the previously defined environment variables in the container and<br />any service environment variables. If a variable cannot be resolved,<br />the reference in the input string will be unchanged. Double $$ are reduced<br />to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e.<br />"$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".<br />Escaped references will never be expanded, regardless of whether the variable<br />exists or not.<br />Defaults to "".<br />+optional.
+- `value_from` - (Computed) - [env_var_source](#env_var_source) - Source for the environment variable's value. Cannot be used if value is not empty.<br />+optional.
+
+### env_var_source
+
+EnvVarSource represents a source for the value of an EnvVar.
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `field_ref` - (Computed) - [object_field_selector](#object_field_selector) - Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`,<br />spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.<br />+optional.
+- `resource_field_ref` - (Computed) - [resource_field_selector](#resource_field_selector) - Selects a resource of the container: only resources limits and requests<br />(limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.<br />+optional.
+- `config_map_key_ref` - (Computed) - [config_map_key_selector](#config_map_key_selector) - Selects a key of a ConfigMap.<br />+optional.
+- `secret_key_ref` - (Computed) - [secret_key_selector](#secret_key_selector) - Selects a key of a secret in the pod's namespace<br />+optional.
+
+### object_field_selector
+
+ObjectFieldSelector selects an APIVersioned field of an object.<br />+structType=atomic.
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `api_version` - (Computed) - String - Version of the schema the FieldPath is written in terms of, defaults to "v1".<br />+optional.
+- `field_path` - (Required) - String - Path of the field to select in the specified API version.
+
+### resource_field_selector
+
+ResourceFieldSelector represents container resources (cpu, memory) and their output format<br />+structType=atomic.
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `container_name` - (Computed) - String - Container name: required for volumes, optional for env vars<br />+optional.
+- `resource` - (Required) - String - Required: resource to select.
+
+### config_map_key_selector
+
+Selects a key from a ConfigMap.<br />+structType=atomic.
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `name` - (Computed) - String - Name of the referent.<br />This field is effectively required, but due to backwards compatibility is<br />allowed to be empty. Instances of this type with an empty value here are<br />almost certainly wrong.<br />TODO: Add other useful fields. apiVersion, kind, uid?<br />More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names<br />+optional<br />+default=""<br />+kubebuilder:default=""<br />TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
+- `key` - (Required) - String - The key to select.
+- `optional` - (Computed) - Bool - Specify whether the ConfigMap or its key must be defined<br />+optional.
+
+### secret_key_selector
+
+SecretKeySelector selects a key of a Secret.<br />+structType=atomic.
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `name` - (Computed) - String - Name of the referent.<br />This field is effectively required, but due to backwards compatibility is<br />allowed to be empty. Instances of this type with an empty value here are<br />almost certainly wrong.<br />TODO: Add other useful fields. apiVersion, kind, uid?<br />More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names<br />+optional<br />+default=""<br />+kubebuilder:default=""<br />TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
+- `key` - (Required) - String - The key of the secret to select from.  Must be a valid secret key.
+- `optional` - (Computed) - Bool - Specify whether the Secret or its key must be defined<br />+optional.
 
 ### kube_controller_manager_config
 
@@ -1614,6 +1687,7 @@ The following arguments are supported:
 - `disable_endpoint_crd` - (Computed) - Bool - DisableEndpointCRD disables usage of CiliumEndpoint CRD.<br />Default: false.
 - `enable_policy` - (Computed) - String - EnablePolicy specifies the policy enforcement mode.<br />"default": Follows Kubernetes policy enforcement.<br />"always": Cilium restricts all traffic if no policy is in place.<br />"never": Cilium allows all traffic regardless of policies in place.<br />If unspecified, "default" policy mode will be used.
 - `enable_l7_proxy` - (Computed) - Bool - EnableL7Proxy enables L7 proxy for L7 policy enforcement.<br />Default: true.
+- `enable_local_redirect_policy` - (Computed) - Bool - EnableLocalRedirectPolicy that enables pod traffic destined to an IP address and port/protocol<br />tuple or Kubernetes service to be redirected locally to backend pod(s) within a node, using eBPF.<br />https://docs.cilium.io/en/stable/network/kubernetes/local-redirect-policy/<br />Default: false.
 - `enable_bpf_masquerade` - (Computed) - Bool - EnableBPFMasquerade enables masquerading packets from endpoints leaving the host with BPF instead of iptables.<br />Default: false.
 - `enable_endpoint_health_checking` - (Computed) - Bool - EnableEndpointHealthChecking enables connectivity health checking between virtual endpoints.<br />Default: true.
 - `enable_prometheus_metrics` - (Computed) - Bool - EnablePrometheusMetrics enables the Cilium "/metrics" endpoint for both the agent and the operator.
@@ -1664,7 +1738,7 @@ HubbleSpec configures the Hubble service on the Cilium agent.
 The following arguments are supported:
 
 - `enabled` - (Computed) - Bool - Enabled decides if Hubble is enabled on the agent or not.
-- `metrics` - (Computed) - List(String) - Metrics is a list of metrics to collect. If empty or null, metrics are disabled.<br />See https://docs.cilium.io/en/stable/configuration/metrics/#hubble-exported-metrics.
+- `metrics` - (Computed) - List(String) - Metrics is a list of metrics to collect. If empty or null, metrics are disabled.<br />See https://docs.cilium.io/en/stable/observability/metrics/#hubble-exported-metrics.
 
 ### cilium_ingress_spec
 

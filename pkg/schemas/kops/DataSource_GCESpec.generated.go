@@ -19,6 +19,7 @@ func DataSourceGCESpec() *schema.Resource {
 			"node_tags":            ComputedString(),
 			"node_instance_prefix": ComputedString(),
 			"pd_csi_driver":        ComputedStruct(DataSourcePDCSIDriver()),
+			"use_startup_script":   ComputedBool(),
 			"binaries_location":    ComputedString(),
 		},
 	}
@@ -112,6 +113,25 @@ func ExpandDataSourceGCESpec(in map[string]interface{}) kops.GCESpec {
 				}(in))
 			}(in)
 		}(in["pd_csi_driver"]),
+		UseStartupScript: func(in interface{}) *bool {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
+		}(in["use_startup_script"]),
 		BinariesLocation: func(in interface{}) *string {
 			if in == nil {
 				return nil
@@ -183,6 +203,16 @@ func FlattenDataSourceGCESpecInto(in kops.GCESpec, out map[string]interface{}) {
 			}(*in)
 		}(in)
 	}(in.PDCSIDriver)
+	out["use_startup_script"] = func(in *bool) interface{} {
+		return func(in *bool) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in bool) interface{} {
+				return FlattenBool(bool(in))
+			}(*in)
+		}(in)
+	}(in.UseStartupScript)
 	out["binaries_location"] = func(in *string) interface{} {
 		return func(in *string) interface{} {
 			if in == nil {

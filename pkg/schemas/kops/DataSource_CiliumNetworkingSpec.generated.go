@@ -25,6 +25,7 @@ func DataSourceCiliumNetworkingSpec() *schema.Resource {
 			"disable_endpoint_crd":              ComputedBool(),
 			"enable_policy":                     ComputedString(),
 			"enable_l7_proxy":                   ComputedBool(),
+			"enable_local_redirect_policy":      ComputedBool(),
 			"enable_bpf_masquerade":             ComputedBool(),
 			"enable_endpoint_health_checking":   ComputedBool(),
 			"enable_prometheus_metrics":         ComputedBool(),
@@ -166,6 +167,25 @@ func ExpandDataSourceCiliumNetworkingSpec(in map[string]interface{}) kops.Cilium
 				}(bool(ExpandBool(in)))
 			}(in)
 		}(in["enable_l7_proxy"]),
+		EnableLocalRedirectPolicy: func(in interface{}) *bool {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
+		}(in["enable_local_redirect_policy"]),
 		EnableBPFMasquerade: func(in interface{}) *bool {
 			if in == nil {
 				return nil
@@ -520,6 +540,16 @@ func FlattenDataSourceCiliumNetworkingSpecInto(in kops.CiliumNetworkingSpec, out
 			}(*in)
 		}(in)
 	}(in.EnableL7Proxy)
+	out["enable_local_redirect_policy"] = func(in *bool) interface{} {
+		return func(in *bool) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in bool) interface{} {
+				return FlattenBool(bool(in))
+			}(*in)
+		}(in)
+	}(in.EnableLocalRedirectPolicy)
 	out["enable_bpf_masquerade"] = func(in *bool) interface{} {
 		return func(in *bool) interface{} {
 			if in == nil {

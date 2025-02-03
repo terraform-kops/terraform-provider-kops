@@ -32,6 +32,7 @@ func TestExpandDataSourceCiliumNetworkingSpec(t *testing.T) {
 					"disable_endpoint_crd":              false,
 					"enable_policy":                     "",
 					"enable_l7_proxy":                   nil,
+					"enable_local_redirect_policy":      nil,
 					"enable_bpf_masquerade":             nil,
 					"enable_endpoint_health_checking":   nil,
 					"enable_prometheus_metrics":         false,
@@ -100,6 +101,7 @@ func TestFlattenDataSourceCiliumNetworkingSpecInto(t *testing.T) {
 		"disable_endpoint_crd":              false,
 		"enable_policy":                     "",
 		"enable_l7_proxy":                   nil,
+		"enable_local_redirect_policy":      nil,
 		"enable_bpf_masquerade":             nil,
 		"enable_endpoint_health_checking":   nil,
 		"enable_prometheus_metrics":         false,
@@ -272,6 +274,17 @@ func TestFlattenDataSourceCiliumNetworkingSpecInto(t *testing.T) {
 				in: func() kops.CiliumNetworkingSpec {
 					subject := kops.CiliumNetworkingSpec{}
 					subject.EnableL7Proxy = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EnableLocalRedirectPolicy - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.EnableLocalRedirectPolicy = nil
 					return subject
 				}(),
 			},
@@ -742,6 +755,7 @@ func TestFlattenDataSourceCiliumNetworkingSpec(t *testing.T) {
 		"disable_endpoint_crd":              false,
 		"enable_policy":                     "",
 		"enable_l7_proxy":                   nil,
+		"enable_local_redirect_policy":      nil,
 		"enable_bpf_masquerade":             nil,
 		"enable_endpoint_health_checking":   nil,
 		"enable_prometheus_metrics":         false,
@@ -914,6 +928,17 @@ func TestFlattenDataSourceCiliumNetworkingSpec(t *testing.T) {
 				in: func() kops.CiliumNetworkingSpec {
 					subject := kops.CiliumNetworkingSpec{}
 					subject.EnableL7Proxy = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EnableLocalRedirectPolicy - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.EnableLocalRedirectPolicy = nil
 					return subject
 				}(),
 			},
