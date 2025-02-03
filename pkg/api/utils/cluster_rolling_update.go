@@ -103,7 +103,7 @@ func ClusterInstanceGroupsNeedingUpdate(clientset simple.Clientset, clusterName 
 	return needUpdate, nil
 }
 
-func ClusterRollingUpdate(clientset simple.Clientset, clusterName string, options RollingUpdateOptions) error {
+func ClusterRollingUpdate(clientset simple.Clientset, clusterName string, options RollingUpdateOptions, controlPlaneOnly bool) error {
 	kc, err := clientset.GetCluster(context.Background(), clusterName)
 	if err != nil {
 		return err
@@ -135,7 +135,9 @@ func ClusterRollingUpdate(clientset simple.Clientset, clusterName string, option
 	}
 	var instanceGroups []*kops.InstanceGroup
 	for i := range list.Items {
-		instanceGroups = append(instanceGroups, &list.Items[i])
+		if !controlPlaneOnly || isControlPlane(&list.Items[i]) {
+			instanceGroups = append(instanceGroups, &list.Items[i])
+		}
 	}
 	cloud, err := cloudup.BuildCloud(kc)
 	if err != nil {
@@ -170,7 +172,6 @@ func ClusterRollingUpdate(clientset simple.Clientset, clusterName string, option
 		ValidateCount = *options.ValidateCount
 	}
 	d := &instancegroups.RollingUpdateCluster{
-		Ctx:                     context.TODO(),
 		Cluster:                 kc,
 		Clientset:               clientset,
 		MasterInterval:          MasterInterval,
@@ -203,10 +204,19 @@ func ClusterRollingUpdate(clientset simple.Clientset, clusterName string, option
 	if !needUpdate && !options.Force {
 		return nil
 	}
-	clusterValidator, err := validation.NewClusterValidator(kc, cloud, list, config.Host, k8sClient)
+	clusterValidator, err := validation.NewClusterValidator(kc, cloud, list, config, k8sClient)
 	if err != nil {
 		return fmt.Errorf("cannot create cluster validator: %v", err)
 	}
 	d.ClusterValidator = clusterValidator
-	return d.RollingUpdate(groups, list)
+	return d.RollingUpdate(context.Background(), groups, list)
+}
+
+func isControlPlane(group *kops.InstanceGroup) bool {
+	for _, role := range []kops.InstanceGroupRole{kops.InstanceGroupRoleControlPlane, kops.InstanceGroupRoleAPIServer} {
+		if group.Spec.Role == role {
+			return true
+		}
+	}
+	return false
 }

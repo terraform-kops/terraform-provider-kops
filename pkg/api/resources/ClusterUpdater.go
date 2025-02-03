@@ -24,11 +24,12 @@ type ClusterUpdater struct {
 }
 
 func (u *ClusterUpdater) UpdateCluster(clientset simple.Clientset) error {
+	// Handle ControlPlanes
 	if !u.Apply.Skip {
 		if lifecycleOverrides, err := utils.ParseLifecycleOverrides(u.Apply.LifecycleOverrides); err != nil {
 			return err
 		} else {
-			if err := utils.ClusterApply(clientset, u.ClusterName, u.Apply.AllowKopsDowngrade, lifecycleOverrides, false); err != nil {
+			if _, err := utils.ClusterApply(clientset, u.ClusterName, u.Apply.AllowKopsDowngrade, lifecycleOverrides, false, true); err != nil {
 				return err
 			}
 		}
@@ -39,18 +40,39 @@ func (u *ClusterUpdater) UpdateCluster(clientset simple.Clientset) error {
 		}
 	}
 	if !u.RollingUpdate.Skip {
-		if err := utils.ClusterRollingUpdate(clientset, u.ClusterName, u.RollingUpdate.RollingUpdateOptions); err != nil {
+		if err := utils.ClusterRollingUpdate(clientset, u.ClusterName, u.RollingUpdate.RollingUpdateOptions, true); err != nil {
 			return err
 		}
+	}
 
-		// Prune deferred deletions
-		if !u.Apply.Skip {
-			if lifecycleOverrides, err := utils.ParseLifecycleOverrides(u.Apply.LifecycleOverrides); err != nil {
+	// Handle nodes
+	if !u.Apply.Skip {
+		if lifecycleOverrides, err := utils.ParseLifecycleOverrides(u.Apply.LifecycleOverrides); err != nil {
+			return err
+		} else {
+			if _, err := utils.ClusterApply(clientset, u.ClusterName, u.Apply.AllowKopsDowngrade, lifecycleOverrides, false, false); err != nil {
 				return err
-			} else {
-				if err := utils.ClusterApply(clientset, u.ClusterName, u.Apply.AllowKopsDowngrade, lifecycleOverrides, true); err != nil {
-					return err
-				}
+			}
+		}
+	}
+	if !u.Validate.Skip {
+		if err := utils.ClusterValidate(clientset, u.ClusterName, u.Validate.ValidateOptions); err != nil {
+			return err
+		}
+	}
+	if !u.RollingUpdate.Skip {
+		if err := utils.ClusterRollingUpdate(clientset, u.ClusterName, u.RollingUpdate.RollingUpdateOptions, false); err != nil {
+			return err
+		}
+	}
+
+	// Prune deferred deletions
+	if !u.Apply.Skip {
+		if lifecycleOverrides, err := utils.ParseLifecycleOverrides(u.Apply.LifecycleOverrides); err != nil {
+			return err
+		} else {
+			if _, err := utils.ClusterApply(clientset, u.ClusterName, u.Apply.AllowKopsDowngrade, lifecycleOverrides, true, false); err != nil {
+				return err
 			}
 		}
 	}

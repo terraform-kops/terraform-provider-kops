@@ -31,7 +31,14 @@ func GetKubeConfigBuilder(clientset simple.Clientset, clusterName string, admin 
 	if err != nil {
 		return nil, err
 	}
-	conf, err := kubeconfig.BuildKubecfg(context.Background(), cluster, keyStore, secretStore, cloud, duration, "", internal, "", false)
+	options := kubeconfig.CreateKubecfgOptions{
+		CreateKubecfg:               false,
+		Admin:                       duration,
+		User:                        "",
+		Internal:                    internal,
+		UseKopsAuthenticationPlugin: false,
+	}
+	conf, err := kubeconfig.BuildKubecfg(context.Background(), cluster, keyStore, secretStore, cloud, options, "")
 	if err != nil {
 		return nil, err
 	}

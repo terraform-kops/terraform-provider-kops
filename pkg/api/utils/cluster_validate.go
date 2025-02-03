@@ -48,7 +48,7 @@ func makeValidator(clientset simple.Clientset, clusterName string) (validation.C
 	if err != nil {
 		return nil, fmt.Errorf("cannot build kubernetes api client for %q: %v", kc.Name, err)
 	}
-	validator, err := validation.NewClusterValidator(kc, cloud, list, config.Host, k8sClient)
+	validator, err := validation.NewClusterValidator(kc, cloud, list, config, k8sClient)
 	if err != nil {
 		return nil, fmt.Errorf("unexpected error creating validator: %v", err)
 	}
