@@ -23,13 +23,13 @@ type ClusterUpdater struct {
 	Validate ValidateOptions
 }
 
-func (u *ClusterUpdater) UpdateCluster(clientset simple.Clientset) error {
+func (u *ClusterUpdater) UpdateCluster(clientset simple.Clientset, isNewResource bool) error {
 	// Handle ControlPlanes
 	if !u.Apply.Skip {
 		if lifecycleOverrides, err := utils.ParseLifecycleOverrides(u.Apply.LifecycleOverrides); err != nil {
 			return err
 		} else {
-			if _, err := utils.ClusterApply(clientset, u.ClusterName, u.Apply.AllowKopsDowngrade, lifecycleOverrides, false, true); err != nil {
+			if _, err := utils.ClusterApply(clientset, u.ClusterName, u.Apply.AllowKopsDowngrade, lifecycleOverrides, false, !isNewResource); err != nil {
 				return err
 			}
 		}
@@ -45,13 +45,16 @@ func (u *ClusterUpdater) UpdateCluster(clientset simple.Clientset) error {
 		}
 	}
 
-	// Handle nodes
-	if !u.Apply.Skip {
-		if lifecycleOverrides, err := utils.ParseLifecycleOverrides(u.Apply.LifecycleOverrides); err != nil {
-			return err
-		} else {
-			if _, err := utils.ClusterApply(clientset, u.ClusterName, u.Apply.AllowKopsDowngrade, lifecycleOverrides, false, false); err != nil {
+	// Nodes are only handled separately during updates
+	if !isNewResource {
+		// Handle nodes
+		if !u.Apply.Skip {
+			if lifecycleOverrides, err := utils.ParseLifecycleOverrides(u.Apply.LifecycleOverrides); err != nil {
 				return err
+			} else {
+				if _, err := utils.ClusterApply(clientset, u.ClusterName, u.Apply.AllowKopsDowngrade, lifecycleOverrides, false, false); err != nil {
+					return err
+				}
 			}
 		}
 	}
