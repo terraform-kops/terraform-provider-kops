@@ -31,7 +31,7 @@ func ClusterUpdater() *schema.Resource {
 
 func ClusterUpdaterCreateOrUpdate(_ context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	in := resourcesschema.ExpandResourceClusterUpdater(d.Get("").(map[string]interface{}))
-	if err := in.UpdateCluster(config.Clientset(m)); err != nil {
+	if err := in.UpdateCluster(config.Clientset(m), d.IsNewResource()); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(in.ClusterName)
