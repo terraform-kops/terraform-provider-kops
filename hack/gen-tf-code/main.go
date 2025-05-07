@@ -378,6 +378,10 @@ func main() {
 		generate(corev1.SecretKeySelector{},
 			required("Key"),
 		),
+		// 1.32
+		generate(kops.CiliumGatewayAPISpec{}),
+		generate(kops.KindnetNetworkingSpec{}),
+		generate(kops.KindnetMasqueradeSpec{}),
 	)
 	build(
 		"Config",
@@ -614,5 +618,9 @@ func main() {
 		generate(corev1.SecretKeySelector{},
 			required("Key"),
 		),
+		// 1.32
+		generate(kops.CiliumGatewayAPISpec{}),
+		generate(kops.KindnetNetworkingSpec{}),
+		generate(kops.KindnetMasqueradeSpec{}),
 	)
 }

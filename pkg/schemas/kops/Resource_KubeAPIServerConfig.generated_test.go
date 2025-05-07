@@ -103,6 +103,7 @@ func TestExpandResourceKubeAPIServerConfig(t *testing.T) {
 					"requestheader_client_ca_file":                 "",
 					"requestheader_allowed_names":                  func() []interface{} { return nil }(),
 					"feature_gates":                                func() map[string]interface{} { return nil }(),
+					"goaway_chance":                                "",
 					"max_requests_inflight":                        0,
 					"max_mutating_requests_inflight":               0,
 					"http2_max_streams_per_connection":             nil,
@@ -228,6 +229,7 @@ func TestFlattenResourceKubeAPIServerConfigInto(t *testing.T) {
 		"requestheader_client_ca_file":                 "",
 		"requestheader_allowed_names":                  func() []interface{} { return nil }(),
 		"feature_gates":                                func() map[string]interface{} { return nil }(),
+		"goaway_chance":                                "",
 		"max_requests_inflight":                        0,
 		"max_mutating_requests_inflight":               0,
 		"http2_max_streams_per_connection":             nil,
@@ -1167,6 +1169,17 @@ func TestFlattenResourceKubeAPIServerConfigInto(t *testing.T) {
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
 					subject.FeatureGates = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "GoawayChance - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.GoawayChance = ""
 					return subject
 				}(),
 			},
@@ -1554,6 +1567,7 @@ func TestFlattenResourceKubeAPIServerConfig(t *testing.T) {
 		"requestheader_client_ca_file":                 "",
 		"requestheader_allowed_names":                  func() []interface{} { return nil }(),
 		"feature_gates":                                func() map[string]interface{} { return nil }(),
+		"goaway_chance":                                "",
 		"max_requests_inflight":                        0,
 		"max_mutating_requests_inflight":               0,
 		"http2_max_streams_per_connection":             nil,
@@ -2493,6 +2507,17 @@ func TestFlattenResourceKubeAPIServerConfig(t *testing.T) {
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
 					subject.FeatureGates = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "GoawayChance - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.GoawayChance = ""
 					return subject
 				}(),
 			},
