@@ -39,6 +39,7 @@ func ResourceNetworkingSpec() *schema.Resource {
 			"cilium":                   OptionalStruct(ResourceCiliumNetworkingSpec()),
 			"lyft_vpc":                 OptionalStruct(ResourceLyftVPCNetworkingSpec()),
 			"gcp":                      OptionalStruct(ResourceGCPNetworkingSpec()),
+			"kindnet":                  OptionalStruct(ResourceKindnetNetworkingSpec()),
 		},
 	}
 
@@ -440,6 +441,24 @@ func ExpandResourceNetworkingSpec(in map[string]interface{}) kops.NetworkingSpec
 				}(in))
 			}(in)
 		}(in["gcp"]),
+		Kindnet: func(in interface{}) *kops.KindnetNetworkingSpec {
+			return func(in interface{}) *kops.KindnetNetworkingSpec {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in kops.KindnetNetworkingSpec) *kops.KindnetNetworkingSpec {
+					return &in
+				}(func(in interface{}) kops.KindnetNetworkingSpec {
+					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+						return ExpandResourceKindnetNetworkingSpec(in[0].(map[string]interface{}))
+					}
+					return kops.KindnetNetworkingSpec{}
+				}(in))
+			}(in)
+		}(in["kindnet"]),
 	}
 }
 
@@ -706,6 +725,18 @@ func FlattenResourceNetworkingSpecInto(in kops.NetworkingSpec, out map[string]in
 			}(*in)
 		}(in)
 	}(in.GCP)
+	out["kindnet"] = func(in *kops.KindnetNetworkingSpec) interface{} {
+		return func(in *kops.KindnetNetworkingSpec) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in kops.KindnetNetworkingSpec) interface{} {
+				return func(in kops.KindnetNetworkingSpec) []interface{} {
+					return []interface{}{FlattenResourceKindnetNetworkingSpec(in)}
+				}(in)
+			}(*in)
+		}(in)
+	}(in.Kindnet)
 }
 
 func FlattenResourceNetworkingSpec(in kops.NetworkingSpec) map[string]interface{} {

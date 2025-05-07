@@ -62,10 +62,12 @@ func DataSourceCiliumNetworkingSpec() *schema.Resource {
 			"etcd_managed":                      ComputedBool(),
 			"enable_remote_node_identity":       ComputedBool(),
 			"enable_unreachable_routes":         ComputedBool(),
+			"cni_exclusive":                     ComputedBool(),
 			"hubble":                            ComputedStruct(DataSourceHubbleSpec()),
 			"disable_cnp_status_updates":        ComputedBool(),
 			"enable_service_topology":           ComputedBool(),
 			"ingress":                           ComputedStruct(DataSourceCiliumIngressSpec()),
+			"gateway_api":                       ComputedStruct(DataSourceCiliumGatewayAPISpec()),
 		},
 	}
 
@@ -418,6 +420,25 @@ func ExpandDataSourceCiliumNetworkingSpec(in map[string]interface{}) kops.Cilium
 				}(bool(ExpandBool(in)))
 			}(in)
 		}(in["enable_unreachable_routes"]),
+		CniExclusive: func(in interface{}) *bool {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
+		}(in["cni_exclusive"]),
 		Hubble: func(in interface{}) *kops.HubbleSpec {
 			return func(in interface{}) *kops.HubbleSpec {
 				if in == nil {
@@ -476,6 +497,24 @@ func ExpandDataSourceCiliumNetworkingSpec(in map[string]interface{}) kops.Cilium
 				}(in))
 			}(in)
 		}(in["ingress"]),
+		GatewayAPI: func(in interface{}) *kops.CiliumGatewayAPISpec {
+			return func(in interface{}) *kops.CiliumGatewayAPISpec {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in kops.CiliumGatewayAPISpec) *kops.CiliumGatewayAPISpec {
+					return &in
+				}(func(in interface{}) kops.CiliumGatewayAPISpec {
+					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+						return ExpandDataSourceCiliumGatewayAPISpec(in[0].(map[string]interface{}))
+					}
+					return kops.CiliumGatewayAPISpec{}
+				}(in))
+			}(in)
+		}(in["gateway_api"]),
 	}
 }
 
@@ -718,6 +757,16 @@ func FlattenDataSourceCiliumNetworkingSpecInto(in kops.CiliumNetworkingSpec, out
 			}(*in)
 		}(in)
 	}(in.EnableUnreachableRoutes)
+	out["cni_exclusive"] = func(in *bool) interface{} {
+		return func(in *bool) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in bool) interface{} {
+				return FlattenBool(bool(in))
+			}(*in)
+		}(in)
+	}(in.CniExclusive)
 	out["hubble"] = func(in *kops.HubbleSpec) interface{} {
 		return func(in *kops.HubbleSpec) interface{} {
 			if in == nil {
@@ -755,6 +804,18 @@ func FlattenDataSourceCiliumNetworkingSpecInto(in kops.CiliumNetworkingSpec, out
 			}(*in)
 		}(in)
 	}(in.Ingress)
+	out["gateway_api"] = func(in *kops.CiliumGatewayAPISpec) interface{} {
+		return func(in *kops.CiliumGatewayAPISpec) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in kops.CiliumGatewayAPISpec) interface{} {
+				return func(in kops.CiliumGatewayAPISpec) []interface{} {
+					return []interface{}{FlattenDataSourceCiliumGatewayAPISpec(in)}
+				}(in)
+			}(*in)
+		}(in)
+	}(in.GatewayAPI)
 }
 
 func FlattenDataSourceCiliumNetworkingSpec(in kops.CiliumNetworkingSpec) map[string]interface{} {

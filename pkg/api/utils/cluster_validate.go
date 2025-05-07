@@ -6,8 +6,10 @@ import (
 	"log"
 	"time"
 
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/kops/pkg/apis/kops"
 	"k8s.io/kops/pkg/client/simple"
 	"k8s.io/kops/pkg/validation"
 	"k8s.io/kops/upup/pkg/fi/cloudup"
@@ -48,7 +50,13 @@ func makeValidator(clientset simple.Clientset, clusterName string) (validation.C
 	if err != nil {
 		return nil, fmt.Errorf("cannot build kubernetes api client for %q: %v", kc.Name, err)
 	}
-	validator, err := validation.NewClusterValidator(kc, cloud, list, config, k8sClient)
+	allowAllInstanceGroups := func(ig *kops.InstanceGroup) bool {
+		return true
+	}
+	allowAllPods := func(pod *v1.Pod) bool {
+		return true
+	}
+	validator, err := validation.NewClusterValidator(kc, cloud, list, allowAllInstanceGroups, allowAllPods, config, k8sClient)
 	if err != nil {
 		return nil, fmt.Errorf("unexpected error creating validator: %v", err)
 	}
@@ -59,7 +67,7 @@ func ClusterIsValid(clientset simple.Clientset, clusterName string) (bool, error
 	if validator, err := makeValidator(clientset, clusterName); err != nil {
 		return false, err
 	} else {
-		result, err := validator.Validate()
+		result, err := validator.Validate(context.Background())
 		if err != nil {
 			return false, err
 		}
@@ -89,7 +97,7 @@ func ClusterValidate(clientset simple.Clientset, clusterName string, options Val
 			if time.Now().After(timeout) {
 				return fmt.Errorf("wait time exceeded during validation")
 			}
-			result, err := validator.Validate()
+			result, err := validator.Validate(context.Background())
 			if err != nil {
 				consecutive = 0
 				log.Printf("(will retry): unexpected error during validation: %v\n", err)
