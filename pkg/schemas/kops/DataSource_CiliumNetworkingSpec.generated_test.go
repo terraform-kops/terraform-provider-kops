@@ -69,10 +69,12 @@ func TestExpandDataSourceCiliumNetworkingSpec(t *testing.T) {
 					"etcd_managed":                      false,
 					"enable_remote_node_identity":       nil,
 					"enable_unreachable_routes":         nil,
+					"cni_exclusive":                     nil,
 					"hubble":                            nil,
 					"disable_cnp_status_updates":        nil,
 					"enable_service_topology":           false,
 					"ingress":                           nil,
+					"gateway_api":                       nil,
 				},
 			},
 			want: _default,
@@ -138,10 +140,12 @@ func TestFlattenDataSourceCiliumNetworkingSpecInto(t *testing.T) {
 		"etcd_managed":                      false,
 		"enable_remote_node_identity":       nil,
 		"enable_unreachable_routes":         nil,
+		"cni_exclusive":                     nil,
 		"hubble":                            nil,
 		"disable_cnp_status_updates":        nil,
 		"enable_service_topology":           false,
 		"ingress":                           nil,
+		"gateway_api":                       nil,
 	}
 	type args struct {
 		in kops.CiliumNetworkingSpec
@@ -687,6 +691,17 @@ func TestFlattenDataSourceCiliumNetworkingSpecInto(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "CniExclusive - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.CniExclusive = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "Hubble - default",
 			args: args{
 				in: func() kops.CiliumNetworkingSpec {
@@ -725,6 +740,17 @@ func TestFlattenDataSourceCiliumNetworkingSpecInto(t *testing.T) {
 				in: func() kops.CiliumNetworkingSpec {
 					subject := kops.CiliumNetworkingSpec{}
 					subject.Ingress = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "GatewayApi - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.GatewayAPI = nil
 					return subject
 				}(),
 			},
@@ -792,10 +818,12 @@ func TestFlattenDataSourceCiliumNetworkingSpec(t *testing.T) {
 		"etcd_managed":                      false,
 		"enable_remote_node_identity":       nil,
 		"enable_unreachable_routes":         nil,
+		"cni_exclusive":                     nil,
 		"hubble":                            nil,
 		"disable_cnp_status_updates":        nil,
 		"enable_service_topology":           false,
 		"ingress":                           nil,
+		"gateway_api":                       nil,
 	}
 	type args struct {
 		in kops.CiliumNetworkingSpec
@@ -1341,6 +1369,17 @@ func TestFlattenDataSourceCiliumNetworkingSpec(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "CniExclusive - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.CniExclusive = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "Hubble - default",
 			args: args{
 				in: func() kops.CiliumNetworkingSpec {
@@ -1379,6 +1418,17 @@ func TestFlattenDataSourceCiliumNetworkingSpec(t *testing.T) {
 				in: func() kops.CiliumNetworkingSpec {
 					subject := kops.CiliumNetworkingSpec{}
 					subject.Ingress = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "GatewayApi - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.GatewayAPI = nil
 					return subject
 				}(),
 			},

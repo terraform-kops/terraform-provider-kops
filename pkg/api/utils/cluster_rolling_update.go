@@ -204,7 +204,13 @@ func ClusterRollingUpdate(clientset simple.Clientset, clusterName string, option
 	if !needUpdate && !options.Force {
 		return nil
 	}
-	clusterValidator, err := validation.NewClusterValidator(kc, cloud, list, config, k8sClient)
+	allowAllInstanceGroups := func(ig *kops.InstanceGroup) bool {
+		return true
+	}
+	allowAllPods := func(pod *v1.Pod) bool {
+		return true
+	}
+	clusterValidator, err := validation.NewClusterValidator(kc, cloud, list, allowAllInstanceGroups, allowAllPods, config, k8sClient)
 	if err != nil {
 		return fmt.Errorf("cannot create cluster validator: %v", err)
 	}

@@ -1033,6 +1033,7 @@ The following arguments are supported:
 - `requestheader_client_ca_file` - (Optional) - String - Root certificate bundle to use to verify client certificates on incoming requests before trusting usernames in headers specified by --requestheader-username-headers.
 - `requestheader_allowed_names` - (Optional) - List(String) - List of client certificate common names to allow to provide usernames in headers specified by --requestheader-username-headers. If empty, any client certificate validated by the authorities in --requestheader-client-ca-file is allowed.
 - `feature_gates` - (Optional) - Map(String) - FeatureGates is set of key=value pairs that describe feature gates for alpha/experimental features.
+- `goaway_chance` - (Optional) - String - GoawayChance is the probability that send a GOAWAY to HTTP/2 clients. Default to 0, means never send GOAWAY. Max is 0.02 to prevent break the apiserver.
 - `max_requests_inflight` - (Optional) - Int - MaxRequestsInflight The maximum number of non-mutating requests in flight at a given time.
 - `max_mutating_requests_inflight` - (Optional) - Int - MaxMutatingRequestsInflight The maximum number of mutating requests in flight at a given time. Defaults to 200.
 - `http2_max_streams_per_connection` - (Optional) - Int - HTTP2MaxStreamsPerConnection sets the limit that the server gives to clients for the maximum number of streams in an HTTP/2 connection. Zero means to use golang's default.
@@ -1115,7 +1116,7 @@ Selects a key from a ConfigMap.<br />+structType=atomic.
 
 The following arguments are supported:
 
-- `name` - (Optional) - String - Name of the referent.<br />This field is effectively required, but due to backwards compatibility is<br />allowed to be empty. Instances of this type with an empty value here are<br />almost certainly wrong.<br />TODO: Add other useful fields. apiVersion, kind, uid?<br />More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names<br />+optional<br />+default=""<br />+kubebuilder:default=""<br />TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
+- `name` - (Optional) - String - Name of the referent.<br />This field is effectively required, but due to backwards compatibility is<br />allowed to be empty. Instances of this type with an empty value here are<br />almost certainly wrong.<br />More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names<br />+optional<br />+default=""<br />+kubebuilder:default=""<br />TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
 - `key` - (Required) - String - The key to select.
 - `optional` - (Optional) - Bool - Specify whether the ConfigMap or its key must be defined<br />+optional.
 
@@ -1127,7 +1128,7 @@ SecretKeySelector selects a key of a Secret.<br />+structType=atomic.
 
 The following arguments are supported:
 
-- `name` - (Optional) - String - Name of the referent.<br />This field is effectively required, but due to backwards compatibility is<br />allowed to be empty. Instances of this type with an empty value here are<br />almost certainly wrong.<br />TODO: Add other useful fields. apiVersion, kind, uid?<br />More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names<br />+optional<br />+default=""<br />+kubebuilder:default=""<br />TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
+- `name` - (Optional) - String - Name of the referent.<br />This field is effectively required, but due to backwards compatibility is<br />allowed to be empty. Instances of this type with an empty value here are<br />almost certainly wrong.<br />More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names<br />+optional<br />+default=""<br />+kubebuilder:default=""<br />TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
 - `key` - (Required) - String - The key of the secret to select from.  Must be a valid secret key.
 - `optional` - (Optional) - Bool - Specify whether the Secret or its key must be defined<br />+optional.
 
@@ -1519,6 +1520,7 @@ The following arguments are supported:
 - `cilium` - (Optional) - [cilium_networking_spec](#cilium_networking_spec)
 - `lyft_vpc` - (Optional) - [lyft_vpc_networking_spec](#lyft_vpc_networking_spec)
 - `gcp` - (Optional) - [gcp_networking_spec](#gcp_networking_spec)
+- `kindnet` - (Optional) - [kindnet_networking_spec](#kindnet_networking_spec)
 
 ### cluster_subnet_spec
 
@@ -1810,10 +1812,12 @@ The following arguments are supported:
 - `etcd_managed` - (Optional) - Bool - EtcdManagd installs an additional etcd cluster that is used for Cilium state change.<br />The cluster is operated by cilium-etcd-operator.<br />Default: false.
 - `enable_remote_node_identity` - (Required) - Bool - EnableRemoteNodeIdentity enables the remote-node-identity.<br />Default: true.
 - `enable_unreachable_routes` - (Optional) - Bool - EnableUnreachableRoutes enables unreachable routes on pod deletion.<br />Default: false.
+- `cni_exclusive` - (Optional) - Bool - CniExclusive configures whether to remove other CNI configuration files.<br />Default: true.
 - `hubble` - (Optional) - [hubble_spec](#hubble_spec) - Hubble configures the Hubble service on the Cilium agent.
 - `disable_cnp_status_updates` - (Optional) - Bool - DisableCNPStatusUpdates determines if CNP NodeStatus updates will be sent to the Kubernetes api-server.
 - `enable_service_topology` - (Optional) - Bool - EnableServiceTopology determine if cilium should use topology aware hints.
 - `ingress` - (Optional) - [cilium_ingress_spec](#cilium_ingress_spec) - Ingress specifies the configuration for Cilium Ingress settings.
+- `gateway_api` - (Optional) - [cilium_gateway_api_spec](#cilium_gateway_api_spec) - GatewayAPI specifies the configuration for Cilium Gateway API settings.
 
 ### hubble_spec
 
@@ -1841,6 +1845,17 @@ The following arguments are supported:
 - `default_load_balancer_mode` - (Optional) - String - DefaultLoadBalancerMode specifies the default load balancer mode.<br />Possible values: 'shared' or 'dedicated'<br />Default: dedicated.
 - `shared_load_balancer_service_name` - (Optional) - String - SharedLoadBalancerServiceName specifies the name of the shared load balancer service.<br />Default: cilium-ingress.
 
+### cilium_gateway_api_spec
+
+CiliumGatewayAPISpec configures Cilium Gateway API settings.
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `enabled` - (Optional) - Bool - Enabled specifies whether Cilium Gateway API is enabled.
+- `enable_secrets_sync` - (Optional) - Bool - EnableSecretsSync specifies whether synchronization of secrets is enabled.<br />Default: true.
+
 ### lyft_vpc_networking_spec
 
 LyftVPCNetworkingSpec declares that we want to use the cni-ipvlan-vpc-k8s CNI networking.<br />Lyft VPC is deprecated as of kOps 1.22 and removed as of kOps 1.23.
@@ -1857,6 +1872,33 @@ GCPNetworkingSpec is the specification of GCP's native networking mode, using IP
 
 
 This resource has no attributes.
+
+### kindnet_networking_spec
+
+KindnetNetworkingSpec configures Kindnet settings.
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `version` - (Optional) - String - Version is the version of the kindnet agent.<br />Default: v1.8.0.
+- `network_policies` - (Optional) - Bool - Enable network policies.
+- `admin_network_policies` - (Optional) - Bool
+- `baseline_admin_network_policies` - (Optional) - Bool
+- `dns_caching` - (Optional) - Bool - enable dns caching.
+- `nat64` - (Optional) - Bool - enable nat64 on ipv6 clusters.
+- `fast_path_threshold` - (Optional) - Int - number of packets in a connection to offload it to the fast path.
+- `masquerade` - (Optional) - [kindnet_masquerade_spec](#kindnet_masquerade_spec) - node agent masquerading rules.
+- `log_level` - (Optional) - Int - log level.
+
+### kindnet_masquerade_spec
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `enabled` - (Optional) - Bool
+- `non_masquerade_cidrs` - (Optional) - List(String)
 
 ### api_spec
 
