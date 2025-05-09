@@ -6,7 +6,7 @@ require (
 	github.com/Masterminds/sprig v2.22.0+incompatible
 	github.com/aws/aws-sdk-go-v2 v1.36.3
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.212.0
-	github.com/aws/aws-sdk-go-v2/service/sts v1.33.10
+	github.com/aws/aws-sdk-go-v2/service/sts v1.33.19
 	github.com/google/go-cmp v0.6.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.36.1
 	golang.org/x/tools v0.29.0
