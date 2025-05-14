@@ -47,6 +47,7 @@ func TestExpandDataSourceNetworkingSpec(t *testing.T) {
 					"cilium":                   nil,
 					"lyft_vpc":                 nil,
 					"gcp":                      nil,
+					"kindnet":                  nil,
 				},
 			},
 			want: _default,
@@ -90,6 +91,7 @@ func TestFlattenDataSourceNetworkingSpecInto(t *testing.T) {
 		"cilium":                   nil,
 		"lyft_vpc":                 nil,
 		"gcp":                      nil,
+		"kindnet":                  nil,
 	}
 	type args struct {
 		in kops.NetworkingSpec
@@ -387,6 +389,17 @@ func TestFlattenDataSourceNetworkingSpecInto(t *testing.T) {
 				in: func() kops.NetworkingSpec {
 					subject := kops.NetworkingSpec{}
 					subject.GCP = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "Kindnet - default",
+			args: args{
+				in: func() kops.NetworkingSpec {
+					subject := kops.NetworkingSpec{}
+					subject.Kindnet = nil
 					return subject
 				}(),
 			},
@@ -432,6 +445,7 @@ func TestFlattenDataSourceNetworkingSpec(t *testing.T) {
 		"cilium":                   nil,
 		"lyft_vpc":                 nil,
 		"gcp":                      nil,
+		"kindnet":                  nil,
 	}
 	type args struct {
 		in kops.NetworkingSpec
@@ -729,6 +743,17 @@ func TestFlattenDataSourceNetworkingSpec(t *testing.T) {
 				in: func() kops.NetworkingSpec {
 					subject := kops.NetworkingSpec{}
 					subject.GCP = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "Kindnet - default",
+			args: args{
+				in: func() kops.NetworkingSpec {
+					subject := kops.NetworkingSpec{}
+					subject.Kindnet = nil
 					return subject
 				}(),
 			},

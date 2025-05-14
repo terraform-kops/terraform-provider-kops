@@ -99,6 +99,7 @@ func ResourceKubeAPIServerConfig() *schema.Resource {
 			"requestheader_client_ca_file":                 OptionalString(),
 			"requestheader_allowed_names":                  OptionalList(String()),
 			"feature_gates":                                OptionalMap(String()),
+			"goaway_chance":                                OptionalString(),
 			"max_requests_inflight":                        OptionalInt(),
 			"max_mutating_requests_inflight":               OptionalInt(),
 			"http2_max_streams_per_connection":             OptionalInt(),
@@ -1137,6 +1138,9 @@ func ExpandResourceKubeAPIServerConfig(in map[string]interface{}) kops.KubeAPISe
 				return nil
 			}(in)
 		}(in["feature_gates"]),
+		GoawayChance: func(in interface{}) string {
+			return string(ExpandString(in))
+		}(in["goaway_chance"]),
 		MaxRequestsInflight: func(in interface{}) int32 {
 			return int32(ExpandInt(in))
 		}(in["max_requests_inflight"]),
@@ -2177,6 +2181,9 @@ func FlattenResourceKubeAPIServerConfigInto(in kops.KubeAPIServerConfig, out map
 			return out
 		}(in)
 	}(in.FeatureGates)
+	out["goaway_chance"] = func(in string) interface{} {
+		return FlattenString(string(in))
+	}(in.GoawayChance)
 	out["max_requests_inflight"] = func(in int32) interface{} {
 		return FlattenInt(int(in))
 	}(in.MaxRequestsInflight)
