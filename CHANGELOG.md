@@ -1,6 +1,6 @@
 # Changelog
 
-## [v1.33.0](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.32.0...v1.33.0) - 2025-07-29
+## [v1.32.1](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.32.0...v1.32.1) - 2025-07-29
 - chore(deps): bump golang.org/x/tools from 0.29.0 to 0.34.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/232
 - feat: update to kOps 1.32.1 by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/240
 - feat: add GitHub workflow for tagging PRs on main branch by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/249
