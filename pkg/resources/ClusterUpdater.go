@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/terraform-kops/terraform-provider-kops/pkg/api/resources"
 	"github.com/terraform-kops/terraform-provider-kops/pkg/config"
 	"github.com/terraform-kops/terraform-provider-kops/pkg/schemas"
 	resourcesschema "github.com/terraform-kops/terraform-provider-kops/pkg/schemas/resources"
@@ -31,11 +32,20 @@ func ClusterUpdater() *schema.Resource {
 
 func ClusterUpdaterCreateOrUpdate(_ context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	in := resourcesschema.ExpandResourceClusterUpdater(d.Get("").(map[string]interface{}))
-	if err := in.UpdateCluster(config.Clientset(m), d.IsNewResource()); err != nil {
+	if err := in.UpdateCluster(config.Clientset(m), hasNewKeeper(in)); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(in.ClusterName)
 	return nil
+}
+
+func hasNewKeeper(in resources.ClusterUpdater) bool {
+	for _, revision := range in.Keepers {
+		if revision == "1" {
+			return true
+		}
+	}
+	return false
 }
 
 func ClusterUpdaterDelete(_ context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
