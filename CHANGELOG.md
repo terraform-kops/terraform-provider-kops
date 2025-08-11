@@ -1,5 +1,14 @@
 # Changelog
 
+## [v1.32.1](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.32.0...v1.32.1) - 2025-08-11
+- chore(deps): bump golang.org/x/tools from 0.29.0 to 0.34.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/232
+- feat: update to kOps 1.32.1 by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/240
+- feat: add GitHub workflow for tagging PRs on main branch by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/249
+- chore: add initial configuration file for tagpr by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/255
+- fix: set release flag to false and revert version by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/258
+- fix: revert version upgrade by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/264
+- fix: run apply on all node groups if new keepers are added by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/263
+
 ## [v1.32.0](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.31.1...v1.32.0) - 2025-05-27
 - chore(deps): bump github.com/hashicorp/terraform-plugin-sdk/v2 from 2.34.0 to 2.36.1 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/200
 - chore(deps): bump goreleaser/goreleaser-action from 6.1.0 to 6.3.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/212
