@@ -33,6 +33,7 @@ func DataSourceKubeDNSConfig() *schema.Resource {
 			"cpu_request":          ComputedQuantity(),
 			"memory_limit":         ComputedQuantity(),
 			"node_local_dns":       ComputedStruct(DataSourceNodeLocalDNSConfig()),
+			"pod_annotations":      ComputedMap(String()),
 		},
 	}
 
@@ -222,6 +223,23 @@ func ExpandDataSourceKubeDNSConfig(in map[string]interface{}) kops.KubeDNSConfig
 				}(in))
 			}(in)
 		}(in["node_local_dns"]),
+		PodAnnotations: func(in interface{}) map[string]string {
+			return func(in interface{}) map[string]string {
+				if in == nil {
+					return nil
+				}
+				if in, ok := in.(map[string]interface{}); ok {
+					if len(in) > 0 {
+						out := map[string]string{}
+						for key, in := range in {
+							out[key] = string(ExpandString(in))
+						}
+						return out
+					}
+				}
+				return nil
+			}(in)
+		}(in["pod_annotations"]),
 	}
 }
 
@@ -353,6 +371,18 @@ func FlattenDataSourceKubeDNSConfigInto(in kops.KubeDNSConfig, out map[string]in
 			}(*in)
 		}(in)
 	}(in.NodeLocalDNS)
+	out["pod_annotations"] = func(in map[string]string) interface{} {
+		return func(in map[string]string) map[string]interface{} {
+			if in == nil {
+				return nil
+			}
+			out := map[string]interface{}{}
+			for key, in := range in {
+				out[key] = FlattenString(string(in))
+			}
+			return out
+		}(in)
+	}(in.PodAnnotations)
 }
 
 func FlattenDataSourceKubeDNSConfig(in kops.KubeDNSConfig) map[string]interface{} {

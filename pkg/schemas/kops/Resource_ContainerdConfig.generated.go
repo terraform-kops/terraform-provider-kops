@@ -16,20 +16,21 @@ var _ = Schema
 func ResourceContainerdConfig() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"address":          OptionalString(),
-			"config_additions": OptionalComplexMap(schemas.ResourceIntOrString()),
-			"config_override":  OptionalString(),
-			"log_level":        OptionalString(),
-			"packages":         OptionalStruct(ResourcePackagesConfig()),
-			"registry_mirrors": OptionalComplexMap(List(String())),
-			"root":             OptionalString(),
-			"skip_install":     OptionalBool(),
-			"state":            OptionalString(),
-			"version":          OptionalString(),
-			"nvidia_gpu":       OptionalStruct(ResourceNvidiaGPUConfig()),
-			"runc":             OptionalStruct(ResourceRunc()),
-			"se_linux_enabled": OptionalBool(),
-			"nri":              OptionalStruct(ResourceNRIConfig()),
+			"address":                         OptionalString(),
+			"config_additions":                OptionalComplexMap(schemas.ResourceIntOrString()),
+			"config_override":                 OptionalString(),
+			"log_level":                       OptionalString(),
+			"packages":                        OptionalStruct(ResourcePackagesConfig()),
+			"registry_mirrors":                OptionalComplexMap(List(String())),
+			"root":                            OptionalString(),
+			"skip_install":                    OptionalBool(),
+			"state":                           OptionalString(),
+			"version":                         OptionalString(),
+			"nvidia_gpu":                      OptionalStruct(ResourceNvidiaGPUConfig()),
+			"runc":                            OptionalStruct(ResourceRunc()),
+			"se_linux_enabled":                OptionalBool(),
+			"nri":                             OptionalStruct(ResourceNRIConfig()),
+			"use_ecr_credentials_for_mirrors": OptionalBool(),
 		},
 	}
 
@@ -288,6 +289,9 @@ func ExpandResourceContainerdConfig(in map[string]interface{}) kops.ContainerdCo
 				}(in))
 			}(in)
 		}(in["nri"]),
+		UseECRCredentialsForMirrors: func(in interface{}) bool {
+			return bool(ExpandBool(in))
+		}(in["use_ecr_credentials_for_mirrors"]),
 	}
 }
 
@@ -458,6 +462,9 @@ func FlattenResourceContainerdConfigInto(in kops.ContainerdConfig, out map[strin
 			}(*in)
 		}(in)
 	}(in.NRI)
+	out["use_ecr_credentials_for_mirrors"] = func(in bool) interface{} {
+		return FlattenBool(bool(in))
+	}(in.UseECRCredentialsForMirrors)
 }
 
 func FlattenResourceContainerdConfig(in kops.ContainerdConfig) map[string]interface{} {

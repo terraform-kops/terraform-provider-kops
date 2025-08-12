@@ -622,6 +622,7 @@ The following arguments are supported:
 - `runc` - (Computed) - [runc](#runc) - Runc configures the runc runtime.
 - `se_linux_enabled` - (Computed) - Bool - SelinuxEnabled enables SELinux support.
 - `nri` - (Computed) - [nri_config](#nri_config) - NRI configures the Node Resource Interface.
+- `use_ecr_credentials_for_mirrors` - (Computed) - Bool - Enables Kubelet ECR Credential helper to pass credentials to containerd mirrors, to use ECR as a pull-through cache.
 
 ### nvidia_gpu_config
 
@@ -686,6 +687,7 @@ The following arguments are supported:
 - `cpu_request` - (Computed) - Quantity - CPURequest specifies the cpu requests of each dns container in the cluster. Default 100m.
 - `memory_limit` - (Computed) - Quantity - MemoryLimit specifies the memory limit of each dns container in the cluster. Default 170m.
 - `node_local_dns` - (Computed) - [node_local_dns_config](#node_local_dns_config) - NodeLocalDNS specifies the configuration for the node-local-dns addon.
+- `pod_annotations` - (Computed) - Map(String) - PodAnnotations makes possible to add additional annotations to CoreDNS Pods.<br />Default: none.
 
 ### toleration
 
@@ -791,8 +793,8 @@ The following arguments are supported:
 - `namespaces` - (Computed) - List(String) - namespaces specifies a static list of namespace names that the term applies to.<br />The term is applied to the union of the namespaces listed in this field<br />and the ones selected by namespaceSelector.<br />null or empty namespaces list and null namespaceSelector means "this pod's namespace".<br />+optional<br />+listType=atomic.
 - `topology_key` - (Computed) - String - This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching<br />the labelSelector in the specified namespaces, where co-located is defined as running on a node<br />whose value of the label with key topologyKey matches that of any node on which any of the<br />selected pods is running.<br />Empty topologyKey is not allowed.
 - `namespace_selector` - (Computed) - [label_selector](#label_selector) - A label query over the set of namespaces that the term applies to.<br />The term is applied to the union of the namespaces selected by this field<br />and the ones listed in the namespaces field.<br />null selector and null or empty namespaces list means "this pod's namespace".<br />An empty selector ({}) matches all namespaces.<br />+optional.
-- `match_label_keys` - (Computed) - List(String) - MatchLabelKeys is a set of pod label keys to select which pods will<br />be taken into consideration. The keys are used to lookup values from the<br />incoming pod labels, those key-value labels are merged with `labelSelector` as `key in (value)`<br />to select the group of existing pods which pods will be taken into consideration<br />for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming<br />pod labels will be ignored. The default value is empty.<br />The same key is forbidden to exist in both matchLabelKeys and labelSelector.<br />Also, matchLabelKeys cannot be set when labelSelector isn't set.<br />This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).<br /><br />+listType=atomic<br />+optional.
-- `mismatch_label_keys` - (Computed) - List(String) - MismatchLabelKeys is a set of pod label keys to select which pods will<br />be taken into consideration. The keys are used to lookup values from the<br />incoming pod labels, those key-value labels are merged with `labelSelector` as `key notin (value)`<br />to select the group of existing pods which pods will be taken into consideration<br />for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming<br />pod labels will be ignored. The default value is empty.<br />The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.<br />Also, mismatchLabelKeys cannot be set when labelSelector isn't set.<br />This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).<br /><br />+listType=atomic<br />+optional.
+- `match_label_keys` - (Computed) - List(String) - MatchLabelKeys is a set of pod label keys to select which pods will<br />be taken into consideration. The keys are used to lookup values from the<br />incoming pod labels, those key-value labels are merged with `labelSelector` as `key in (value)`<br />to select the group of existing pods which pods will be taken into consideration<br />for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming<br />pod labels will be ignored. The default value is empty.<br />The same key is forbidden to exist in both matchLabelKeys and labelSelector.<br />Also, matchLabelKeys cannot be set when labelSelector isn't set.<br /><br />+listType=atomic<br />+optional.
+- `mismatch_label_keys` - (Computed) - List(String) - MismatchLabelKeys is a set of pod label keys to select which pods will<br />be taken into consideration. The keys are used to lookup values from the<br />incoming pod labels, those key-value labels are merged with `labelSelector` as `key notin (value)`<br />to select the group of existing pods which pods will be taken into consideration<br />for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming<br />pod labels will be ignored. The default value is empty.<br />The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.<br />Also, mismatchLabelKeys cannot be set when labelSelector isn't set.<br /><br />+listType=atomic<br />+optional.
 
 ### label_selector
 
@@ -1274,8 +1276,8 @@ The following arguments are supported:
 - `non_masquerade_cidr` - (Computed) - String - NonMasqueradeCIDR configures masquerading: traffic to IPs outside this range will use IP masquerade.
 - `enable_custom_metrics` - (Computed) - Bool - Enable gathering custom metrics.
 - `network_plugin_mtu` - (Computed) - Int - NetworkPluginMTU is the MTU to be passed to the network plugin,<br />and overrides the default MTU for cases where it cannot be automatically<br />computed (such as IPSEC).
-- `image_minimum_gc_age` - (Computed) - String - imageMinimumGCAge is the minimum age for an unused image before it is garbage collected. Default: "2m".
-- `image_maximum_gc_age` - (Computed) - String - imageMaximumGCAge is the maximum age an image can be unused before it is garbage collected.<br />The default of this field is "0s", which disables this field--meaning images won't be garbage<br />collected based on being unused for too long. Default: "0s" (disabled).
+- `image_minimum_gc_age` - (Computed) - Duration - imageMinimumGCAge is the minimum age for an unused image before it is garbage collected. Default: "2m".
+- `image_maximum_gc_age` - (Computed) - Duration - imageMaximumGCAge is the maximum age an image can be unused before it is garbage collected.<br />The default of this field is "0s", which disables this field--meaning images won't be garbage<br />collected based on being unused for too long. Default: "0s" (disabled).
 - `image_gc_high_threshold_percent` - (Computed) - Int - ImageGCHighThresholdPercent is the percent of disk usage after which<br />image garbage collection is always run.
 - `image_gc_low_threshold_percent` - (Computed) - Int - ImageGCLowThresholdPercent is the percent of disk usage before which<br />image garbage collection is never run. Lowest disk usage to garbage<br />collect to.
 - `image_pull_progress_deadline` - (Computed) - Duration - ImagePullProgressDeadline is the timeout for image pulls<br />If no pulling progress is made before this deadline, the image pulling will be cancelled. (default 1m0s).
@@ -1370,7 +1372,7 @@ The following arguments are supported:
 - `memory_request` - (Computed) - Quantity - MemoryRequest of NodeProblemDetector container.<br />Default: 80Mi.
 - `cpu_request` - (Computed) - Quantity - CPURequest of NodeProblemDetector container.<br />Default: 10m.
 - `memory_limit` - (Computed) - Quantity - MemoryLimit of NodeProblemDetector container.<br />Default: 80Mi.
-- `cpu_limit` - (Computed) - Quantity - CPULimit of NodeProblemDetector container.<br />Default: 10m.
+- `cpu_limit` - (Computed) - Quantity - CPULimit of NodeProblemDetector container.
 
 ### metrics_server_config
 
@@ -1488,6 +1490,7 @@ The following arguments are supported:
 
 The following arguments are supported:
 
+- `additional_security_groups` - (Computed) - List(String)
 - `type` - (Computed) - String - Type of load balancer to create, it can be Public or Internal.
 
 ### egress_proxy_spec
@@ -1902,7 +1905,7 @@ The following arguments are supported:
 - `memory_request` - (Computed) - Quantity - MemoryRequest memory request of AWS IAM Authenticator container. Default 20Mi.
 - `cpu_request` - (Computed) - Quantity - CPURequest CPU request of AWS IAM Authenticator container. Default 10m.
 - `memory_limit` - (Computed) - Quantity - MemoryLimit memory limit of AWS IAM Authenticator container. Default 20Mi.
-- `cpu_limit` - (Computed) - Quantity - CPULimit CPU limit of AWS IAM Authenticator container. Default 10m.
+- `cpu_limit` - (Computed) - Quantity - CPULimit CPU limit of AWS IAM Authenticator container.
 - `identity_mappings` - (Computed) - List([aws_authentication_identity_mapping_spec](#aws_authentication_identity_mapping_spec)) - IdentityMappings maps IAM Identities to Kubernetes users/groups.
 
 ### aws_authentication_identity_mapping_spec
