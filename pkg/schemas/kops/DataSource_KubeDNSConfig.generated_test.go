@@ -37,6 +37,7 @@ func TestExpandDataSourceKubeDNSConfig(t *testing.T) {
 					"cpu_request":          nil,
 					"memory_limit":         nil,
 					"node_local_dns":       nil,
+					"pod_annotations":      func() map[string]interface{} { return nil }(),
 				},
 			},
 			want: _default,
@@ -70,6 +71,7 @@ func TestFlattenDataSourceKubeDNSConfigInto(t *testing.T) {
 		"cpu_request":          nil,
 		"memory_limit":         nil,
 		"node_local_dns":       nil,
+		"pod_annotations":      func() map[string]interface{} { return nil }(),
 	}
 	type args struct {
 		in kops.KubeDNSConfig
@@ -257,6 +259,17 @@ func TestFlattenDataSourceKubeDNSConfigInto(t *testing.T) {
 				in: func() kops.KubeDNSConfig {
 					subject := kops.KubeDNSConfig{}
 					subject.NodeLocalDNS = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "PodAnnotations - default",
+			args: args{
+				in: func() kops.KubeDNSConfig {
+					subject := kops.KubeDNSConfig{}
+					subject.PodAnnotations = nil
 					return subject
 				}(),
 			},
@@ -292,6 +305,7 @@ func TestFlattenDataSourceKubeDNSConfig(t *testing.T) {
 		"cpu_request":          nil,
 		"memory_limit":         nil,
 		"node_local_dns":       nil,
+		"pod_annotations":      func() map[string]interface{} { return nil }(),
 	}
 	type args struct {
 		in kops.KubeDNSConfig
@@ -479,6 +493,17 @@ func TestFlattenDataSourceKubeDNSConfig(t *testing.T) {
 				in: func() kops.KubeDNSConfig {
 					subject := kops.KubeDNSConfig{}
 					subject.NodeLocalDNS = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "PodAnnotations - default",
+			args: args{
+				in: func() kops.KubeDNSConfig {
+					subject := kops.KubeDNSConfig{}
+					subject.PodAnnotations = nil
 					return subject
 				}(),
 			},

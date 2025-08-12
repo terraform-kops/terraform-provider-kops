@@ -248,8 +248,8 @@ The following arguments are supported:
 - `non_masquerade_cidr` - (Computed) - String - NonMasqueradeCIDR configures masquerading: traffic to IPs outside this range will use IP masquerade.
 - `enable_custom_metrics` - (Computed) - Bool - Enable gathering custom metrics.
 - `network_plugin_mtu` - (Computed) - Int - NetworkPluginMTU is the MTU to be passed to the network plugin,<br />and overrides the default MTU for cases where it cannot be automatically<br />computed (such as IPSEC).
-- `image_minimum_gc_age` - (Computed) - String - imageMinimumGCAge is the minimum age for an unused image before it is garbage collected. Default: "2m".
-- `image_maximum_gc_age` - (Computed) - String - imageMaximumGCAge is the maximum age an image can be unused before it is garbage collected.<br />The default of this field is "0s", which disables this field--meaning images won't be garbage<br />collected based on being unused for too long. Default: "0s" (disabled).
+- `image_minimum_gc_age` - (Computed) - Duration - imageMinimumGCAge is the minimum age for an unused image before it is garbage collected. Default: "2m".
+- `image_maximum_gc_age` - (Computed) - Duration - imageMaximumGCAge is the maximum age an image can be unused before it is garbage collected.<br />The default of this field is "0s", which disables this field--meaning images won't be garbage<br />collected based on being unused for too long. Default: "0s" (disabled).
 - `image_gc_high_threshold_percent` - (Computed) - Int - ImageGCHighThresholdPercent is the percent of disk usage after which<br />image garbage collection is always run.
 - `image_gc_low_threshold_percent` - (Computed) - Int - ImageGCLowThresholdPercent is the percent of disk usage before which<br />image garbage collection is never run. Lowest disk usage to garbage<br />collect to.
 - `image_pull_progress_deadline` - (Computed) - Duration - ImagePullProgressDeadline is the timeout for image pulls<br />If no pulling progress is made before this deadline, the image pulling will be cancelled. (default 1m0s).
@@ -421,6 +421,7 @@ The following arguments are supported:
 - `runc` - (Computed) - [runc](#runc) - Runc configures the runc runtime.
 - `se_linux_enabled` - (Computed) - Bool - SelinuxEnabled enables SELinux support.
 - `nri` - (Computed) - [nri_config](#nri_config) - NRI configures the Node Resource Interface.
+- `use_ecr_credentials_for_mirrors` - (Computed) - Bool - Enables Kubelet ECR Credential helper to pass credentials to containerd mirrors, to use ECR as a pull-through cache.
 
 ### packages_config
 

@@ -21,7 +21,8 @@ func TestExpandResourceBastionLoadBalancerSpec(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
-					"type": "",
+					"additional_security_groups": func() []interface{} { return nil }(),
+					"type":                       "",
 				},
 			},
 			want: _default,
@@ -39,7 +40,8 @@ func TestExpandResourceBastionLoadBalancerSpec(t *testing.T) {
 
 func TestFlattenResourceBastionLoadBalancerSpecInto(t *testing.T) {
 	_default := map[string]interface{}{
-		"type": "",
+		"additional_security_groups": func() []interface{} { return nil }(),
+		"type":                       "",
 	}
 	type args struct {
 		in kops.BastionLoadBalancerSpec
@@ -53,6 +55,17 @@ func TestFlattenResourceBastionLoadBalancerSpecInto(t *testing.T) {
 			name: "default",
 			args: args{
 				in: kops.BastionLoadBalancerSpec{},
+			},
+			want: _default,
+		},
+		{
+			name: "AdditionalSecurityGroups - default",
+			args: args{
+				in: func() kops.BastionLoadBalancerSpec {
+					subject := kops.BastionLoadBalancerSpec{}
+					subject.AdditionalSecurityGroups = nil
+					return subject
+				}(),
 			},
 			want: _default,
 		},
@@ -81,7 +94,8 @@ func TestFlattenResourceBastionLoadBalancerSpecInto(t *testing.T) {
 
 func TestFlattenResourceBastionLoadBalancerSpec(t *testing.T) {
 	_default := map[string]interface{}{
-		"type": "",
+		"additional_security_groups": func() []interface{} { return nil }(),
+		"type":                       "",
 	}
 	type args struct {
 		in kops.BastionLoadBalancerSpec
@@ -95,6 +109,17 @@ func TestFlattenResourceBastionLoadBalancerSpec(t *testing.T) {
 			name: "default",
 			args: args{
 				in: kops.BastionLoadBalancerSpec{},
+			},
+			want: _default,
+		},
+		{
+			name: "AdditionalSecurityGroups - default",
+			args: args{
+				in: func() kops.BastionLoadBalancerSpec {
+					subject := kops.BastionLoadBalancerSpec{}
+					subject.AdditionalSecurityGroups = nil
+					return subject
+				}(),
 			},
 			want: _default,
 		},

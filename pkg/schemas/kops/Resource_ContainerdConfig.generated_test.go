@@ -21,20 +21,21 @@ func TestExpandResourceContainerdConfig(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
-					"address":          nil,
-					"config_additions": func() []interface{} { return nil }(),
-					"config_override":  nil,
-					"log_level":        nil,
-					"packages":         nil,
-					"registry_mirrors": func() []interface{} { return nil }(),
-					"root":             nil,
-					"skip_install":     false,
-					"state":            nil,
-					"version":          nil,
-					"nvidia_gpu":       nil,
-					"runc":             nil,
-					"se_linux_enabled": false,
-					"nri":              nil,
+					"address":                         nil,
+					"config_additions":                func() []interface{} { return nil }(),
+					"config_override":                 nil,
+					"log_level":                       nil,
+					"packages":                        nil,
+					"registry_mirrors":                func() []interface{} { return nil }(),
+					"root":                            nil,
+					"skip_install":                    false,
+					"state":                           nil,
+					"version":                         nil,
+					"nvidia_gpu":                      nil,
+					"runc":                            nil,
+					"se_linux_enabled":                false,
+					"nri":                             nil,
+					"use_ecr_credentials_for_mirrors": false,
 				},
 			},
 			want: _default,
@@ -52,20 +53,21 @@ func TestExpandResourceContainerdConfig(t *testing.T) {
 
 func TestFlattenResourceContainerdConfigInto(t *testing.T) {
 	_default := map[string]interface{}{
-		"address":          nil,
-		"config_additions": func() []interface{} { return nil }(),
-		"config_override":  nil,
-		"log_level":        nil,
-		"packages":         nil,
-		"registry_mirrors": func() []interface{} { return nil }(),
-		"root":             nil,
-		"skip_install":     false,
-		"state":            nil,
-		"version":          nil,
-		"nvidia_gpu":       nil,
-		"runc":             nil,
-		"se_linux_enabled": false,
-		"nri":              nil,
+		"address":                         nil,
+		"config_additions":                func() []interface{} { return nil }(),
+		"config_override":                 nil,
+		"log_level":                       nil,
+		"packages":                        nil,
+		"registry_mirrors":                func() []interface{} { return nil }(),
+		"root":                            nil,
+		"skip_install":                    false,
+		"state":                           nil,
+		"version":                         nil,
+		"nvidia_gpu":                      nil,
+		"runc":                            nil,
+		"se_linux_enabled":                false,
+		"nri":                             nil,
+		"use_ecr_credentials_for_mirrors": false,
 	}
 	type args struct {
 		in kops.ContainerdConfig
@@ -231,6 +233,17 @@ func TestFlattenResourceContainerdConfigInto(t *testing.T) {
 				in: func() kops.ContainerdConfig {
 					subject := kops.ContainerdConfig{}
 					subject.NRI = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "UseECRCredentialsForMirrors - default",
+			args: args{
+				in: func() kops.ContainerdConfig {
+					subject := kops.ContainerdConfig{}
+					subject.UseECRCredentialsForMirrors = false
 					return subject
 				}(),
 			},
@@ -250,20 +263,21 @@ func TestFlattenResourceContainerdConfigInto(t *testing.T) {
 
 func TestFlattenResourceContainerdConfig(t *testing.T) {
 	_default := map[string]interface{}{
-		"address":          nil,
-		"config_additions": func() []interface{} { return nil }(),
-		"config_override":  nil,
-		"log_level":        nil,
-		"packages":         nil,
-		"registry_mirrors": func() []interface{} { return nil }(),
-		"root":             nil,
-		"skip_install":     false,
-		"state":            nil,
-		"version":          nil,
-		"nvidia_gpu":       nil,
-		"runc":             nil,
-		"se_linux_enabled": false,
-		"nri":              nil,
+		"address":                         nil,
+		"config_additions":                func() []interface{} { return nil }(),
+		"config_override":                 nil,
+		"log_level":                       nil,
+		"packages":                        nil,
+		"registry_mirrors":                func() []interface{} { return nil }(),
+		"root":                            nil,
+		"skip_install":                    false,
+		"state":                           nil,
+		"version":                         nil,
+		"nvidia_gpu":                      nil,
+		"runc":                            nil,
+		"se_linux_enabled":                false,
+		"nri":                             nil,
+		"use_ecr_credentials_for_mirrors": false,
 	}
 	type args struct {
 		in kops.ContainerdConfig
@@ -429,6 +443,17 @@ func TestFlattenResourceContainerdConfig(t *testing.T) {
 				in: func() kops.ContainerdConfig {
 					subject := kops.ContainerdConfig{}
 					subject.NRI = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "UseECRCredentialsForMirrors - default",
+			args: args{
+				in: func() kops.ContainerdConfig {
+					subject := kops.ContainerdConfig{}
+					subject.UseECRCredentialsForMirrors = false
 					return subject
 				}(),
 			},
