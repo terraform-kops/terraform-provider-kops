@@ -1,5 +1,14 @@
 # Changelog
 
+## [v1.33.0](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.32.1...v1.33.0) - 2025-08-12
+- chore(deps): bump github.com/hashicorp/terraform-plugin-sdk/v2 from 2.36.1 to 2.37.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/235
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.227.0 to 1.241.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/262
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/sts from 1.34.0 to 1.37.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/267
+- chore(deps): bump actions/checkout from 4 to 5 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/268
+- chore(deps): bump golang.org/x/tools from 0.34.0 to 0.36.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/271
+- feat: update to kOps 1.33.0 by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/270
+- chore(deps): bump github.com/aws/aws-sdk-go-v2 from 1.37.2 to 1.38.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/272
+
 ## [v1.32.1](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.32.0...v1.32.1) - 2025-08-11
 - chore(deps): bump golang.org/x/tools from 0.29.0 to 0.34.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/232
 - feat: update to kOps 1.32.1 by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/240
