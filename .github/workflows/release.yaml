@@ -44,11 +44,18 @@ jobs:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
 
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.GORELEASER_APP_ID }}
+          private-key: ${{ secrets.GORELEASER_APP_PRIVATE_KEY }}
+
       - name: Create release
         uses: goreleaser/goreleaser-action@v6.3.0
         env:
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
-          GITHUB_TOKEN: ${{ secrets.GORELEASER_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
         with:
           version: latest
           args: release --clean --timeout 60m -p 2
