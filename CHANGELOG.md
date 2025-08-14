@@ -1,5 +1,10 @@
 # Changelog
 
+## [v1.33.1](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.33.0...v1.33.1) - 2025-08-14
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.241.0 to 1.243.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/274
+- fix: make ClusterUpdater new resource logic safer by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/275
+- feat: update GitHub Actions to use dynamic tokens by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/277
+
 ## [v1.33.0](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.32.1...v1.33.0) - 2025-08-12
 - chore(deps): bump github.com/hashicorp/terraform-plugin-sdk/v2 from 2.36.1 to 2.37.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/235
 - chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.227.0 to 1.241.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/262
