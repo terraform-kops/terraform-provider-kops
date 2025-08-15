@@ -52,7 +52,7 @@ jobs:
           private-key: ${{ secrets.GORELEASER_APP_PRIVATE_KEY }}
 
       - name: Create release
-        uses: goreleaser/goreleaser-action@v6.3.0
+        uses: goreleaser/goreleaser-action@v6.4.0
         env:
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
