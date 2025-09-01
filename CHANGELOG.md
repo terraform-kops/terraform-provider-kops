@@ -1,5 +1,12 @@
 # Changelog
 
+## [v1.33.2](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.33.1...v1.33.2) - 2025-09-01
+- chore(deps): bump goreleaser/goreleaser-action from 6.3.0 to 6.4.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/282
+- chore: update checkout action in tagpr workflow by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/283
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/sts from 1.37.0 to 1.38.2 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/298
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.243.0 to 1.249.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/299
+- chore: update kOps to 1.33.1 by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/300
+
 ## [v1.33.1](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.33.0...v1.33.1) - 2025-08-14
 - chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.241.0 to 1.243.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/274
 - fix: make ClusterUpdater new resource logic safer by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/275
