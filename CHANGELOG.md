@@ -1,5 +1,8 @@
 # Changelog
 
+## [v1.33.3](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.33.2...v1.33.3) - 2025-09-05
+- ci: update Go version and improve caching in workflow by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/306
+
 ## [v1.33.2](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.33.1...v1.33.2) - 2025-09-01
 - chore(deps): bump goreleaser/goreleaser-action from 6.3.0 to 6.4.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/282
 - chore: update checkout action in tagpr workflow by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/283
