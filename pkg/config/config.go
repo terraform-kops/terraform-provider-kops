@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	awsconfig "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -94,7 +95,15 @@ func initAwsCredentials(ctx context.Context, config *config.Aws) error {
 		os.Setenv("AWS_PROFILE", config.Profile)
 	}
 	if config.AssumeRole != nil {
-		svc := sts.New(sts.Options{})
+		awsCfg, err := awsconfig.LoadDefaultConfig(ctx)
+		if err != nil {
+			return err
+		}
+
+		svc := sts.New(sts.Options{
+			Region:      config.Region,
+			Credentials: awsCfg.Credentials,
+		})
 		input := &sts.AssumeRoleInput{
 			RoleArn:         aws.String(config.AssumeRole.RoleArn),
 			RoleSessionName: aws.String("TF-PROVIDER-KOPS"),
