@@ -285,8 +285,8 @@ The following arguments are supported:
 - `registry_burst` - (Computed) - Int - RegistryBurst Maximum size of a bursty pulls, temporarily allows pulls to burst to this number, while still not exceeding registry-qps. Only used if --registry-qps > 0 (default 10).
 - `topology_manager_policy` - (Computed) - String - TopologyManagerPolicy determines the allocation policy for the topology manager.
 - `rotate_certificates` - (Computed) - Bool - rotateCertificates enables client certificate rotation.
-- `protect_kernel_defaults` - (Computed) - Bool - Default kubelet behaviour for kernel tuning. If set, kubelet errors if any of kernel tunables is different than kubelet defaults.<br />(DEPRECATED: This parameter should be set via the config file specified by the Kubelet's --config flag.
-- `cgroup_driver` - (Computed) - String - CgroupDriver allows the explicit setting of the kubelet cgroup driver. If omitted, defaults to cgroupfs.
+- `protect_kernel_defaults` - (Computed) - Bool - Default kubelet behaviour for kernel tuning. If set, kubelet errors if any of kernel tunables is different than kubelet defaults.<br />DEPRECATED: This parameter should be set via the config file specified by the Kubelet's --config flag.
+- `cgroup_driver` - (Computed) - String - CgroupDriver allows the explicit setting of the kubelet cgroup driver.<br />DEPRECATED: The cgroup driver is automatically detected.
 - `housekeeping_interval` - (Computed) - Duration - HousekeepingInterval allows to specify interval between container housekeepings.
 - `event_qps` - (Computed) - Int - EventQPS if > 0, limit event creations per second to this value.  If 0, unlimited.
 - `event_burst` - (Computed) - Int - EventBurst temporarily allows event records to burst to this number, while still not exceeding EventQPS. Only used if EventQPS > 0.
@@ -422,6 +422,8 @@ The following arguments are supported:
 - `se_linux_enabled` - (Computed) - Bool - SelinuxEnabled enables SELinux support.
 - `nri` - (Computed) - [nri_config](#nri_config) - NRI configures the Node Resource Interface.
 - `use_ecr_credentials_for_mirrors` - (Computed) - Bool - Enables Kubelet ECR Credential helper to pass credentials to containerd mirrors, to use ECR as a pull-through cache.
+- `install_cri_ctl` - (Computed) - Bool - InstallCriCtl installs crictl (default "false").
+- `install_nerd_ctl` - (Computed) - Bool - InstallNerdCtl installs nerdctl (default "false").
 
 ### packages_config
 
@@ -440,8 +442,9 @@ The following arguments are supported:
 
 The following arguments are supported:
 
-- `driver_package` - (Computed) - String - Package is the name of the nvidia driver package that will be installed.<br />Default is "nvidia-headless-510-server".
-- `enabled` - (Computed) - Bool - Enabled determines if kOps will install the Nvidia GPU runtime and drivers.<br />They will only be installed on intances that has an Nvidia GPU.
+- `driver_package` - (Computed) - String - Package is the name of the nvidia driver package that will be installed.<br />Default is "nvidia-driver-535-server".
+- `enabled` - (Computed) - Bool - Enabled determines if kOps will install the Nvidia GPU runtime and drivers.<br />They will only be installed on instances that has an Nvidia GPU.
+- `device_plugin_image` - (Computed) - String - Image defines the container image used to deploy the Nvidia Kubernetes Device Plugin.
 - `dcgm_exporter` - (Computed) - [dcgm_exporter_config](#dcgm_exporter_config) - DCGMExporterConfig configures the DCGM exporter.
 
 ### dcgm_exporter_config

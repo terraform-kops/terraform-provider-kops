@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	. "github.com/terraform-kops/terraform-provider-kops/pkg/schemas"
+	"k8s.io/apimachinery/pkg/api/resource"
 	"k8s.io/kops/pkg/apis/kops"
 )
 
@@ -13,11 +14,15 @@ var _ = Schema
 func ResourceLoadBalancerControllerSpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"enabled":       OptionalBool(),
-			"version":       OptionalString(),
-			"enable_waf":    OptionalBool(),
-			"enable_wa_fv2": OptionalBool(),
-			"enable_shield": OptionalBool(),
+			"enabled":        OptionalBool(),
+			"version":        OptionalString(),
+			"enable_waf":     OptionalBool(),
+			"enable_wa_fv2":  OptionalBool(),
+			"enable_shield":  OptionalBool(),
+			"cpu_request":    OptionalQuantity(),
+			"cpu_limit":      OptionalQuantity(),
+			"memory_request": OptionalQuantity(),
+			"memory_limit":   OptionalQuantity(),
 		},
 	}
 
@@ -76,6 +81,82 @@ func ExpandResourceLoadBalancerControllerSpec(in map[string]interface{}) kops.Lo
 		EnableShield: func(in interface{}) bool {
 			return bool(ExpandBool(in))
 		}(in["enable_shield"]),
+		CPURequest: func(in interface{}) *resource.Quantity {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *resource.Quantity {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in resource.Quantity) *resource.Quantity {
+					return &in
+				}(ExpandQuantity(in))
+			}(in)
+		}(in["cpu_request"]),
+		CPULimit: func(in interface{}) *resource.Quantity {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *resource.Quantity {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in resource.Quantity) *resource.Quantity {
+					return &in
+				}(ExpandQuantity(in))
+			}(in)
+		}(in["cpu_limit"]),
+		MemoryRequest: func(in interface{}) *resource.Quantity {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *resource.Quantity {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in resource.Quantity) *resource.Quantity {
+					return &in
+				}(ExpandQuantity(in))
+			}(in)
+		}(in["memory_request"]),
+		MemoryLimit: func(in interface{}) *resource.Quantity {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *resource.Quantity {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in resource.Quantity) *resource.Quantity {
+					return &in
+				}(ExpandQuantity(in))
+			}(in)
+		}(in["memory_limit"]),
 	}
 }
 
@@ -109,6 +190,46 @@ func FlattenResourceLoadBalancerControllerSpecInto(in kops.LoadBalancerControlle
 	out["enable_shield"] = func(in bool) interface{} {
 		return FlattenBool(bool(in))
 	}(in.EnableShield)
+	out["cpu_request"] = func(in *resource.Quantity) interface{} {
+		return func(in *resource.Quantity) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in resource.Quantity) interface{} {
+				return FlattenQuantity(in)
+			}(*in)
+		}(in)
+	}(in.CPURequest)
+	out["cpu_limit"] = func(in *resource.Quantity) interface{} {
+		return func(in *resource.Quantity) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in resource.Quantity) interface{} {
+				return FlattenQuantity(in)
+			}(*in)
+		}(in)
+	}(in.CPULimit)
+	out["memory_request"] = func(in *resource.Quantity) interface{} {
+		return func(in *resource.Quantity) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in resource.Quantity) interface{} {
+				return FlattenQuantity(in)
+			}(*in)
+		}(in)
+	}(in.MemoryRequest)
+	out["memory_limit"] = func(in *resource.Quantity) interface{} {
+		return func(in *resource.Quantity) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in resource.Quantity) interface{} {
+				return FlattenQuantity(in)
+			}(*in)
+		}(in)
+	}(in.MemoryLimit)
 }
 
 func FlattenResourceLoadBalancerControllerSpec(in kops.LoadBalancerControllerSpec) map[string]interface{} {

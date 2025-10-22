@@ -31,6 +31,8 @@ func ResourceContainerdConfig() *schema.Resource {
 			"se_linux_enabled":                OptionalBool(),
 			"nri":                             OptionalStruct(ResourceNRIConfig()),
 			"use_ecr_credentials_for_mirrors": OptionalBool(),
+			"install_cri_ctl":                 OptionalBool(),
+			"install_nerd_ctl":                OptionalBool(),
 		},
 	}
 
@@ -292,6 +294,12 @@ func ExpandResourceContainerdConfig(in map[string]interface{}) kops.ContainerdCo
 		UseECRCredentialsForMirrors: func(in interface{}) bool {
 			return bool(ExpandBool(in))
 		}(in["use_ecr_credentials_for_mirrors"]),
+		InstallCriCtl: func(in interface{}) bool {
+			return bool(ExpandBool(in))
+		}(in["install_cri_ctl"]),
+		InstallNerdCtl: func(in interface{}) bool {
+			return bool(ExpandBool(in))
+		}(in["install_nerd_ctl"]),
 	}
 }
 
@@ -465,6 +473,12 @@ func FlattenResourceContainerdConfigInto(in kops.ContainerdConfig, out map[strin
 	out["use_ecr_credentials_for_mirrors"] = func(in bool) interface{} {
 		return FlattenBool(bool(in))
 	}(in.UseECRCredentialsForMirrors)
+	out["install_cri_ctl"] = func(in bool) interface{} {
+		return FlattenBool(bool(in))
+	}(in.InstallCriCtl)
+	out["install_nerd_ctl"] = func(in bool) interface{} {
+		return FlattenBool(bool(in))
+	}(in.InstallNerdCtl)
 }
 
 func FlattenResourceContainerdConfig(in kops.ContainerdConfig) map[string]interface{} {

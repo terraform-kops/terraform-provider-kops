@@ -31,6 +31,8 @@ func DataSourceContainerdConfig() *schema.Resource {
 			"se_linux_enabled":                ComputedBool(),
 			"nri":                             ComputedStruct(DataSourceNRIConfig()),
 			"use_ecr_credentials_for_mirrors": ComputedBool(),
+			"install_cri_ctl":                 ComputedBool(),
+			"install_nerd_ctl":                ComputedBool(),
 		},
 	}
 
@@ -292,6 +294,12 @@ func ExpandDataSourceContainerdConfig(in map[string]interface{}) kops.Containerd
 		UseECRCredentialsForMirrors: func(in interface{}) bool {
 			return bool(ExpandBool(in))
 		}(in["use_ecr_credentials_for_mirrors"]),
+		InstallCriCtl: func(in interface{}) bool {
+			return bool(ExpandBool(in))
+		}(in["install_cri_ctl"]),
+		InstallNerdCtl: func(in interface{}) bool {
+			return bool(ExpandBool(in))
+		}(in["install_nerd_ctl"]),
 	}
 }
 
@@ -465,6 +473,12 @@ func FlattenDataSourceContainerdConfigInto(in kops.ContainerdConfig, out map[str
 	out["use_ecr_credentials_for_mirrors"] = func(in bool) interface{} {
 		return FlattenBool(bool(in))
 	}(in.UseECRCredentialsForMirrors)
+	out["install_cri_ctl"] = func(in bool) interface{} {
+		return FlattenBool(bool(in))
+	}(in.InstallCriCtl)
+	out["install_nerd_ctl"] = func(in bool) interface{} {
+		return FlattenBool(bool(in))
+	}(in.InstallNerdCtl)
 }
 
 func FlattenDataSourceContainerdConfig(in kops.ContainerdConfig) map[string]interface{} {

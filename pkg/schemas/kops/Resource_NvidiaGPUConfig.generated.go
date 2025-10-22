@@ -13,9 +13,10 @@ var _ = Schema
 func ResourceNvidiaGPUConfig() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"driver_package": OptionalString(),
-			"enabled":        OptionalBool(),
-			"dcgm_exporter":  OptionalStruct(ResourceDCGMExporterConfig()),
+			"driver_package":      OptionalString(),
+			"enabled":             OptionalBool(),
+			"device_plugin_image": OptionalString(),
+			"dcgm_exporter":       OptionalStruct(ResourceDCGMExporterConfig()),
 		},
 	}
 
@@ -49,6 +50,9 @@ func ExpandResourceNvidiaGPUConfig(in map[string]interface{}) kops.NvidiaGPUConf
 				}(bool(ExpandBool(in)))
 			}(in)
 		}(in["enabled"]),
+		DevicePluginImage: func(in interface{}) string {
+			return string(ExpandString(in))
+		}(in["device_plugin_image"]),
 		DCGMExporter: func(in interface{}) *kops.DCGMExporterConfig {
 			return func(in interface{}) *kops.DCGMExporterConfig {
 				if in == nil {
@@ -84,6 +88,9 @@ func FlattenResourceNvidiaGPUConfigInto(in kops.NvidiaGPUConfig, out map[string]
 			}(*in)
 		}(in)
 	}(in.Enabled)
+	out["device_plugin_image"] = func(in string) interface{} {
+		return FlattenString(string(in))
+	}(in.DevicePluginImage)
 	out["dcgm_exporter"] = func(in *kops.DCGMExporterConfig) interface{} {
 		return func(in *kops.DCGMExporterConfig) interface{} {
 			if in == nil {

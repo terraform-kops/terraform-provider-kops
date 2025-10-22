@@ -21,11 +21,15 @@ func TestExpandDataSourceLoadBalancerControllerSpec(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
-					"enabled":       nil,
-					"version":       nil,
-					"enable_waf":    false,
-					"enable_wa_fv2": false,
-					"enable_shield": false,
+					"enabled":        nil,
+					"version":        nil,
+					"enable_waf":     false,
+					"enable_wa_fv2":  false,
+					"enable_shield":  false,
+					"cpu_request":    nil,
+					"cpu_limit":      nil,
+					"memory_request": nil,
+					"memory_limit":   nil,
 				},
 			},
 			want: _default,
@@ -43,11 +47,15 @@ func TestExpandDataSourceLoadBalancerControllerSpec(t *testing.T) {
 
 func TestFlattenDataSourceLoadBalancerControllerSpecInto(t *testing.T) {
 	_default := map[string]interface{}{
-		"enabled":       nil,
-		"version":       nil,
-		"enable_waf":    false,
-		"enable_wa_fv2": false,
-		"enable_shield": false,
+		"enabled":        nil,
+		"version":        nil,
+		"enable_waf":     false,
+		"enable_wa_fv2":  false,
+		"enable_shield":  false,
+		"cpu_request":    nil,
+		"cpu_limit":      nil,
+		"memory_request": nil,
+		"memory_limit":   nil,
 	}
 	type args struct {
 		in kops.LoadBalancerControllerSpec
@@ -114,6 +122,50 @@ func TestFlattenDataSourceLoadBalancerControllerSpecInto(t *testing.T) {
 				in: func() kops.LoadBalancerControllerSpec {
 					subject := kops.LoadBalancerControllerSpec{}
 					subject.EnableShield = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CpuRequest - default",
+			args: args{
+				in: func() kops.LoadBalancerControllerSpec {
+					subject := kops.LoadBalancerControllerSpec{}
+					subject.CPURequest = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CpuLimit - default",
+			args: args{
+				in: func() kops.LoadBalancerControllerSpec {
+					subject := kops.LoadBalancerControllerSpec{}
+					subject.CPULimit = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryRequest - default",
+			args: args{
+				in: func() kops.LoadBalancerControllerSpec {
+					subject := kops.LoadBalancerControllerSpec{}
+					subject.MemoryRequest = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryLimit - default",
+			args: args{
+				in: func() kops.LoadBalancerControllerSpec {
+					subject := kops.LoadBalancerControllerSpec{}
+					subject.MemoryLimit = nil
 					return subject
 				}(),
 			},
@@ -133,11 +185,15 @@ func TestFlattenDataSourceLoadBalancerControllerSpecInto(t *testing.T) {
 
 func TestFlattenDataSourceLoadBalancerControllerSpec(t *testing.T) {
 	_default := map[string]interface{}{
-		"enabled":       nil,
-		"version":       nil,
-		"enable_waf":    false,
-		"enable_wa_fv2": false,
-		"enable_shield": false,
+		"enabled":        nil,
+		"version":        nil,
+		"enable_waf":     false,
+		"enable_wa_fv2":  false,
+		"enable_shield":  false,
+		"cpu_request":    nil,
+		"cpu_limit":      nil,
+		"memory_request": nil,
+		"memory_limit":   nil,
 	}
 	type args struct {
 		in kops.LoadBalancerControllerSpec
@@ -204,6 +260,50 @@ func TestFlattenDataSourceLoadBalancerControllerSpec(t *testing.T) {
 				in: func() kops.LoadBalancerControllerSpec {
 					subject := kops.LoadBalancerControllerSpec{}
 					subject.EnableShield = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CpuRequest - default",
+			args: args{
+				in: func() kops.LoadBalancerControllerSpec {
+					subject := kops.LoadBalancerControllerSpec{}
+					subject.CPURequest = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CpuLimit - default",
+			args: args{
+				in: func() kops.LoadBalancerControllerSpec {
+					subject := kops.LoadBalancerControllerSpec{}
+					subject.CPULimit = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryRequest - default",
+			args: args{
+				in: func() kops.LoadBalancerControllerSpec {
+					subject := kops.LoadBalancerControllerSpec{}
+					subject.MemoryRequest = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "MemoryLimit - default",
+			args: args{
+				in: func() kops.LoadBalancerControllerSpec {
+					subject := kops.LoadBalancerControllerSpec{}
+					subject.MemoryLimit = nil
 					return subject
 				}(),
 			},

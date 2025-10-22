@@ -382,6 +382,10 @@ func main() {
 		generate(kops.CiliumGatewayAPISpec{}),
 		generate(kops.KindnetNetworkingSpec{}),
 		generate(kops.KindnetMasqueradeSpec{}),
+		// 1.34
+		generate(corev1.FileKeySelector{},
+			required("Key"),
+		),
 	)
 	build(
 		"Config",
@@ -622,5 +626,9 @@ func main() {
 		generate(kops.CiliumGatewayAPISpec{}),
 		generate(kops.KindnetNetworkingSpec{}),
 		generate(kops.KindnetMasqueradeSpec{}),
+		// 1.34
+		generate(corev1.FileKeySelector{},
+			required("Key"),
+		),
 	)
 }

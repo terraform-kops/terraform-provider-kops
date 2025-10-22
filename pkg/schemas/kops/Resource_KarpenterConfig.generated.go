@@ -18,6 +18,7 @@ func ResourceKarpenterConfig() *schema.Resource {
 			"log_encoding":   OptionalString(),
 			"log_level":      OptionalString(),
 			"image":          OptionalString(),
+			"feature_gates":  OptionalString(),
 			"memory_limit":   OptionalQuantity(),
 			"memory_request": OptionalQuantity(),
 			"cpu_request":    OptionalQuantity(),
@@ -44,6 +45,9 @@ func ExpandResourceKarpenterConfig(in map[string]interface{}) kops.KarpenterConf
 		Image: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["image"]),
+		FeatureGates: func(in interface{}) string {
+			return string(ExpandString(in))
+		}(in["feature_gates"]),
 		MemoryLimit: func(in interface{}) *resource.Quantity {
 			if in == nil {
 				return nil
@@ -117,6 +121,9 @@ func FlattenResourceKarpenterConfigInto(in kops.KarpenterConfig, out map[string]
 	out["image"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.Image)
+	out["feature_gates"] = func(in string) interface{} {
+		return FlattenString(string(in))
+	}(in.FeatureGates)
 	out["memory_limit"] = func(in *resource.Quantity) interface{} {
 		return func(in *resource.Quantity) interface{} {
 			if in == nil {

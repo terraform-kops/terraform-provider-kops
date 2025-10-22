@@ -226,6 +226,10 @@ The following arguments are supported:
 - `enable_waf` - (Computed) - Bool - EnableWAF specifies whether the controller can use WAFs (Classic Regional).<br />Default: false.
 - `enable_wa_fv2` - (Computed) - Bool - EnableWAFv2 specifies whether the controller can use WAFs (V2).<br />Default: false.
 - `enable_shield` - (Computed) - Bool - EnableShield specifies whether the controller can enable Shield Advanced.<br />Default: false.
+- `cpu_request` - (Computed) - Quantity - CPURequest, cpu request compute resource for AWS Load Balancer Controller.<br />Default: 100m.
+- `cpu_limit` - (Computed) - Quantity - CPULimit, cpu limit compute resource for AWS Load Balancer Controller.<br />Default: 200m.
+- `memory_request` - (Computed) - Quantity - MemoryRequest, memory request compute resource for AWS Load Balancer Controller.<br />Default: 200Mi.
+- `memory_limit` - (Computed) - Quantity - MemoryLimit, memory limit compute resource for AWS Load Balancer Controller.<br />Default: 500Mi.
 
 ### pod_identity_webhook_spec
 
@@ -623,6 +627,8 @@ The following arguments are supported:
 - `se_linux_enabled` - (Computed) - Bool - SelinuxEnabled enables SELinux support.
 - `nri` - (Computed) - [nri_config](#nri_config) - NRI configures the Node Resource Interface.
 - `use_ecr_credentials_for_mirrors` - (Computed) - Bool - Enables Kubelet ECR Credential helper to pass credentials to containerd mirrors, to use ECR as a pull-through cache.
+- `install_cri_ctl` - (Computed) - Bool - InstallCriCtl installs crictl (default "false").
+- `install_nerd_ctl` - (Computed) - Bool - InstallNerdCtl installs nerdctl (default "false").
 
 ### nvidia_gpu_config
 
@@ -630,8 +636,9 @@ The following arguments are supported:
 
 The following arguments are supported:
 
-- `driver_package` - (Computed) - String - Package is the name of the nvidia driver package that will be installed.<br />Default is "nvidia-headless-510-server".
-- `enabled` - (Computed) - Bool - Enabled determines if kOps will install the Nvidia GPU runtime and drivers.<br />They will only be installed on intances that has an Nvidia GPU.
+- `driver_package` - (Computed) - String - Package is the name of the nvidia driver package that will be installed.<br />Default is "nvidia-driver-535-server".
+- `enabled` - (Computed) - Bool - Enabled determines if kOps will install the Nvidia GPU runtime and drivers.<br />They will only be installed on instances that has an Nvidia GPU.
+- `device_plugin_image` - (Computed) - String - Image defines the container image used to deploy the Nvidia Kubernetes Device Plugin.
 - `dcgm_exporter` - (Computed) - [dcgm_exporter_config](#dcgm_exporter_config) - DCGMExporterConfig configures the DCGM exporter.
 
 ### dcgm_exporter_config
@@ -839,7 +846,7 @@ Pod anti affinity is a group of inter pod anti affinity scheduling rules.
 The following arguments are supported:
 
 - `required_during_scheduling_ignored_during_execution` - (Computed) - List([pod_affinity_term](#pod_affinity_term)) - If the anti-affinity requirements specified by this field are not met at<br />scheduling time, the pod will not be scheduled onto the node.<br />If the anti-affinity requirements specified by this field cease to be met<br />at some point during pod execution (e.g. due to a pod label update), the<br />system may or may not try to eventually evict the pod from its node.<br />When there are multiple elements, the lists of nodes corresponding to each<br />podAffinityTerm are intersected, i.e. all terms must be satisfied.<br />+optional<br />+listType=atomic.
-- `preferred_during_scheduling_ignored_during_execution` - (Computed) - List([weighted_pod_affinity_term](#weighted_pod_affinity_term)) - The scheduler will prefer to schedule pods to nodes that satisfy<br />the anti-affinity expressions specified by this field, but it may choose<br />a node that violates one or more of the expressions. The node that is<br />most preferred is the one with the greatest sum of weights, i.e.<br />for each node that meets all of the scheduling requirements (resource<br />request, requiredDuringScheduling anti-affinity expressions, etc.),<br />compute a sum by iterating through the elements of this field and adding<br />"weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the<br />node(s) with the highest sum are the most preferred.<br />+optional<br />+listType=atomic.
+- `preferred_during_scheduling_ignored_during_execution` - (Computed) - List([weighted_pod_affinity_term](#weighted_pod_affinity_term)) - The scheduler will prefer to schedule pods to nodes that satisfy<br />the anti-affinity expressions specified by this field, but it may choose<br />a node that violates one or more of the expressions. The node that is<br />most preferred is the one with the greatest sum of weights, i.e.<br />for each node that meets all of the scheduling requirements (resource<br />request, requiredDuringScheduling anti-affinity expressions, etc.),<br />compute a sum by iterating through the elements of this field and subtracting<br />"weight" from the sum if the node has pods which matches the corresponding podAffinityTerm; the<br />node(s) with the highest sum are the most preferred.<br />+optional<br />+listType=atomic.
 
 ### node_local_dns_config
 
@@ -985,7 +992,7 @@ EnvVar represents an environment variable present in a Container.
 
 The following arguments are supported:
 
-- `name` - (Required) - String - Name of the environment variable. Must be a C_IDENTIFIER.
+- `name` - (Required) - String - Name of the environment variable.<br />May consist of any printable ASCII characters except '='.
 - `value` - (Computed) - String - Variable references $(VAR_NAME) are expanded<br />using the previously defined environment variables in the container and<br />any service environment variables. If a variable cannot be resolved,<br />the reference in the input string will be unchanged. Double $$ are reduced<br />to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e.<br />"$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".<br />Escaped references will never be expanded, regardless of whether the variable<br />exists or not.<br />Defaults to "".<br />+optional.
 - `value_from` - (Computed) - [env_var_source](#env_var_source) - Source for the environment variable's value. Cannot be used if value is not empty.<br />+optional.
 
@@ -1001,6 +1008,7 @@ The following arguments are supported:
 - `resource_field_ref` - (Computed) - [resource_field_selector](#resource_field_selector) - Selects a resource of the container: only resources limits and requests<br />(limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.<br />+optional.
 - `config_map_key_ref` - (Computed) - [config_map_key_selector](#config_map_key_selector) - Selects a key of a ConfigMap.<br />+optional.
 - `secret_key_ref` - (Computed) - [secret_key_selector](#secret_key_selector) - Selects a key of a secret in the pod's namespace<br />+optional.
+- `file_key_ref` - (Computed) - [file_key_selector](#file_key_selector) - FileKeyRef selects a key of the env file.<br />Requires the EnvFiles feature gate to be enabled.<br /><br />+featureGate=EnvFiles<br />+optional.
 
 ### object_field_selector
 
@@ -1047,6 +1055,19 @@ The following arguments are supported:
 - `name` - (Computed) - String - Name of the referent.<br />This field is effectively required, but due to backwards compatibility is<br />allowed to be empty. Instances of this type with an empty value here are<br />almost certainly wrong.<br />More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names<br />+optional<br />+default=""<br />+kubebuilder:default=""<br />TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
 - `key` - (Required) - String - The key of the secret to select from.  Must be a valid secret key.
 - `optional` - (Computed) - Bool - Specify whether the Secret or its key must be defined<br />+optional.
+
+### file_key_selector
+
+FileKeySelector selects a key of the env file.<br />+structType=atomic.
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `volume_name` - (Computed) - String - The name of the volume mount containing the env file.<br />+required.
+- `path` - (Computed) - String - The path within the volume from which to select the file.<br />Must be relative and may not contain the '..' path or start with '..'.<br />+required.
+- `key` - (Required) - String - The key within the env file. An invalid key will prevent the pod from starting.<br />The keys defined within a source may consist of any printable ASCII characters except '='.<br />During Alpha stage of the EnvFiles feature gate, the key size is limited to 128 characters.<br />+required.
+- `optional` - (Computed) - Bool - Specify whether the file or its key must be defined. If the file or key<br />does not exist, then the env var is not published.<br />If optional is set to true and the specified key does not exist,<br />the environment variable will not be set in the Pod's containers.<br /><br />If optional is set to false and the specified key does not exist,<br />an error will be returned during Pod creation.<br />+optional<br />+default=false.
 
 ### kube_controller_manager_config
 
@@ -1313,8 +1334,8 @@ The following arguments are supported:
 - `registry_burst` - (Computed) - Int - RegistryBurst Maximum size of a bursty pulls, temporarily allows pulls to burst to this number, while still not exceeding registry-qps. Only used if --registry-qps > 0 (default 10).
 - `topology_manager_policy` - (Computed) - String - TopologyManagerPolicy determines the allocation policy for the topology manager.
 - `rotate_certificates` - (Computed) - Bool - rotateCertificates enables client certificate rotation.
-- `protect_kernel_defaults` - (Computed) - Bool - Default kubelet behaviour for kernel tuning. If set, kubelet errors if any of kernel tunables is different than kubelet defaults.<br />(DEPRECATED: This parameter should be set via the config file specified by the Kubelet's --config flag.
-- `cgroup_driver` - (Computed) - String - CgroupDriver allows the explicit setting of the kubelet cgroup driver. If omitted, defaults to cgroupfs.
+- `protect_kernel_defaults` - (Computed) - Bool - Default kubelet behaviour for kernel tuning. If set, kubelet errors if any of kernel tunables is different than kubelet defaults.<br />DEPRECATED: This parameter should be set via the config file specified by the Kubelet's --config flag.
+- `cgroup_driver` - (Computed) - String - CgroupDriver allows the explicit setting of the kubelet cgroup driver.<br />DEPRECATED: The cgroup driver is automatically detected.
 - `housekeeping_interval` - (Computed) - Duration - HousekeepingInterval allows to specify interval between container housekeepings.
 - `event_qps` - (Computed) - Int - EventQPS if > 0, limit event creations per second to this value.  If 0, unlimited.
 - `event_burst` - (Computed) - Int - EventBurst temporarily allows event records to burst to this number, while still not exceeding EventQPS. Only used if EventQPS > 0.
@@ -2130,6 +2151,7 @@ The following arguments are supported:
 - `log_encoding` - (Computed) - String
 - `log_level` - (Computed) - String
 - `image` - (Computed) - String
+- `feature_gates` - (Computed) - String
 - `memory_limit` - (Computed) - Quantity
 - `memory_request` - (Computed) - Quantity
 - `cpu_request` - (Computed) - Quantity

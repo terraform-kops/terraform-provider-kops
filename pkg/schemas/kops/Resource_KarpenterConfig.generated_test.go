@@ -25,6 +25,7 @@ func TestExpandResourceKarpenterConfig(t *testing.T) {
 					"log_encoding":   "",
 					"log_level":      "",
 					"image":          "",
+					"feature_gates":  "",
 					"memory_limit":   nil,
 					"memory_request": nil,
 					"cpu_request":    nil,
@@ -49,6 +50,7 @@ func TestFlattenResourceKarpenterConfigInto(t *testing.T) {
 		"log_encoding":   "",
 		"log_level":      "",
 		"image":          "",
+		"feature_gates":  "",
 		"memory_limit":   nil,
 		"memory_request": nil,
 		"cpu_request":    nil,
@@ -107,6 +109,17 @@ func TestFlattenResourceKarpenterConfigInto(t *testing.T) {
 				in: func() kops.KarpenterConfig {
 					subject := kops.KarpenterConfig{}
 					subject.Image = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "FeatureGates - default",
+			args: args{
+				in: func() kops.KarpenterConfig {
+					subject := kops.KarpenterConfig{}
+					subject.FeatureGates = ""
 					return subject
 				}(),
 			},
@@ -163,6 +176,7 @@ func TestFlattenResourceKarpenterConfig(t *testing.T) {
 		"log_encoding":   "",
 		"log_level":      "",
 		"image":          "",
+		"feature_gates":  "",
 		"memory_limit":   nil,
 		"memory_request": nil,
 		"cpu_request":    nil,
@@ -221,6 +235,17 @@ func TestFlattenResourceKarpenterConfig(t *testing.T) {
 				in: func() kops.KarpenterConfig {
 					subject := kops.KarpenterConfig{}
 					subject.Image = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "FeatureGates - default",
+			args: args{
+				in: func() kops.KarpenterConfig {
+					subject := kops.KarpenterConfig{}
+					subject.FeatureGates = ""
 					return subject
 				}(),
 			},
