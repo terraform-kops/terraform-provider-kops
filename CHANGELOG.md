@@ -1,5 +1,10 @@
 # Changelog
 
+## [v1.34.0](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.33.3...v1.34.0) - 2025-10-23
+- feat: update to kOps 1.34.0 by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/325
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/sts from 1.38.2 to 1.38.8 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/326
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/config from 1.29.17 to 1.31.14 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/327
+
 ## [v1.33.3](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.33.2...v1.33.3) - 2025-09-29
 - ci: update Go version and improve caching in workflow by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/306
 - fix: set region and credentials before trying to assume a role by @peter-svensson in https://github.com/terraform-kops/terraform-provider-kops/pull/318
