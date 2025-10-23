@@ -15,6 +15,7 @@ func DataSourceEnvVarSource() *schema.Resource {
 			"resource_field_ref": ComputedStruct(DataSourceResourceFieldSelector()),
 			"config_map_key_ref": ComputedStruct(DataSourceConfigMapKeySelector()),
 			"secret_key_ref":     ComputedStruct(DataSourceSecretKeySelector()),
+			"file_key_ref":       ComputedStruct(DataSourceFileKeySelector()),
 		},
 	}
 
@@ -98,6 +99,24 @@ func ExpandDataSourceEnvVarSource(in map[string]interface{}) core.EnvVarSource {
 				}(in))
 			}(in)
 		}(in["secret_key_ref"]),
+		FileKeyRef: func(in interface{}) *core.FileKeySelector {
+			return func(in interface{}) *core.FileKeySelector {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in core.FileKeySelector) *core.FileKeySelector {
+					return &in
+				}(func(in interface{}) core.FileKeySelector {
+					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+						return ExpandDataSourceFileKeySelector(in[0].(map[string]interface{}))
+					}
+					return core.FileKeySelector{}
+				}(in))
+			}(in)
+		}(in["file_key_ref"]),
 	}
 }
 
@@ -150,6 +169,18 @@ func FlattenDataSourceEnvVarSourceInto(in core.EnvVarSource, out map[string]inte
 			}(*in)
 		}(in)
 	}(in.SecretKeyRef)
+	out["file_key_ref"] = func(in *core.FileKeySelector) interface{} {
+		return func(in *core.FileKeySelector) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in core.FileKeySelector) interface{} {
+				return func(in core.FileKeySelector) []interface{} {
+					return []interface{}{FlattenDataSourceFileKeySelector(in)}
+				}(in)
+			}(*in)
+		}(in)
+	}(in.FileKeyRef)
 }
 
 func FlattenDataSourceEnvVarSource(in core.EnvVarSource) map[string]interface{} {

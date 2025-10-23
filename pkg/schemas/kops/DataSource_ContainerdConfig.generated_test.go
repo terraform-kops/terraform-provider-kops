@@ -36,6 +36,8 @@ func TestExpandDataSourceContainerdConfig(t *testing.T) {
 					"se_linux_enabled":                false,
 					"nri":                             nil,
 					"use_ecr_credentials_for_mirrors": false,
+					"install_cri_ctl":                 false,
+					"install_nerd_ctl":                false,
 				},
 			},
 			want: _default,
@@ -68,6 +70,8 @@ func TestFlattenDataSourceContainerdConfigInto(t *testing.T) {
 		"se_linux_enabled":                false,
 		"nri":                             nil,
 		"use_ecr_credentials_for_mirrors": false,
+		"install_cri_ctl":                 false,
+		"install_nerd_ctl":                false,
 	}
 	type args struct {
 		in kops.ContainerdConfig
@@ -244,6 +248,28 @@ func TestFlattenDataSourceContainerdConfigInto(t *testing.T) {
 				in: func() kops.ContainerdConfig {
 					subject := kops.ContainerdConfig{}
 					subject.UseECRCredentialsForMirrors = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "InstallCriCtl - default",
+			args: args{
+				in: func() kops.ContainerdConfig {
+					subject := kops.ContainerdConfig{}
+					subject.InstallCriCtl = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "InstallNerdCtl - default",
+			args: args{
+				in: func() kops.ContainerdConfig {
+					subject := kops.ContainerdConfig{}
+					subject.InstallNerdCtl = false
 					return subject
 				}(),
 			},
@@ -278,6 +304,8 @@ func TestFlattenDataSourceContainerdConfig(t *testing.T) {
 		"se_linux_enabled":                false,
 		"nri":                             nil,
 		"use_ecr_credentials_for_mirrors": false,
+		"install_cri_ctl":                 false,
+		"install_nerd_ctl":                false,
 	}
 	type args struct {
 		in kops.ContainerdConfig
@@ -454,6 +482,28 @@ func TestFlattenDataSourceContainerdConfig(t *testing.T) {
 				in: func() kops.ContainerdConfig {
 					subject := kops.ContainerdConfig{}
 					subject.UseECRCredentialsForMirrors = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "InstallCriCtl - default",
+			args: args{
+				in: func() kops.ContainerdConfig {
+					subject := kops.ContainerdConfig{}
+					subject.InstallCriCtl = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "InstallNerdCtl - default",
+			args: args{
+				in: func() kops.ContainerdConfig {
+					subject := kops.ContainerdConfig{}
+					subject.InstallNerdCtl = false
 					return subject
 				}(),
 			},

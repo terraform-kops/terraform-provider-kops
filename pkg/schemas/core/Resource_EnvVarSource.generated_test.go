@@ -25,6 +25,7 @@ func TestExpandResourceEnvVarSource(t *testing.T) {
 					"resource_field_ref": nil,
 					"config_map_key_ref": nil,
 					"secret_key_ref":     nil,
+					"file_key_ref":       nil,
 				},
 			},
 			want: _default,
@@ -46,6 +47,7 @@ func TestFlattenResourceEnvVarSourceInto(t *testing.T) {
 		"resource_field_ref": nil,
 		"config_map_key_ref": nil,
 		"secret_key_ref":     nil,
+		"file_key_ref":       nil,
 	}
 	type args struct {
 		in core.EnvVarSource
@@ -101,6 +103,17 @@ func TestFlattenResourceEnvVarSourceInto(t *testing.T) {
 				in: func() core.EnvVarSource {
 					subject := core.EnvVarSource{}
 					subject.SecretKeyRef = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "FileKeyRef - default",
+			args: args{
+				in: func() core.EnvVarSource {
+					subject := core.EnvVarSource{}
+					subject.FileKeyRef = nil
 					return subject
 				}(),
 			},
@@ -124,6 +137,7 @@ func TestFlattenResourceEnvVarSource(t *testing.T) {
 		"resource_field_ref": nil,
 		"config_map_key_ref": nil,
 		"secret_key_ref":     nil,
+		"file_key_ref":       nil,
 	}
 	type args struct {
 		in core.EnvVarSource
@@ -179,6 +193,17 @@ func TestFlattenResourceEnvVarSource(t *testing.T) {
 				in: func() core.EnvVarSource {
 					subject := core.EnvVarSource{}
 					subject.SecretKeyRef = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "FileKeyRef - default",
+			args: args{
+				in: func() core.EnvVarSource {
+					subject := core.EnvVarSource{}
+					subject.FileKeyRef = nil
 					return subject
 				}(),
 			},
