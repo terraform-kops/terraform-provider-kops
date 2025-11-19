@@ -56,6 +56,8 @@ jobs:
           app-id: ${{ vars.GORELEASER_APP_ID }}
           private-key: ${{ secrets.GORELEASER_APP_PRIVATE_KEY }}
 
+      # Keeping -p 2 to avoid resource issues on GitHub runners
+      # Main optimization is pre-generation which saves 1-2 minutes
       - name: Create release
         uses: goreleaser/goreleaser-action@v6.4.0
         env:
@@ -63,4 +65,4 @@ jobs:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
         with:
           version: latest
-          args: release --clean --timeout 60m -p 2
+          args: release --timeout 60m -p 2

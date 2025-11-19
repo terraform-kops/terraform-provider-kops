@@ -31,7 +31,7 @@ archives:
   - id: terraform-provider-kops
     formats: [ 'zip' ]
     name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
-    builds:
+    ids:
       - terraform-provider-kops
     files:
       - LICENSE

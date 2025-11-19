@@ -18,3 +18,7 @@ terraform.log
 **/terraform.tfstate*
 examples/**/kubeconfig
 examples/**/locals_override.tf
+
+# Build optimization artifacts
+.gen-timestamp
+.claude

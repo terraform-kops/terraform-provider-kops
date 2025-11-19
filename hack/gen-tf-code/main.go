@@ -5,6 +5,8 @@ import (
 	"log"
 	"path"
 	"reflect"
+	"runtime"
+	"sync"
 	"text/template"
 
 	"github.com/Masterminds/sprig"
@@ -69,19 +71,39 @@ func build(scope, docs string, parser *parser, g ...generated) {
 	for _, gen := range g {
 		o[gen.t] = gen.o
 	}
-	for _, gen := range g {
-		funcMaps := []template.FuncMap{
-			reflectFuncs(gen.t, mappings, parser),
-			optionFuncs(scope == "DataSource", o, parser),
-			schemaFuncs(scope),
-			sprig.TxtFuncMap(),
-		}
-		buildSchema(gen.t, path.Join("pkg/schemas", mappings[gen.t.PkgPath()]), scope, funcMaps...)
-		buildTests(gen.t, path.Join("pkg/schemas", mappings[gen.t.PkgPath()]), scope, funcMaps...)
-		if gen.o.doc != nil {
-			buildDoc(gen.t, docs, append(funcMaps, docFuncs(gen.o.doc.header, gen.o.doc.footer, parser, o))...)
-		}
+
+	// Parallel code generation with worker pool
+	numWorkers := runtime.NumCPU()
+	if numWorkers > 8 {
+		numWorkers = 8 // Cap at 8 workers to avoid excessive parallelism
 	}
+
+	log.Printf("Generating %d types using %d workers...", len(g), numWorkers)
+
+	var wg sync.WaitGroup
+	semaphore := make(chan struct{}, numWorkers)
+
+	for _, gen := range g {
+		wg.Add(1)
+		go func(gen generated) {
+			defer wg.Done()
+			semaphore <- struct{}{}        // Acquire
+			defer func() { <-semaphore }() // Release
+
+			funcMaps := []template.FuncMap{
+				reflectFuncs(gen.t, mappings, parser),
+				optionFuncs(scope == "DataSource", o, parser),
+				schemaFuncs(scope),
+				sprig.TxtFuncMap(),
+			}
+			buildSchema(gen.t, path.Join("pkg/schemas", mappings[gen.t.PkgPath()]), scope, funcMaps...)
+			buildTests(gen.t, path.Join("pkg/schemas", mappings[gen.t.PkgPath()]), scope, funcMaps...)
+			if gen.o.doc != nil {
+				buildDoc(gen.t, docs, append(funcMaps, docFuncs(gen.o.doc.header, gen.o.doc.footer, parser, o))...)
+			}
+		}(gen)
+	}
+	wg.Wait()
 }
 
 func main() {
