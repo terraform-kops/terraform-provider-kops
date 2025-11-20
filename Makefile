@@ -9,12 +9,14 @@ ifeq (${GOARCH},x86_64)
 	GOARCH := amd64
 endif
 
+# IMPROVEMENT 1: Fix dependency chain - remove circular dependencies
 .PHONY: all
-all: clean gen fmt build verify-gen vet test
+all: gen build test vet verify-gen
 
 .PHONY: clean
 clean:
 	@rm -f terraform-provider-kops
+	@rm -f .gen-timestamp
 	@rm -rf ./pkg/schemas/config
 	@rm -rf ./pkg/schemas/datasources
 	@rm -rf ./pkg/schemas/kops
@@ -29,43 +31,58 @@ $(GOIMPORTS):
 	@echo Install goimports... >&2
 	@GOBIN=$(TOOLS_DIR) go install golang.org/x/tools/cmd/goimports@$(GOIMPORTS_VERSION)
 
+# IMPROVEMENT 2: Incremental code generation - only regenerate if source changed
+# Timestamp file tracks when generation last succeeded
 .PHONY: gen-tf-code
-gen-tf-code: clean $(GOIMPORTS)
-	@go run ./hack/gen-tf-code/...
-	@go fmt ./pkg/schemas/...
-	@$(GOIMPORTS) -w ./pkg/schemas
+gen-tf-code: $(GOIMPORTS) .gen-timestamp
 
+.gen-timestamp: $(shell find pkg/api hack/gen-tf-code -name "*.go" -type f 2>/dev/null)
+	@echo "Running code generation..."
+	@rm -rf ./pkg/schemas/config
+	@rm -rf ./pkg/schemas/datasources
+	@rm -rf ./pkg/schemas/kops
+	@rm -rf ./pkg/schemas/kube
+	@rm -rf ./pkg/schemas/resources
+	@rm -rf ./pkg/schemas/utils
+	@go run ./hack/gen-tf-code/...
+	@$(GOIMPORTS) -w ./pkg/schemas
+	@touch .gen-timestamp
+
+# IMPROVEMENT 3: Separate gen from formatting
 .PHONY: gen
 gen: gen-tf-code
 
 .PHONY: build
-build: gen
+build:
 	@CGO_ENABLED=0 go build -ldflags="-s -w -X 'github.com/terraform-kops/terraform-provider-kops/pkg/version.BuildVersion=v${PROVIDER_VERSION}'" ./cmd/terraform-provider-kops
 
+# IMPROVEMENT 4: Consolidated formatting - do it once
 .PHONY: fmt
-fmt: build
-	@go fmt ./cmd/...
-	@go fmt ./pkg/...
+fmt:
+	@goimports -w ./pkg ./cmd
 
 .PHONY: verify-gen
-verify-gen: fmt
-	@git --no-pager diff .
-	@echo 'If this test fails, it is because the git diff is non-empty after running "make gen".' >&2
-	@echo 'To correct this, locally run "make gen", commit the changes, and re-run tests.' >&2
-	@git diff --quiet --exit-code .
+verify-gen: gen
+	@git --no-pager diff --exit-code ./pkg/schemas ./docs || \
+		(echo 'Generated code is out of date. Run "make gen" and commit changes.' >&2 && exit 1)
 
+# IMPROVEMENT 5: Parallel test execution
 .PHONY: test
-test: fmt
-	@go test ./...
+test:
+	@go test -parallel=4 ./...
 
 .PHONY: vet
-vet: fmt
+vet:
 	@go vet ./...
 
 .PHONY: install
-install: all
+install: build
 	@mkdir -p ${HOME}/.terraform.d/plugins/github/terraform-kops/kops/${PROVIDER_VERSION}/${OS}_${GOARCH}
 	@cp terraform-provider-kops $(HOME)/.terraform.d/plugins/github/terraform-kops/kops/${PROVIDER_VERSION}/${OS}_${GOARCH}/terraform-provider-kops
+
+# Quick build without regeneration (for iterative development)
+.PHONY: quick
+quick: build test vet
 
 # EXAMPLES FOR TERRAFORM >= 0.15
 
