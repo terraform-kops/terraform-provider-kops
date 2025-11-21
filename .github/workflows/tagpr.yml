@@ -17,7 +17,7 @@ jobs:
       with:
         app-id: ${{ vars.TAGPR_APP_ID }}
         private-key: ${{ secrets.TAGPR_APP_PRIVATE_KEY }}
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         persist-credentials: true
         token: ${{ steps.generate-token.outputs.token }}
