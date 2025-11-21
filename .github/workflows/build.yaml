@@ -27,7 +27,7 @@ jobs:
           rm *
 
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - uses: actions/cache@v4
         with:
@@ -64,7 +64,7 @@ jobs:
           swap-storage: true
 
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Unshallow
         run: git fetch --prune --unshallow
