@@ -1,5 +1,14 @@
 # Changelog
 
+## [v1.35.0](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.34.1...v1.35.0) - 2025-12-03
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/sts from 1.41.1 to 1.41.2 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/348
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/config from 1.32.1 to 1.32.2 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/346
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.274.0 to 1.275.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/347
+- chore(deps): bump github.com/aws/aws-sdk-go-v2 from 1.40.0 to 1.40.1 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/353
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/sts from 1.41.2 to 1.41.3 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/351
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.275.0 to 1.275.1 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/350
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/config from 1.32.2 to 1.32.3 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/352
+
 ## [v1.34.0](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.34.0...v1.34.1) - 2025-11-25
 - ci: improve Makefile with enhanced commands by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/335
 - chore(deps): bump golang.org/x/tools from 0.37.0 to 0.38.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/332
