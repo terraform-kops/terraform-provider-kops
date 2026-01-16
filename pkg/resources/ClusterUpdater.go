@@ -35,7 +35,7 @@ func ClusterUpdaterCreateOrUpdate(_ context.Context, d *schema.ResourceData, m i
 	if oldState != nil {
 		o := resourcesschema.ExpandResourceClusterUpdater(oldState.(map[string]interface{}))
 		n := resourcesschema.ExpandResourceClusterUpdater(newState.(map[string]interface{}))
-		for k, _ := range n.Keepers {
+		for k := range n.Keepers {
 			if _, exists := o.Keepers[k]; !exists {
 				hasNewResource = true
 				break
@@ -44,6 +44,16 @@ func ClusterUpdaterCreateOrUpdate(_ context.Context, d *schema.ResourceData, m i
 	}
 	in := resourcesschema.ExpandResourceClusterUpdater(d.Get("").(map[string]interface{}))
 	if err := in.UpdateCluster(config.Clientset(m), hasNewResource); err != nil {
+		// On error, restore old computed values to prevent state drift
+		if oldState != nil {
+			oldMap := oldState.(map[string]interface{})
+			if oldRevision, ok := oldMap["revision"]; ok {
+				d.Set("revision", oldRevision)
+			}
+			if oldVersion, ok := oldMap["provider_version"]; ok {
+				d.Set("provider_version", oldVersion)
+			}
+		}
 		return diag.FromErr(err)
 	}
 	d.SetId(in.ClusterName)
