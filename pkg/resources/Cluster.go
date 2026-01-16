@@ -31,22 +31,34 @@ func Cluster() *schema.Resource {
 
 func ClusterCreate(c context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	in := resourcesschema.ExpandResourceCluster(d.Get("").(map[string]interface{}))
-	if cluster, err := resources.CreateCluster(in.Name, in.Labels, in.Annotations, in.AdminSshKey, in.Secrets, in.ClusterSpec, config.Clientset(m)); err != nil {
+	cluster, err := resources.CreateCluster(in.Name, in.Labels, in.Annotations, in.AdminSshKey, in.Secrets, in.ClusterSpec, config.Clientset(m))
+	if err != nil {
 		return diag.FromErr(err)
-	} else {
-		d.SetId(cluster.Name)
-		return ClusterRead(c, d, m)
 	}
+	d.SetId(cluster.Name)
+	if diags := ClusterRead(c, d, m); diags.HasError() {
+		// Clear ID so Terraform doesn't persist a broken state for new resources
+		d.SetId("")
+		return diags
+	}
+	return nil
 }
 
 func ClusterUpdate(c context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	oldState, _ := d.GetChange("")
 	in := resourcesschema.ExpandResourceCluster(d.Get("").(map[string]interface{}))
-	if cluster, err := resources.UpdateCluster(in.Name, in.Labels, in.Annotations, in.AdminSshKey, in.Secrets, in.ClusterSpec, config.Clientset(m)); err != nil {
+	cluster, err := resources.UpdateCluster(in.Name, in.Labels, in.Annotations, in.AdminSshKey, in.Secrets, in.ClusterSpec, config.Clientset(m))
+	if err != nil {
+		// On error, restore old revision to prevent state drift
+		if oldState != nil {
+			if oldRevision, ok := oldState.(map[string]interface{})["revision"]; ok {
+				d.Set("revision", oldRevision)
+			}
+		}
 		return diag.FromErr(err)
-	} else {
-		d.SetId(cluster.Name)
-		return ClusterRead(c, d, m)
 	}
+	d.SetId(cluster.Name)
+	return ClusterRead(c, d, m)
 }
 
 func ClusterRead(_ context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
