@@ -31,22 +31,34 @@ func InstanceGroup() *schema.Resource {
 
 func InstanceGroupCreate(c context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	in := resourcesschema.ExpandResourceInstanceGroup(d.Get("").(map[string]interface{}))
-	if instanceGroup, err := resources.CreateInstanceGroup(in.ClusterName, in.Name, in.Labels, in.Annotations, in.InstanceGroupSpec, config.Clientset(m)); err != nil {
+	instanceGroup, err := resources.CreateInstanceGroup(in.ClusterName, in.Name, in.Labels, in.Annotations, in.InstanceGroupSpec, config.Clientset(m))
+	if err != nil {
 		return diag.FromErr(err)
-	} else {
-		d.SetId(fmt.Sprintf("%s/%s", instanceGroup.ClusterName, instanceGroup.Name))
-		return InstanceGroupRead(c, d, m)
 	}
+	d.SetId(fmt.Sprintf("%s/%s", instanceGroup.ClusterName, instanceGroup.Name))
+	if diags := InstanceGroupRead(c, d, m); diags.HasError() {
+		// Clear ID so Terraform doesn't persist a broken state for new resources
+		d.SetId("")
+		return diags
+	}
+	return nil
 }
 
 func InstanceGroupUpdate(c context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	oldState, _ := d.GetChange("")
 	in := resourcesschema.ExpandResourceInstanceGroup(d.Get("").(map[string]interface{}))
-	if instanceGroup, err := resources.UpdateInstanceGroup(in.ClusterName, in.Name, in.Labels, in.Annotations, in.InstanceGroupSpec, config.Clientset(m)); err != nil {
+	instanceGroup, err := resources.UpdateInstanceGroup(in.ClusterName, in.Name, in.Labels, in.Annotations, in.InstanceGroupSpec, config.Clientset(m))
+	if err != nil {
+		// On error, restore old revision to prevent state drift
+		if oldState != nil {
+			if oldRevision, ok := oldState.(map[string]interface{})["revision"]; ok {
+				d.Set("revision", oldRevision)
+			}
+		}
 		return diag.FromErr(err)
-	} else {
-		d.SetId(fmt.Sprintf("%s/%s", instanceGroup.ClusterName, instanceGroup.Name))
-		return InstanceGroupRead(c, d, m)
 	}
+	d.SetId(fmt.Sprintf("%s/%s", instanceGroup.ClusterName, instanceGroup.Name))
+	return InstanceGroupRead(c, d, m)
 }
 
 func InstanceGroupRead(_ context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
