@@ -1,5 +1,14 @@
 # Changelog
 
+## [v1.34.3](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.34.2...v1.34.3) - 2026-02-16
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.285.0 to 1.286.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/389
+- chore(deps): bump golang.org/x/tools from 0.41.0 to 0.42.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/388
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.286.0 to 1.287.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/391
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.287.0 to 1.288.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/395
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.288.0 to 1.289.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/396
+- ci: group k8s and aws-sdk dependabot updates by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/397
+- feat: add excludeInstanceGroups option to cluster updater by @peter-svensson in https://github.com/terraform-kops/terraform-provider-kops/pull/399
+
 ## [v1.34.2](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.34.1...v1.34.2) - 2026-02-06
 - chore(deps): bump github.com/aws/aws-sdk-go-v2/service/sts from 1.41.1 to 1.41.2 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/348
 - chore(deps): bump github.com/aws/aws-sdk-go-v2/config from 1.32.1 to 1.32.2 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/346
