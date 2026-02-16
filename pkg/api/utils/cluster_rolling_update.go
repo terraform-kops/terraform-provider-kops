@@ -103,7 +103,26 @@ func ClusterInstanceGroupsNeedingUpdate(clientset simple.Clientset, clusterName 
 	return needUpdate, nil
 }
 
-func ClusterRollingUpdate(clientset simple.Clientset, clusterName string, options RollingUpdateOptions, controlPlaneOnly bool) error {
+// filterInstanceGroups filters instance groups by role and exclusion list.
+func filterInstanceGroups(items []kops.InstanceGroup, controlPlaneOnly bool, excludeNames []string) []*kops.InstanceGroup {
+	excludeSet := make(map[string]bool, len(excludeNames))
+	for _, name := range excludeNames {
+		excludeSet[name] = true
+	}
+	var result []*kops.InstanceGroup
+	for i := range items {
+		ig := &items[i]
+		if excludeSet[ig.Name] {
+			continue
+		}
+		if !controlPlaneOnly || isControlPlane(ig) {
+			result = append(result, ig)
+		}
+	}
+	return result
+}
+
+func ClusterRollingUpdate(clientset simple.Clientset, clusterName string, options RollingUpdateOptions, controlPlaneOnly bool, excludeInstanceGroups []string) error {
 	kc, err := clientset.GetCluster(context.Background(), clusterName)
 	if err != nil {
 		return err
@@ -133,12 +152,7 @@ func ClusterRollingUpdate(clientset simple.Clientset, clusterName string, option
 	if err != nil {
 		return err
 	}
-	var instanceGroups []*kops.InstanceGroup
-	for i := range list.Items {
-		if !controlPlaneOnly || isControlPlane(&list.Items[i]) {
-			instanceGroups = append(instanceGroups, &list.Items[i])
-		}
-	}
+	instanceGroups := filterInstanceGroups(list.Items, controlPlaneOnly, excludeInstanceGroups)
 	cloud, err := cloudup.BuildCloud(kc)
 	if err != nil {
 		return err

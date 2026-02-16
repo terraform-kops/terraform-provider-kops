@@ -40,7 +40,7 @@ func (u *ClusterUpdater) UpdateCluster(clientset simple.Clientset, isNewResource
 		}
 	}
 	if !u.RollingUpdate.Skip {
-		if err := utils.ClusterRollingUpdate(clientset, u.ClusterName, u.RollingUpdate.RollingUpdateOptions, true); err != nil {
+		if err := utils.ClusterRollingUpdate(clientset, u.ClusterName, u.RollingUpdate.RollingUpdateOptions, true, u.RollingUpdate.ExcludeInstanceGroups); err != nil {
 			return err
 		}
 	}
@@ -64,7 +64,7 @@ func (u *ClusterUpdater) UpdateCluster(clientset simple.Clientset, isNewResource
 		}
 	}
 	if !u.RollingUpdate.Skip {
-		if err := utils.ClusterRollingUpdate(clientset, u.ClusterName, u.RollingUpdate.RollingUpdateOptions, false); err != nil {
+		if err := utils.ClusterRollingUpdate(clientset, u.ClusterName, u.RollingUpdate.RollingUpdateOptions, false, u.RollingUpdate.ExcludeInstanceGroups); err != nil {
 			return err
 		}
 	}

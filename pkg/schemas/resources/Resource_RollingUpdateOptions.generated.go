@@ -13,17 +13,18 @@ var _ = Schema
 func ResourceRollingUpdateOptions() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"skip":                OptionalBool(),
-			"master_interval":     OptionalDuration(),
-			"node_interval":       OptionalDuration(),
-			"bastion_interval":    OptionalDuration(),
-			"fail_on_drain_error": OptionalBool(),
-			"fail_on_validate":    OptionalBool(),
-			"post_drain_delay":    OptionalDuration(),
-			"validation_timeout":  OptionalDuration(),
-			"validate_count":      OptionalInt(),
-			"cloud_only":          OptionalBool(),
-			"force":               OptionalBool(),
+			"skip":                    OptionalBool(),
+			"exclude_instance_groups": OptionalList(String()),
+			"master_interval":         OptionalDuration(),
+			"node_interval":           OptionalDuration(),
+			"bastion_interval":        OptionalDuration(),
+			"fail_on_drain_error":     OptionalBool(),
+			"fail_on_validate":        OptionalBool(),
+			"post_drain_delay":        OptionalDuration(),
+			"validation_timeout":      OptionalDuration(),
+			"validate_count":          OptionalInt(),
+			"cloud_only":              OptionalBool(),
+			"force":                   OptionalBool(),
 		},
 	}
 
@@ -38,6 +39,18 @@ func ExpandResourceRollingUpdateOptions(in map[string]interface{}) resources.Rol
 		Skip: func(in interface{}) bool {
 			return bool(ExpandBool(in))
 		}(in["skip"]),
+		ExcludeInstanceGroups: func(in interface{}) []string {
+			return func(in interface{}) []string {
+				if in == nil {
+					return nil
+				}
+				var out []string
+				for _, in := range in.([]interface{}) {
+					out = append(out, string(ExpandString(in)))
+				}
+				return out
+			}(in)
+		}(in["exclude_instance_groups"]),
 		RollingUpdateOptions: func(in interface{}) utils.RollingUpdateOptions {
 			return utilsschemas.ExpandResourceRollingUpdateOptions(in.(map[string]interface{}))
 		}(in),
@@ -48,6 +61,15 @@ func FlattenResourceRollingUpdateOptionsInto(in resources.RollingUpdateOptions, 
 	out["skip"] = func(in bool) interface{} {
 		return FlattenBool(bool(in))
 	}(in.Skip)
+	out["exclude_instance_groups"] = func(in []string) interface{} {
+		return func(in []string) []interface{} {
+			var out []interface{}
+			for _, in := range in {
+				out = append(out, FlattenString(string(in)))
+			}
+			return out
+		}(in)
+	}(in.ExcludeInstanceGroups)
 	utilsschemas.FlattenResourceRollingUpdateOptionsInto(in.RollingUpdateOptions, out)
 }
 
