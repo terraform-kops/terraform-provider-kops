@@ -4,6 +4,14 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    groups:
+      k8s:
+        patterns:
+          - "k8s.io/*"
+          - "sigs.k8s.io/*"
+      aws-sdk:
+        patterns:
+          - "github.com/aws/aws-sdk-go-v2*"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
