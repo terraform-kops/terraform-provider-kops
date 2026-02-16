@@ -21,17 +21,18 @@ func TestExpandResourceRollingUpdateOptions(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
-					"skip":                false,
-					"master_interval":     nil,
-					"node_interval":       nil,
-					"bastion_interval":    nil,
-					"fail_on_drain_error": false,
-					"fail_on_validate":    false,
-					"post_drain_delay":    nil,
-					"validation_timeout":  nil,
-					"validate_count":      nil,
-					"cloud_only":          false,
-					"force":               false,
+					"skip":                    false,
+					"exclude_instance_groups": func() []interface{} { return nil }(),
+					"master_interval":         nil,
+					"node_interval":           nil,
+					"bastion_interval":        nil,
+					"fail_on_drain_error":     false,
+					"fail_on_validate":        false,
+					"post_drain_delay":        nil,
+					"validation_timeout":      nil,
+					"validate_count":          nil,
+					"cloud_only":              false,
+					"force":                   false,
 				},
 			},
 			want: _default,
@@ -49,17 +50,18 @@ func TestExpandResourceRollingUpdateOptions(t *testing.T) {
 
 func TestFlattenResourceRollingUpdateOptionsInto(t *testing.T) {
 	_default := map[string]interface{}{
-		"skip":                false,
-		"master_interval":     nil,
-		"node_interval":       nil,
-		"bastion_interval":    nil,
-		"fail_on_drain_error": false,
-		"fail_on_validate":    false,
-		"post_drain_delay":    nil,
-		"validation_timeout":  nil,
-		"validate_count":      nil,
-		"cloud_only":          false,
-		"force":               false,
+		"skip":                    false,
+		"exclude_instance_groups": func() []interface{} { return nil }(),
+		"master_interval":         nil,
+		"node_interval":           nil,
+		"bastion_interval":        nil,
+		"fail_on_drain_error":     false,
+		"fail_on_validate":        false,
+		"post_drain_delay":        nil,
+		"validation_timeout":      nil,
+		"validate_count":          nil,
+		"cloud_only":              false,
+		"force":                   false,
 	}
 	type args struct {
 		in resources.RollingUpdateOptions
@@ -82,6 +84,17 @@ func TestFlattenResourceRollingUpdateOptionsInto(t *testing.T) {
 				in: func() resources.RollingUpdateOptions {
 					subject := resources.RollingUpdateOptions{}
 					subject.Skip = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ExcludeInstanceGroups - default",
+			args: args{
+				in: func() resources.RollingUpdateOptions {
+					subject := resources.RollingUpdateOptions{}
+					subject.ExcludeInstanceGroups = nil
 					return subject
 				}(),
 			},
@@ -211,17 +224,18 @@ func TestFlattenResourceRollingUpdateOptionsInto(t *testing.T) {
 
 func TestFlattenResourceRollingUpdateOptions(t *testing.T) {
 	_default := map[string]interface{}{
-		"skip":                false,
-		"master_interval":     nil,
-		"node_interval":       nil,
-		"bastion_interval":    nil,
-		"fail_on_drain_error": false,
-		"fail_on_validate":    false,
-		"post_drain_delay":    nil,
-		"validation_timeout":  nil,
-		"validate_count":      nil,
-		"cloud_only":          false,
-		"force":               false,
+		"skip":                    false,
+		"exclude_instance_groups": func() []interface{} { return nil }(),
+		"master_interval":         nil,
+		"node_interval":           nil,
+		"bastion_interval":        nil,
+		"fail_on_drain_error":     false,
+		"fail_on_validate":        false,
+		"post_drain_delay":        nil,
+		"validation_timeout":      nil,
+		"validate_count":          nil,
+		"cloud_only":              false,
+		"force":                   false,
 	}
 	type args struct {
 		in resources.RollingUpdateOptions
@@ -244,6 +258,17 @@ func TestFlattenResourceRollingUpdateOptions(t *testing.T) {
 				in: func() resources.RollingUpdateOptions {
 					subject := resources.RollingUpdateOptions{}
 					subject.Skip = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ExcludeInstanceGroups - default",
+			args: args{
+				in: func() resources.RollingUpdateOptions {
+					subject := resources.RollingUpdateOptions{}
+					subject.ExcludeInstanceGroups = nil
 					return subject
 				}(),
 			},

@@ -50,6 +50,17 @@ resource "kops_instance_group" "master-2" {
   depends_on   = [kops_cluster.cluster]
 }
 
+resource "kops_instance_group" "runner" {
+  cluster_name = kops_cluster.cluster.name
+  name         = "runner"
+  role         = "Node"
+  min_size     = 0
+  max_size     = 3
+  machine_type = "t3.large"
+  subnets      = ["private-0"]
+  depends_on   = [kops_cluster.cluster]
+}
+
 resource "kops_cluster_updater" "updater" {
   cluster_name        = kops_cluster.cluster.name
 
@@ -58,14 +69,16 @@ resource "kops_cluster_updater" "updater" {
     master-0 = kops_instance_group.master-0.revision
     master-1 = kops_instance_group.master-1.revision
     master-2 = kops_instance_group.master-2.revision
+    runner   = kops_instance_group.runner.revision
     // ...
   }
 
   rolling_update {
-    skip                = false
-    fail_on_drain_error = true
-    fail_on_validate    = true
-    validate_count      = 1
+    skip                    = false
+    fail_on_drain_error     = true
+    fail_on_validate        = true
+    validate_count          = 1
+    exclude_instance_groups = [kops_instance_group.runner.name]
 
     // ...
   }
@@ -81,7 +94,8 @@ resource "kops_cluster_updater" "updater" {
     kops_cluster.cluster,
     kops_instance_group.master-0,
     kops_instance_group.master-1,
-    kops_instance_group.master-2
+    kops_instance_group.master-2,
+    kops_instance_group.runner
   ]
 }
 ```
@@ -116,6 +130,7 @@ The following arguments are supported:
 The following arguments are supported:
 
 - `skip` - (Optional) - Bool - Skip allows skipping cluster rolling update.
+- `exclude_instance_groups` - (Optional) - List(String) - ExcludeInstanceGroups is a list of instance group names to exclude from rolling updates.<br />Excluded instance groups will have their cloud resources updated (ASG launch template)<br />but existing instances will not be terminated or replaced.
 - `master_interval` - (Optional) - Duration - MasterInterval is the amount of time to wait after stopping a master instance.
 - `node_interval` - (Optional) - Duration - NodeInterval is the amount of time to wait after stopping a non-master instance.
 - `bastion_interval` - (Optional) - Duration - BastionInterval is the amount of time to wait after stopping a bastion instance.
