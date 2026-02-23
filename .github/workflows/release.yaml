@@ -59,7 +59,7 @@ jobs:
       # Keeping -p 2 to avoid resource issues on GitHub runners
       # Main optimization is pre-generation which saves 1-2 minutes
       - name: Create release
-        uses: goreleaser/goreleaser-action@v6.4.0
+        uses: goreleaser/goreleaser-action@v7.0.0
         env:
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
