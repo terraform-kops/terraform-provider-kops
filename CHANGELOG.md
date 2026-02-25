@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.34.4](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.34.3...v1.34.4) - 2026-02-25
+- chore(deps): bump the aws-sdk group across 1 directory with 2 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/401
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/config from 1.32.8 to 1.32.9 in the aws-sdk group by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/403
+- chore(deps): bump goreleaser/goreleaser-action from 6.4.0 to 7.0.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/404
+- chore(deps): bump the aws-sdk group with 4 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/405
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.290.1 to 1.291.0 in the aws-sdk group by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/407
+- fix: make *bool fields with default=true nullable to allow setting false by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/408
+
 ## [v1.34.3](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.34.2...v1.34.3) - 2026-02-16
 - chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.285.0 to 1.286.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/389
 - chore(deps): bump golang.org/x/tools from 0.41.0 to 0.42.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/388
