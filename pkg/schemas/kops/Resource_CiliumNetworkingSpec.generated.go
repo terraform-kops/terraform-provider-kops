@@ -169,7 +169,17 @@ func ExpandResourceCiliumNetworkingSpec(in map[string]interface{}) kops.CiliumNe
 					}(in)
 				}(in[0].(map[string]interface{})["value"])
 			}
-			return nil
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
 		}(in["enable_l7_proxy"]),
 		EnableLocalRedirectPolicy: func(in interface{}) *bool {
 			if in == nil {
@@ -228,7 +238,17 @@ func ExpandResourceCiliumNetworkingSpec(in map[string]interface{}) kops.CiliumNe
 					}(in)
 				}(in[0].(map[string]interface{})["value"])
 			}
-			return nil
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
 		}(in["enable_endpoint_health_checking"]),
 		EnablePrometheusMetrics: func(in interface{}) bool {
 			return bool(ExpandBool(in))
@@ -374,7 +394,17 @@ func ExpandResourceCiliumNetworkingSpec(in map[string]interface{}) kops.CiliumNe
 					}(in)
 				}(in[0].(map[string]interface{})["value"])
 			}
-			return nil
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
 		}(in["install_iptables_rules"]),
 		AutoDirectNodeRoutes: func(in interface{}) bool {
 			return bool(ExpandBool(in))
@@ -439,7 +469,17 @@ func ExpandResourceCiliumNetworkingSpec(in map[string]interface{}) kops.CiliumNe
 					}(in)
 				}(in[0].(map[string]interface{})["value"])
 			}
-			return nil
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
 		}(in["cni_exclusive"]),
 		Hubble: func(in interface{}) *kops.HubbleSpec {
 			return func(in interface{}) *kops.HubbleSpec {

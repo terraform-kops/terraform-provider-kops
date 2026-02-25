@@ -42,7 +42,17 @@ func ExpandConfigKlog(in map[string]interface{}) config.Klog {
 					}(in)
 				}(in[0].(map[string]interface{})["value"])
 			}
-			return nil
+			return func(in interface{}) *int {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in int) *int {
+					return &in
+				}(int(ExpandInt(in)))
+			}(in)
 		}(in["verbosity"]),
 	}
 }

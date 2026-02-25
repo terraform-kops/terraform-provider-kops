@@ -107,7 +107,17 @@ func ExpandResourceNodeTerminationHandlerSpec(in map[string]interface{}) kops.No
 					}(in)
 				}(in[0].(map[string]interface{})["value"])
 			}
-			return nil
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
 		}(in["enable_scheduled_event_draining"]),
 		EnableRebalanceMonitoring: func(in interface{}) *bool {
 			if in == nil {
@@ -185,7 +195,17 @@ func ExpandResourceNodeTerminationHandlerSpec(in map[string]interface{}) kops.No
 					}(in)
 				}(in[0].(map[string]interface{})["value"])
 			}
-			return nil
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
 		}(in["enable_sqs_termination_draining"]),
 		ExcludeFromLoadBalancers: func(in interface{}) *bool {
 			if in == nil {
@@ -206,7 +226,17 @@ func ExpandResourceNodeTerminationHandlerSpec(in map[string]interface{}) kops.No
 					}(in)
 				}(in[0].(map[string]interface{})["value"])
 			}
-			return nil
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
 		}(in["exclude_from_load_balancers"]),
 		ManagedASGTag: func(in interface{}) *string {
 			if in == nil {
