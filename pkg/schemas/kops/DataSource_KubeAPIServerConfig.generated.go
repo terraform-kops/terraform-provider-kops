@@ -79,7 +79,7 @@ func DataSourceKubeAPIServerConfig() *schema.Resource {
 			"audit_webhook_batch_max_size":                 ComputedInt(),
 			"audit_webhook_batch_max_wait":                 ComputedDuration(),
 			"audit_webhook_batch_throttle_burst":           ComputedInt(),
-			"audit_webhook_batch_throttle_enable":          ComputedBool(),
+			"audit_webhook_batch_throttle_enable":          Nullable(ComputedBool()),
 			"audit_webhook_batch_throttle_qps":             ComputedQuantity(),
 			"audit_webhook_config_file":                    ComputedString(),
 			"audit_webhook_initial_backoff":                ComputedDuration(),
@@ -840,20 +840,22 @@ func ExpandDataSourceKubeAPIServerConfig(in map[string]interface{}) kops.KubeAPI
 			if in == nil {
 				return nil
 			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
+			if in, ok := in.([]interface{}); ok && len(in) == 1 {
+				return func(in interface{}) *bool {
+					return func(in interface{}) *bool {
+						if in == nil {
+							return nil
+						}
+						if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+							return nil
+						}
+						return func(in bool) *bool {
+							return &in
+						}(bool(ExpandBool(in)))
+					}(in)
+				}(in[0].(map[string]interface{})["value"])
 			}
-			return func(in interface{}) *bool {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in bool) *bool {
-					return &in
-				}(bool(ExpandBool(in)))
-			}(in)
+			return nil
 		}(in["audit_webhook_batch_throttle_enable"]),
 		AuditWebhookBatchThrottleQps: func(in interface{}) *resource.Quantity {
 			if in == nil {
@@ -2005,14 +2007,17 @@ func FlattenDataSourceKubeAPIServerConfigInto(in kops.KubeAPIServerConfig, out m
 		}(in)
 	}(in.AuditWebhookBatchThrottleBurst)
 	out["audit_webhook_batch_throttle_enable"] = func(in *bool) interface{} {
-		return func(in *bool) interface{} {
+		if in == nil {
+			return nil
+		}
+		return []interface{}{map[string]interface{}{"value": func(in *bool) interface{} {
 			if in == nil {
 				return nil
 			}
 			return func(in bool) interface{} {
 				return FlattenBool(bool(in))
 			}(*in)
-		}(in)
+		}(in)}}
 	}(in.AuditWebhookBatchThrottleEnable)
 	out["audit_webhook_batch_throttle_qps"] = func(in *resource.Quantity) interface{} {
 		return func(in *resource.Quantity) interface{} {

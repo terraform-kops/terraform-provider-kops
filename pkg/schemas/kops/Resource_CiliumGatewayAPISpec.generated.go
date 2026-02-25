@@ -14,7 +14,7 @@ func ResourceCiliumGatewayAPISpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"enabled":             OptionalBool(),
-			"enable_secrets_sync": OptionalBool(),
+			"enable_secrets_sync": Nullable(OptionalBool()),
 		},
 	}
 
@@ -49,20 +49,22 @@ func ExpandResourceCiliumGatewayAPISpec(in map[string]interface{}) kops.CiliumGa
 			if in == nil {
 				return nil
 			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
+			if in, ok := in.([]interface{}); ok && len(in) == 1 {
+				return func(in interface{}) *bool {
+					return func(in interface{}) *bool {
+						if in == nil {
+							return nil
+						}
+						if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+							return nil
+						}
+						return func(in bool) *bool {
+							return &in
+						}(bool(ExpandBool(in)))
+					}(in)
+				}(in[0].(map[string]interface{})["value"])
 			}
-			return func(in interface{}) *bool {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in bool) *bool {
-					return &in
-				}(bool(ExpandBool(in)))
-			}(in)
+			return nil
 		}(in["enable_secrets_sync"]),
 	}
 }
@@ -79,14 +81,17 @@ func FlattenResourceCiliumGatewayAPISpecInto(in kops.CiliumGatewayAPISpec, out m
 		}(in)
 	}(in.Enabled)
 	out["enable_secrets_sync"] = func(in *bool) interface{} {
-		return func(in *bool) interface{} {
+		if in == nil {
+			return nil
+		}
+		return []interface{}{map[string]interface{}{"value": func(in *bool) interface{} {
 			if in == nil {
 				return nil
 			}
 			return func(in bool) interface{} {
 				return FlattenBool(bool(in))
 			}(*in)
-		}(in)
+		}(in)}}
 	}(in.EnableSecretsSync)
 }
 

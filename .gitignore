@@ -13,6 +13,7 @@ crash.log
 terraform.log
 
 /terraform-provider-kops
+/gen-tf-code
 .idea
 **/.terraform.tfstate.lock.info
 **/terraform.tfstate*

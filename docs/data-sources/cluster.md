@@ -197,12 +197,12 @@ The following arguments are supported:
 - `delete_sqs_msg_if_node_not_found` - (Computed) - Bool - DeleteSQSMsgIfNodeNotFound makes node termination handler delete the SQS Message from the SQS Queue if the targeted node is not found.<br />Only used in Queue Processor mode.<br />Default: false.
 - `enabled` - (Computed) - Bool - Enabled enables the node termination handler.<br />Default: true.
 - `enable_spot_interruption_draining` - (Computed) - Bool - EnableSpotInterruptionDraining makes node termination handler drain nodes when spot interruption termination notice is received.<br />Cannot be disabled in queue-processor mode.<br />Default: true.
-- `enable_scheduled_event_draining` - (Computed) - Bool - EnableScheduledEventDraining makes node termination handler drain nodes before the maintenance window starts for an EC2 instance scheduled event.<br />Cannot be disabled in queue-processor mode.<br />Default: true.
+- `enable_scheduled_event_draining` - (Computed) - Bool([Nullable](#nullable-arguments)) - EnableScheduledEventDraining makes node termination handler drain nodes before the maintenance window starts for an EC2 instance scheduled event.<br />Cannot be disabled in queue-processor mode.<br />Default: true.
 - `enable_rebalance_monitoring` - (Computed) - Bool - EnableRebalanceMonitoring makes node termination handler cordon nodes when the rebalance recommendation notice is received.<br />In queue-processor mode, cannot be enabled without rebalance draining.<br />Default: false.
 - `enable_rebalance_draining` - (Computed) - Bool - EnableRebalanceDraining makes node termination handler drain nodes when the rebalance recommendation notice is received.<br />Default: false.
 - `enable_prometheus_metrics` - (Computed) - Bool - EnablePrometheusMetrics enables the "/metrics" endpoint.<br />Default: false.
-- `enable_sqs_termination_draining` - (Computed) - Bool - EnableSQSTerminationDraining enables queue-processor mode which drains nodes when an SQS termination event is received.<br />Default: true.
-- `exclude_from_load_balancers` - (Computed) - Bool - ExcludeFromLoadBalancers makes node termination handler will mark for exclusion from load balancers before node are cordoned.<br />Default: true.
+- `enable_sqs_termination_draining` - (Computed) - Bool([Nullable](#nullable-arguments)) - EnableSQSTerminationDraining enables queue-processor mode which drains nodes when an SQS termination event is received.<br />Default: true.
+- `exclude_from_load_balancers` - (Computed) - Bool([Nullable](#nullable-arguments)) - ExcludeFromLoadBalancers makes node termination handler will mark for exclusion from load balancers before node are cordoned.<br />Default: true.
 - `managed_asg_tag` - (Computed) - String - ManagedASGTag is the tag used to determine which nodes NTH can take action on<br />This field has kept its name even though it now maps to the --managed-tag flag due to keeping the API stable.<br />Node termination handler does no longer check the ASG for this tag, but the actual EC2 instances.
 - `pod_termination_grace_period` - (Computed) - Int - PodTerminationGracePeriod is the time in seconds given to each pod to terminate gracefully.<br />If negative, the default value specified in the pod will be used, which defaults to 30 seconds if not specified for the pod.<br />Default: -1.
 - `taint_node` - (Computed) - Bool - TaintNode makes node termination handler taint nodes when an interruption event occurs.<br />Default: false.
@@ -936,7 +936,7 @@ The following arguments are supported:
 - `audit_webhook_batch_max_size` - (Computed) - Int - AuditWebhookBatchMaxSize is The maximum size of a batch. Only used in batch mode. (default 400).
 - `audit_webhook_batch_max_wait` - (Computed) - Duration - AuditWebhookBatchMaxWait is The amount of time to wait before force writing the batch that hadn't reached the max size. Only used in batch mode. (default 30s).
 - `audit_webhook_batch_throttle_burst` - (Computed) - Int - AuditWebhookBatchThrottleBurst is Maximum number of requests sent at the same moment if ThrottleQPS was not utilized before. Only used in batch mode. (default 15).
-- `audit_webhook_batch_throttle_enable` - (Computed) - Bool - AuditWebhookBatchThrottleEnable is Whether batching throttling is enabled. Only used in batch mode. (default true).
+- `audit_webhook_batch_throttle_enable` - (Computed) - Bool([Nullable](#nullable-arguments)) - AuditWebhookBatchThrottleEnable is Whether batching throttling is enabled. Only used in batch mode. (default true).
 - `audit_webhook_batch_throttle_qps` - (Computed) - Quantity - AuditWebhookBatchThrottleQps is Maximum average number of batches per second. Only used in batch mode. (default 10).
 - `audit_webhook_config_file` - (Computed) - String - AuditWebhookConfigFile is Path to a kubeconfig formatted file that defines the audit webhook configuration. Requires the 'AdvancedAuditing' feature gate.
 - `audit_webhook_initial_backoff` - (Computed) - Duration - AuditWebhookInitialBackoff is The amount of time to wait before retrying the first failed request. (default 10s).
@@ -1712,10 +1712,10 @@ The following arguments are supported:
 - `debug` - (Computed) - Bool - Debug runs Cilium in debug mode.
 - `disable_endpoint_crd` - (Computed) - Bool - DisableEndpointCRD disables usage of CiliumEndpoint CRD.<br />Default: false.
 - `enable_policy` - (Computed) - String - EnablePolicy specifies the policy enforcement mode.<br />"default": Follows Kubernetes policy enforcement.<br />"always": Cilium restricts all traffic if no policy is in place.<br />"never": Cilium allows all traffic regardless of policies in place.<br />If unspecified, "default" policy mode will be used.
-- `enable_l7_proxy` - (Computed) - Bool - EnableL7Proxy enables L7 proxy for L7 policy enforcement.<br />Default: true.
+- `enable_l7_proxy` - (Computed) - Bool([Nullable](#nullable-arguments)) - EnableL7Proxy enables L7 proxy for L7 policy enforcement.<br />Default: true.
 - `enable_local_redirect_policy` - (Computed) - Bool - EnableLocalRedirectPolicy that enables pod traffic destined to an IP address and port/protocol<br />tuple or Kubernetes service to be redirected locally to backend pod(s) within a node, using eBPF.<br />https://docs.cilium.io/en/stable/network/kubernetes/local-redirect-policy/<br />Default: false.
 - `enable_bpf_masquerade` - (Computed) - Bool - EnableBPFMasquerade enables masquerading packets from endpoints leaving the host with BPF instead of iptables.<br />Default: false.
-- `enable_endpoint_health_checking` - (Computed) - Bool - EnableEndpointHealthChecking enables connectivity health checking between virtual endpoints.<br />Default: true.
+- `enable_endpoint_health_checking` - (Computed) - Bool([Nullable](#nullable-arguments)) - EnableEndpointHealthChecking enables connectivity health checking between virtual endpoints.<br />Default: true.
 - `enable_prometheus_metrics` - (Computed) - Bool - EnablePrometheusMetrics enables the Cilium "/metrics" endpoint for both the agent and the operator.
 - `enable_encryption` - (Computed) - Bool - EnableEncryption enables Cilium Encryption.<br />Default: false.
 - `encryption_type` - (Computed) - String - EncryptionType specifies Cilium Encryption method ("ipsec", "wireguard").<br />Default: ipsec.
@@ -1743,14 +1743,14 @@ The following arguments are supported:
 - `to_fqdns_dns_reject_response_code` - (Computed) - String - ToFQDNsDNSRejectResponseCode sets the DNS response code for rejecting DNS requests.<br />Possible values are "nameError" or "refused".<br />Default: refused.
 - `to_fqdns_enable_poller` - (Computed) - Bool - ToFQDNsEnablePoller replaces the DNS proxy-based implementation of FQDN policies<br />with the less powerful legacy implementation.<br />Default: false.
 - `ipam` - (Computed) - String - IPAM specifies the IP address allocation mode to use.<br />Possible values are "crd" and "eni".<br />"eni" will use AWS native networking for pods. Eni requires masquerade to be set to false.<br />"crd" will use CRDs for controlling IP address management.<br />"hostscope" will use hostscope IPAM mode.<br />"kubernetes" will use addersing based on node pod CIDR.<br />Default: "kubernetes".
-- `install_iptables_rules` - (Computed) - Bool - InstallIptablesRules enables installing the base IPTables rules used for masquerading and kube-proxy.<br />Default: true.
+- `install_iptables_rules` - (Computed) - Bool([Nullable](#nullable-arguments)) - InstallIptablesRules enables installing the base IPTables rules used for masquerading and kube-proxy.<br />Default: true.
 - `auto_direct_node_routes` - (Computed) - Bool - AutoDirectNodeRoutes adds automatic L2 routing between nodes.<br />Default: false.
 - `enable_host_reachable_services` - (Computed) - Bool - EnableHostReachableServices configures Cilium to enable services to be<br />reached from the host namespace in addition to pod namespaces.<br />https://docs.cilium.io/en/v1.9/gettingstarted/host-services/<br />Default: false.
 - `enable_node_port` - (Computed) - Bool - EnableNodePort replaces kube-proxy with Cilium's BPF implementation.<br />Requires spec.kubeProxy.enabled be set to false.<br />Default: false.
 - `etcd_managed` - (Computed) - Bool - EtcdManagd installs an additional etcd cluster that is used for Cilium state change.<br />The cluster is operated by cilium-etcd-operator.<br />Default: false.
 - `enable_remote_node_identity` - (Computed) - Bool - EnableRemoteNodeIdentity enables the remote-node-identity.<br />Default: true.
 - `enable_unreachable_routes` - (Computed) - Bool - EnableUnreachableRoutes enables unreachable routes on pod deletion.<br />Default: false.
-- `cni_exclusive` - (Computed) - Bool - CniExclusive configures whether to remove other CNI configuration files.<br />Default: true.
+- `cni_exclusive` - (Computed) - Bool([Nullable](#nullable-arguments)) - CniExclusive configures whether to remove other CNI configuration files.<br />Default: true.
 - `hubble` - (Computed) - [hubble_spec](#hubble_spec) - Hubble configures the Hubble service on the Cilium agent.
 - `disable_cnp_status_updates` - (Computed) - Bool - DisableCNPStatusUpdates determines if CNP NodeStatus updates will be sent to the Kubernetes api-server.
 - `enable_service_topology` - (Computed) - Bool - EnableServiceTopology determine if cilium should use topology aware hints.
@@ -1777,8 +1777,8 @@ CiliumIngressSpec configures Cilium Ingress settings.
 The following arguments are supported:
 
 - `enabled` - (Computed) - Bool - Enabled specifies whether Cilium Ingress is enabled.
-- `enforce_https` - (Computed) - Bool - EnforceHttps specifies whether HTTPS enforcement is enabled for Ingress traffic.<br />Default: true.
-- `enable_secrets_sync` - (Computed) - Bool - EnableSecretsSync specifies whether synchronization of secrets is enabled.<br />Default: true.
+- `enforce_https` - (Computed) - Bool([Nullable](#nullable-arguments)) - EnforceHttps specifies whether HTTPS enforcement is enabled for Ingress traffic.<br />Default: true.
+- `enable_secrets_sync` - (Computed) - Bool([Nullable](#nullable-arguments)) - EnableSecretsSync specifies whether synchronization of secrets is enabled.<br />Default: true.
 - `load_balancer_annotation_prefixes` - (Computed) - String - LoadBalancerAnnotationPrefixes specifies annotation prefixes for Load Balancer configuration.<br />Default: "service.beta.kubernetes.io service.kubernetes.io cloud.google.com".
 - `default_load_balancer_mode` - (Computed) - String - DefaultLoadBalancerMode specifies the default load balancer mode.<br />Possible values: 'shared' or 'dedicated'<br />Default: dedicated.
 - `shared_load_balancer_service_name` - (Computed) - String - SharedLoadBalancerServiceName specifies the name of the shared load balancer service.<br />Default: cilium-ingress.
@@ -1792,7 +1792,7 @@ CiliumGatewayAPISpec configures Cilium Gateway API settings.
 The following arguments are supported:
 
 - `enabled` - (Computed) - Bool - Enabled specifies whether Cilium Gateway API is enabled.
-- `enable_secrets_sync` - (Computed) - Bool - EnableSecretsSync specifies whether synchronization of secrets is enabled.<br />Default: true.
+- `enable_secrets_sync` - (Computed) - Bool([Nullable](#nullable-arguments)) - EnableSecretsSync specifies whether synchronization of secrets is enabled.<br />Default: true.
 
 ### lyft_vpc_networking_spec
 
@@ -2102,7 +2102,7 @@ The following arguments are supported:
 - `aws_use_static_instance_list` - (Computed) - Bool - AWSUseStaticInstanceList makes cluster autoscaler to use statically defined set of AWS EC2 Instance List.<br />Default: false.
 - `ignore_daemon_sets_utilization` - (Computed) - Bool - IgnoreDaemonSetsUtilization causes the cluster autoscaler to ignore DaemonSet-managed pods when calculating resource utilization for scaling down.<br />Default: false.
 - `scale_down_utilization_threshold` - (Computed) - String - ScaleDownUtilizationThreshold determines the utilization threshold for node scale-down.<br />Default: 0.5.
-- `skip_nodes_with_custom_controller_pods` - (Computed) - Bool - SkipNodesWithCustomControllerPods makes the cluster autoscaler skip scale-down of nodes with pods owned by custom controllers.<br />Default: true.
+- `skip_nodes_with_custom_controller_pods` - (Computed) - Bool([Nullable](#nullable-arguments)) - SkipNodesWithCustomControllerPods makes the cluster autoscaler skip scale-down of nodes with pods owned by custom controllers.<br />Default: true.
 - `skip_nodes_with_system_pods` - (Computed) - Bool - SkipNodesWithSystemPods makes the cluster autoscaler skip scale-down of nodes with non-DaemonSet pods in the kube-system namespace.<br />Default: true.
 - `skip_nodes_with_local_storage` - (Computed) - Bool - SkipNodesWithLocalStorage makes the cluster autoscaler skip scale-down of nodes with local storage.<br />Default: true.
 - `new_pod_scale_up_delay` - (Computed) - String - NewPodScaleUpDelay causes the cluster autoscaler to ignore unschedulable pods until they are a certain "age", regardless of the scan-interval<br />Default: 0s.
@@ -2115,7 +2115,7 @@ The following arguments are supported:
 - `cpu_request` - (Computed) - Quantity - CPURequest of cluster autoscaler container.<br />Default: 100m.
 - `max_node_provision_time` - (Computed) - String - MaxNodeProvisionTime determines how long CAS will wait for a node to join the cluster.
 - `pod_annotations` - (Computed) - Map(String) - PodAnnotations are the annotations added to cluster autoscaler pods when they are created.<br />Default: none.
-- `create_priority_expender_config` - (Computed) - Bool - CreatePriorityExpenderConfig makes kOps create the priority-expander ConfigMap<br />Default: true.
+- `create_priority_expender_config` - (Computed) - Bool([Nullable](#nullable-arguments)) - CreatePriorityExpenderConfig makes kOps create the priority-expander ConfigMap<br />Default: true.
 - `custom_priority_expander_config` - (Computed) - Map(List(String)) - CustomPriorityExpanderConfig overides the priority-expander ConfigMap with the provided configuration. Any InstanceGroup configuration will be ignored if this is set.<br />This could be useful in order to use regex on priorities configuration.
 
 ### service_account_issuer_discovery_config
