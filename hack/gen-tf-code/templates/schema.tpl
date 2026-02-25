@@ -345,7 +345,7 @@ func Expand{{ scope }}{{ .Name }}(in map[string]interface{}) {{ qualifiedName . 
 				return {{ template "expand" .Type }}
 			}(in[0].(map[string]interface{})["value"])
 		}
-		return nil
+		return {{ template "expand" .Type }}
 		{{- else -}}
 		return {{ template "expand" .Type }}
 		{{- end -}}

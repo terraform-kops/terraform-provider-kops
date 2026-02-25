@@ -99,7 +99,17 @@ func ExpandResourceMixedInstancesPolicySpec(in map[string]interface{}) kops.Mixe
 					}(in)
 				}(in[0].(map[string]interface{})["value"])
 			}
-			return nil
+			return func(in interface{}) *int64 {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in int64) *int64 {
+					return &in
+				}(int64(ExpandInt(in)))
+			}(in)
 		}(in["on_demand_base"]),
 		OnDemandAboveBase: func(in interface{}) *int64 {
 			if in == nil {
@@ -120,7 +130,17 @@ func ExpandResourceMixedInstancesPolicySpec(in map[string]interface{}) kops.Mixe
 					}(in)
 				}(in[0].(map[string]interface{})["value"])
 			}
-			return nil
+			return func(in interface{}) *int64 {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in int64) *int64 {
+					return &in
+				}(int64(ExpandInt(in)))
+			}(in)
 		}(in["on_demand_above_base"]),
 		SpotAllocationStrategy: func(in interface{}) *string {
 			if in == nil {

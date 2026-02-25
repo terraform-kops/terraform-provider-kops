@@ -76,7 +76,7 @@ func ResourceCluster() *schema.Resource {
 			"delete":                            OptionalStruct(ResourceDeleteOptions()),
 		},
 	}
-	res.SchemaVersion = 5
+	res.SchemaVersion = 6
 	res.StateUpgraders = []schema.StateUpgrader{
 		{
 			Type: res.CoreConfigSchema().ImpliedType(),
@@ -118,6 +118,14 @@ func ResourceCluster() *schema.Resource {
 				return ret, nil
 			},
 			Version: 4,
+		}, {
+			Type: res.CoreConfigSchema().ImpliedType(),
+			Upgrade: func(ctx context.Context, rawState map[string]interface{}, meta interface{}) (map[string]interface{}, error) {
+				ret := FlattenResourceCluster(ExpandResourceCluster(rawState))
+				ret["id"] = rawState["id"]
+				return ret, nil
+			},
+			Version: 5,
 		},
 	}
 	return res

@@ -443,7 +443,17 @@ func ExpandDataSourceKubeAPIServerConfig(in map[string]interface{}) kops.KubeAPI
 					}(in)
 				}(in[0].(map[string]interface{})["value"])
 			}
-			return nil
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
 		}(in["anonymous_auth"]),
 		KubeletPreferredAddressTypes: func(in interface{}) []string {
 			return func(in interface{}) []string {
@@ -855,7 +865,17 @@ func ExpandDataSourceKubeAPIServerConfig(in map[string]interface{}) kops.KubeAPI
 					}(in)
 				}(in[0].(map[string]interface{})["value"])
 			}
-			return nil
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
 		}(in["audit_webhook_batch_throttle_enable"]),
 		AuditWebhookBatchThrottleQps: func(in interface{}) *resource.Quantity {
 			if in == nil {

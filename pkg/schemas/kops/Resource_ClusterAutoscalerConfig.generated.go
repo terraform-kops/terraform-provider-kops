@@ -184,7 +184,17 @@ func ExpandResourceClusterAutoscalerConfig(in map[string]interface{}) kops.Clust
 					}(in)
 				}(in[0].(map[string]interface{})["value"])
 			}
-			return nil
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
 		}(in["skip_nodes_with_custom_controller_pods"]),
 		SkipNodesWithSystemPods: func(in interface{}) *bool {
 			return func(in interface{}) *bool {
@@ -403,7 +413,17 @@ func ExpandResourceClusterAutoscalerConfig(in map[string]interface{}) kops.Clust
 					}(in)
 				}(in[0].(map[string]interface{})["value"])
 			}
-			return nil
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
 		}(in["create_priority_expender_config"]),
 		CustomPriorityExpanderConfig: func(in interface{}) map[string][]string {
 			return func(in interface{}) map[string][]string {

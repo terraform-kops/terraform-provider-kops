@@ -47,7 +47,17 @@ func ExpandDataSourceDNSControllerGossipConfigSecondary(in map[string]interface{
 					}(in)
 				}(in[0].(map[string]interface{})["value"])
 			}
-			return nil
+			return func(in interface{}) *string {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in string) *string {
+					return &in
+				}(string(ExpandString(in)))
+			}(in)
 		}(in["protocol"]),
 		Listen: func(in interface{}) *string {
 			if in == nil {

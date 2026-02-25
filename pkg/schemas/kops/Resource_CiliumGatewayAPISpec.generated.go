@@ -64,7 +64,17 @@ func ExpandResourceCiliumGatewayAPISpec(in map[string]interface{}) kops.CiliumGa
 					}(in)
 				}(in[0].(map[string]interface{})["value"])
 			}
-			return nil
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
 		}(in["enable_secrets_sync"]),
 	}
 }

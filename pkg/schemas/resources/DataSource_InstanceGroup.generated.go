@@ -67,7 +67,7 @@ func DataSourceInstanceGroup() *schema.Resource {
 			"name":                           RequiredString(),
 		},
 	}
-	res.SchemaVersion = 2
+	res.SchemaVersion = 3
 	res.StateUpgraders = []schema.StateUpgrader{
 		{
 			Type: res.CoreConfigSchema().ImpliedType(),
@@ -85,6 +85,14 @@ func DataSourceInstanceGroup() *schema.Resource {
 				return ret, nil
 			},
 			Version: 1,
+		}, {
+			Type: res.CoreConfigSchema().ImpliedType(),
+			Upgrade: func(ctx context.Context, rawState map[string]interface{}, meta interface{}) (map[string]interface{}, error) {
+				ret := FlattenDataSourceInstanceGroup(ExpandDataSourceInstanceGroup(rawState))
+				ret["id"] = rawState["id"]
+				return ret, nil
+			},
+			Version: 2,
 		},
 	}
 	return res
