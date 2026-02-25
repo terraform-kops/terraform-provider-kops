@@ -17,12 +17,12 @@ func DataSourceNodeTerminationHandlerSpec() *schema.Resource {
 			"delete_sqs_msg_if_node_not_found":  ComputedBool(),
 			"enabled":                           ComputedBool(),
 			"enable_spot_interruption_draining": ComputedBool(),
-			"enable_scheduled_event_draining":   ComputedBool(),
+			"enable_scheduled_event_draining":   Nullable(ComputedBool()),
 			"enable_rebalance_monitoring":       ComputedBool(),
 			"enable_rebalance_draining":         ComputedBool(),
 			"enable_prometheus_metrics":         ComputedBool(),
-			"enable_sqs_termination_draining":   ComputedBool(),
-			"exclude_from_load_balancers":       ComputedBool(),
+			"enable_sqs_termination_draining":   Nullable(ComputedBool()),
+			"exclude_from_load_balancers":       Nullable(ComputedBool()),
 			"managed_asg_tag":                   ComputedString(),
 			"pod_termination_grace_period":      ComputedInt(),
 			"taint_node":                        ComputedBool(),
@@ -104,20 +104,22 @@ func ExpandDataSourceNodeTerminationHandlerSpec(in map[string]interface{}) kops.
 			if in == nil {
 				return nil
 			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
+			if in, ok := in.([]interface{}); ok && len(in) == 1 {
+				return func(in interface{}) *bool {
+					return func(in interface{}) *bool {
+						if in == nil {
+							return nil
+						}
+						if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+							return nil
+						}
+						return func(in bool) *bool {
+							return &in
+						}(bool(ExpandBool(in)))
+					}(in)
+				}(in[0].(map[string]interface{})["value"])
 			}
-			return func(in interface{}) *bool {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in bool) *bool {
-					return &in
-				}(bool(ExpandBool(in)))
-			}(in)
+			return nil
 		}(in["enable_scheduled_event_draining"]),
 		EnableRebalanceMonitoring: func(in interface{}) *bool {
 			if in == nil {
@@ -180,39 +182,43 @@ func ExpandDataSourceNodeTerminationHandlerSpec(in map[string]interface{}) kops.
 			if in == nil {
 				return nil
 			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
+			if in, ok := in.([]interface{}); ok && len(in) == 1 {
+				return func(in interface{}) *bool {
+					return func(in interface{}) *bool {
+						if in == nil {
+							return nil
+						}
+						if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+							return nil
+						}
+						return func(in bool) *bool {
+							return &in
+						}(bool(ExpandBool(in)))
+					}(in)
+				}(in[0].(map[string]interface{})["value"])
 			}
-			return func(in interface{}) *bool {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in bool) *bool {
-					return &in
-				}(bool(ExpandBool(in)))
-			}(in)
+			return nil
 		}(in["enable_sqs_termination_draining"]),
 		ExcludeFromLoadBalancers: func(in interface{}) *bool {
 			if in == nil {
 				return nil
 			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
+			if in, ok := in.([]interface{}); ok && len(in) == 1 {
+				return func(in interface{}) *bool {
+					return func(in interface{}) *bool {
+						if in == nil {
+							return nil
+						}
+						if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+							return nil
+						}
+						return func(in bool) *bool {
+							return &in
+						}(bool(ExpandBool(in)))
+					}(in)
+				}(in[0].(map[string]interface{})["value"])
 			}
-			return func(in interface{}) *bool {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in bool) *bool {
-					return &in
-				}(bool(ExpandBool(in)))
-			}(in)
+			return nil
 		}(in["exclude_from_load_balancers"]),
 		ManagedASGTag: func(in interface{}) *string {
 			if in == nil {
@@ -420,14 +426,17 @@ func FlattenDataSourceNodeTerminationHandlerSpecInto(in kops.NodeTerminationHand
 		}(in)
 	}(in.EnableSpotInterruptionDraining)
 	out["enable_scheduled_event_draining"] = func(in *bool) interface{} {
-		return func(in *bool) interface{} {
+		if in == nil {
+			return nil
+		}
+		return []interface{}{map[string]interface{}{"value": func(in *bool) interface{} {
 			if in == nil {
 				return nil
 			}
 			return func(in bool) interface{} {
 				return FlattenBool(bool(in))
 			}(*in)
-		}(in)
+		}(in)}}
 	}(in.EnableScheduledEventDraining)
 	out["enable_rebalance_monitoring"] = func(in *bool) interface{} {
 		return func(in *bool) interface{} {
@@ -460,24 +469,30 @@ func FlattenDataSourceNodeTerminationHandlerSpecInto(in kops.NodeTerminationHand
 		}(in)
 	}(in.EnablePrometheusMetrics)
 	out["enable_sqs_termination_draining"] = func(in *bool) interface{} {
-		return func(in *bool) interface{} {
+		if in == nil {
+			return nil
+		}
+		return []interface{}{map[string]interface{}{"value": func(in *bool) interface{} {
 			if in == nil {
 				return nil
 			}
 			return func(in bool) interface{} {
 				return FlattenBool(bool(in))
 			}(*in)
-		}(in)
+		}(in)}}
 	}(in.EnableSQSTerminationDraining)
 	out["exclude_from_load_balancers"] = func(in *bool) interface{} {
-		return func(in *bool) interface{} {
+		if in == nil {
+			return nil
+		}
+		return []interface{}{map[string]interface{}{"value": func(in *bool) interface{} {
 			if in == nil {
 				return nil
 			}
 			return func(in bool) interface{} {
 				return FlattenBool(bool(in))
 			}(*in)
-		}(in)
+		}(in)}}
 	}(in.ExcludeFromLoadBalancers)
 	out["managed_asg_tag"] = func(in *string) interface{} {
 		return func(in *string) interface{} {

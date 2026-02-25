@@ -24,10 +24,10 @@ func DataSourceCiliumNetworkingSpec() *schema.Resource {
 			"debug":                             ComputedBool(),
 			"disable_endpoint_crd":              ComputedBool(),
 			"enable_policy":                     ComputedString(),
-			"enable_l7_proxy":                   ComputedBool(),
+			"enable_l7_proxy":                   Nullable(ComputedBool()),
 			"enable_local_redirect_policy":      ComputedBool(),
 			"enable_bpf_masquerade":             ComputedBool(),
-			"enable_endpoint_health_checking":   ComputedBool(),
+			"enable_endpoint_health_checking":   Nullable(ComputedBool()),
 			"enable_prometheus_metrics":         ComputedBool(),
 			"enable_encryption":                 ComputedBool(),
 			"encryption_type":                   ComputedString(),
@@ -55,14 +55,14 @@ func DataSourceCiliumNetworkingSpec() *schema.Resource {
 			"to_fqdns_dns_reject_response_code": ComputedString(),
 			"to_fqdns_enable_poller":            ComputedBool(),
 			"ipam":                              ComputedString(),
-			"install_iptables_rules":            ComputedBool(),
+			"install_iptables_rules":            Nullable(ComputedBool()),
 			"auto_direct_node_routes":           ComputedBool(),
 			"enable_host_reachable_services":    ComputedBool(),
 			"enable_node_port":                  ComputedBool(),
 			"etcd_managed":                      ComputedBool(),
 			"enable_remote_node_identity":       ComputedBool(),
 			"enable_unreachable_routes":         ComputedBool(),
-			"cni_exclusive":                     ComputedBool(),
+			"cni_exclusive":                     Nullable(ComputedBool()),
 			"hubble":                            ComputedStruct(DataSourceHubbleSpec()),
 			"disable_cnp_status_updates":        ComputedBool(),
 			"enable_service_topology":           ComputedBool(),
@@ -154,20 +154,22 @@ func ExpandDataSourceCiliumNetworkingSpec(in map[string]interface{}) kops.Cilium
 			if in == nil {
 				return nil
 			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
+			if in, ok := in.([]interface{}); ok && len(in) == 1 {
+				return func(in interface{}) *bool {
+					return func(in interface{}) *bool {
+						if in == nil {
+							return nil
+						}
+						if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+							return nil
+						}
+						return func(in bool) *bool {
+							return &in
+						}(bool(ExpandBool(in)))
+					}(in)
+				}(in[0].(map[string]interface{})["value"])
 			}
-			return func(in interface{}) *bool {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in bool) *bool {
-					return &in
-				}(bool(ExpandBool(in)))
-			}(in)
+			return nil
 		}(in["enable_l7_proxy"]),
 		EnableLocalRedirectPolicy: func(in interface{}) *bool {
 			if in == nil {
@@ -211,20 +213,22 @@ func ExpandDataSourceCiliumNetworkingSpec(in map[string]interface{}) kops.Cilium
 			if in == nil {
 				return nil
 			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
+			if in, ok := in.([]interface{}); ok && len(in) == 1 {
+				return func(in interface{}) *bool {
+					return func(in interface{}) *bool {
+						if in == nil {
+							return nil
+						}
+						if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+							return nil
+						}
+						return func(in bool) *bool {
+							return &in
+						}(bool(ExpandBool(in)))
+					}(in)
+				}(in[0].(map[string]interface{})["value"])
 			}
-			return func(in interface{}) *bool {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in bool) *bool {
-					return &in
-				}(bool(ExpandBool(in)))
-			}(in)
+			return nil
 		}(in["enable_endpoint_health_checking"]),
 		EnablePrometheusMetrics: func(in interface{}) bool {
 			return bool(ExpandBool(in))
@@ -355,20 +359,22 @@ func ExpandDataSourceCiliumNetworkingSpec(in map[string]interface{}) kops.Cilium
 			if in == nil {
 				return nil
 			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
+			if in, ok := in.([]interface{}); ok && len(in) == 1 {
+				return func(in interface{}) *bool {
+					return func(in interface{}) *bool {
+						if in == nil {
+							return nil
+						}
+						if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+							return nil
+						}
+						return func(in bool) *bool {
+							return &in
+						}(bool(ExpandBool(in)))
+					}(in)
+				}(in[0].(map[string]interface{})["value"])
 			}
-			return func(in interface{}) *bool {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in bool) *bool {
-					return &in
-				}(bool(ExpandBool(in)))
-			}(in)
+			return nil
 		}(in["install_iptables_rules"]),
 		AutoDirectNodeRoutes: func(in interface{}) bool {
 			return bool(ExpandBool(in))
@@ -424,20 +430,22 @@ func ExpandDataSourceCiliumNetworkingSpec(in map[string]interface{}) kops.Cilium
 			if in == nil {
 				return nil
 			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
+			if in, ok := in.([]interface{}); ok && len(in) == 1 {
+				return func(in interface{}) *bool {
+					return func(in interface{}) *bool {
+						if in == nil {
+							return nil
+						}
+						if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+							return nil
+						}
+						return func(in bool) *bool {
+							return &in
+						}(bool(ExpandBool(in)))
+					}(in)
+				}(in[0].(map[string]interface{})["value"])
 			}
-			return func(in interface{}) *bool {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in bool) *bool {
-					return &in
-				}(bool(ExpandBool(in)))
-			}(in)
+			return nil
 		}(in["cni_exclusive"]),
 		Hubble: func(in interface{}) *kops.HubbleSpec {
 			return func(in interface{}) *kops.HubbleSpec {
@@ -570,14 +578,17 @@ func FlattenDataSourceCiliumNetworkingSpecInto(in kops.CiliumNetworkingSpec, out
 		return FlattenString(string(in))
 	}(in.EnablePolicy)
 	out["enable_l7_proxy"] = func(in *bool) interface{} {
-		return func(in *bool) interface{} {
+		if in == nil {
+			return nil
+		}
+		return []interface{}{map[string]interface{}{"value": func(in *bool) interface{} {
 			if in == nil {
 				return nil
 			}
 			return func(in bool) interface{} {
 				return FlattenBool(bool(in))
 			}(*in)
-		}(in)
+		}(in)}}
 	}(in.EnableL7Proxy)
 	out["enable_local_redirect_policy"] = func(in *bool) interface{} {
 		return func(in *bool) interface{} {
@@ -600,14 +611,17 @@ func FlattenDataSourceCiliumNetworkingSpecInto(in kops.CiliumNetworkingSpec, out
 		}(in)
 	}(in.EnableBPFMasquerade)
 	out["enable_endpoint_health_checking"] = func(in *bool) interface{} {
-		return func(in *bool) interface{} {
+		if in == nil {
+			return nil
+		}
+		return []interface{}{map[string]interface{}{"value": func(in *bool) interface{} {
 			if in == nil {
 				return nil
 			}
 			return func(in bool) interface{} {
 				return FlattenBool(bool(in))
 			}(*in)
-		}(in)
+		}(in)}}
 	}(in.EnableEndpointHealthChecking)
 	out["enable_prometheus_metrics"] = func(in bool) interface{} {
 		return FlattenBool(bool(in))
@@ -716,14 +730,17 @@ func FlattenDataSourceCiliumNetworkingSpecInto(in kops.CiliumNetworkingSpec, out
 		return FlattenString(string(in))
 	}(in.IPAM)
 	out["install_iptables_rules"] = func(in *bool) interface{} {
-		return func(in *bool) interface{} {
+		if in == nil {
+			return nil
+		}
+		return []interface{}{map[string]interface{}{"value": func(in *bool) interface{} {
 			if in == nil {
 				return nil
 			}
 			return func(in bool) interface{} {
 				return FlattenBool(bool(in))
 			}(*in)
-		}(in)
+		}(in)}}
 	}(in.InstallIptablesRules)
 	out["auto_direct_node_routes"] = func(in bool) interface{} {
 		return FlattenBool(bool(in))
@@ -758,14 +775,17 @@ func FlattenDataSourceCiliumNetworkingSpecInto(in kops.CiliumNetworkingSpec, out
 		}(in)
 	}(in.EnableUnreachableRoutes)
 	out["cni_exclusive"] = func(in *bool) interface{} {
-		return func(in *bool) interface{} {
+		if in == nil {
+			return nil
+		}
+		return []interface{}{map[string]interface{}{"value": func(in *bool) interface{} {
 			if in == nil {
 				return nil
 			}
 			return func(in bool) interface{} {
 				return FlattenBool(bool(in))
 			}(*in)
-		}(in)
+		}(in)}}
 	}(in.CniExclusive)
 	out["hubble"] = func(in *kops.HubbleSpec) interface{} {
 		return func(in *kops.HubbleSpec) interface{} {

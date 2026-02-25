@@ -55,7 +55,7 @@ func optionFuncs(dataSource bool, optionsMap map[reflect.Type]*options, parser *
 			return req
 		}
 		// attempt to detect invalid config
-		if !dataSource {
+		if !dataSource && !optionsMap[in.Owner].nullable.Has(in.Name) {
 			pkg := in.Owner.PkgPath()
 			str := in.Owner.Name()
 			fld := in.Name

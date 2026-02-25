@@ -22,7 +22,7 @@ func DataSourceClusterAutoscalerConfig() *schema.Resource {
 			"aws_use_static_instance_list":           ComputedBool(),
 			"ignore_daemon_sets_utilization":         ComputedBool(),
 			"scale_down_utilization_threshold":       ComputedString(),
-			"skip_nodes_with_custom_controller_pods": ComputedBool(),
+			"skip_nodes_with_custom_controller_pods": Nullable(ComputedBool()),
 			"skip_nodes_with_system_pods":            ComputedBool(),
 			"skip_nodes_with_local_storage":          ComputedBool(),
 			"new_pod_scale_up_delay":                 ComputedString(),
@@ -35,7 +35,7 @@ func DataSourceClusterAutoscalerConfig() *schema.Resource {
 			"cpu_request":                            ComputedQuantity(),
 			"max_node_provision_time":                ComputedString(),
 			"pod_annotations":                        ComputedMap(String()),
-			"create_priority_expender_config":        ComputedBool(),
+			"create_priority_expender_config":        Nullable(ComputedBool()),
 			"custom_priority_expander_config":        ComputedComplexMap(List(String())),
 		},
 	}
@@ -169,20 +169,22 @@ func ExpandDataSourceClusterAutoscalerConfig(in map[string]interface{}) kops.Clu
 			if in == nil {
 				return nil
 			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
+			if in, ok := in.([]interface{}); ok && len(in) == 1 {
+				return func(in interface{}) *bool {
+					return func(in interface{}) *bool {
+						if in == nil {
+							return nil
+						}
+						if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+							return nil
+						}
+						return func(in bool) *bool {
+							return &in
+						}(bool(ExpandBool(in)))
+					}(in)
+				}(in[0].(map[string]interface{})["value"])
 			}
-			return func(in interface{}) *bool {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in bool) *bool {
-					return &in
-				}(bool(ExpandBool(in)))
-			}(in)
+			return nil
 		}(in["skip_nodes_with_custom_controller_pods"]),
 		SkipNodesWithSystemPods: func(in interface{}) *bool {
 			if in == nil {
@@ -398,20 +400,22 @@ func ExpandDataSourceClusterAutoscalerConfig(in map[string]interface{}) kops.Clu
 			if in == nil {
 				return nil
 			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
+			if in, ok := in.([]interface{}); ok && len(in) == 1 {
+				return func(in interface{}) *bool {
+					return func(in interface{}) *bool {
+						if in == nil {
+							return nil
+						}
+						if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+							return nil
+						}
+						return func(in bool) *bool {
+							return &in
+						}(bool(ExpandBool(in)))
+					}(in)
+				}(in[0].(map[string]interface{})["value"])
 			}
-			return func(in interface{}) *bool {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in bool) *bool {
-					return &in
-				}(bool(ExpandBool(in)))
-			}(in)
+			return nil
 		}(in["create_priority_expender_config"]),
 		CustomPriorityExpanderConfig: func(in interface{}) map[string][]string {
 			return func(in interface{}) map[string][]string {
@@ -513,14 +517,17 @@ func FlattenDataSourceClusterAutoscalerConfigInto(in kops.ClusterAutoscalerConfi
 		}(in)
 	}(in.ScaleDownUtilizationThreshold)
 	out["skip_nodes_with_custom_controller_pods"] = func(in *bool) interface{} {
-		return func(in *bool) interface{} {
+		if in == nil {
+			return nil
+		}
+		return []interface{}{map[string]interface{}{"value": func(in *bool) interface{} {
 			if in == nil {
 				return nil
 			}
 			return func(in bool) interface{} {
 				return FlattenBool(bool(in))
 			}(*in)
-		}(in)
+		}(in)}}
 	}(in.SkipNodesWithCustomControllerPods)
 	out["skip_nodes_with_system_pods"] = func(in *bool) interface{} {
 		return func(in *bool) interface{} {
@@ -638,14 +645,17 @@ func FlattenDataSourceClusterAutoscalerConfigInto(in kops.ClusterAutoscalerConfi
 		}(in)
 	}(in.PodAnnotations)
 	out["create_priority_expender_config"] = func(in *bool) interface{} {
-		return func(in *bool) interface{} {
+		if in == nil {
+			return nil
+		}
+		return []interface{}{map[string]interface{}{"value": func(in *bool) interface{} {
 			if in == nil {
 				return nil
 			}
 			return func(in bool) interface{} {
 				return FlattenBool(bool(in))
 			}(*in)
-		}(in)
+		}(in)}}
 	}(in.CreatePriorityExpenderConfig)
 	out["custom_priority_expander_config"] = func(in map[string][]string) interface{} {
 		return func(in map[string][]string) []interface{} {

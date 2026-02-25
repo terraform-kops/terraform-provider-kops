@@ -14,8 +14,8 @@ func DataSourceCiliumIngressSpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"enabled":                           ComputedBool(),
-			"enforce_https":                     ComputedBool(),
-			"enable_secrets_sync":               ComputedBool(),
+			"enforce_https":                     Nullable(ComputedBool()),
+			"enable_secrets_sync":               Nullable(ComputedBool()),
 			"load_balancer_annotation_prefixes": ComputedString(),
 			"default_load_balancer_mode":        ComputedString(),
 			"shared_load_balancer_service_name": ComputedString(),
@@ -53,39 +53,43 @@ func ExpandDataSourceCiliumIngressSpec(in map[string]interface{}) kops.CiliumIng
 			if in == nil {
 				return nil
 			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
+			if in, ok := in.([]interface{}); ok && len(in) == 1 {
+				return func(in interface{}) *bool {
+					return func(in interface{}) *bool {
+						if in == nil {
+							return nil
+						}
+						if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+							return nil
+						}
+						return func(in bool) *bool {
+							return &in
+						}(bool(ExpandBool(in)))
+					}(in)
+				}(in[0].(map[string]interface{})["value"])
 			}
-			return func(in interface{}) *bool {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in bool) *bool {
-					return &in
-				}(bool(ExpandBool(in)))
-			}(in)
+			return nil
 		}(in["enforce_https"]),
 		EnableSecretsSync: func(in interface{}) *bool {
 			if in == nil {
 				return nil
 			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
+			if in, ok := in.([]interface{}); ok && len(in) == 1 {
+				return func(in interface{}) *bool {
+					return func(in interface{}) *bool {
+						if in == nil {
+							return nil
+						}
+						if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+							return nil
+						}
+						return func(in bool) *bool {
+							return &in
+						}(bool(ExpandBool(in)))
+					}(in)
+				}(in[0].(map[string]interface{})["value"])
 			}
-			return func(in interface{}) *bool {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in bool) *bool {
-					return &in
-				}(bool(ExpandBool(in)))
-			}(in)
+			return nil
 		}(in["enable_secrets_sync"]),
 		LoadBalancerAnnotationPrefixes: func(in interface{}) string {
 			return string(ExpandString(in))
@@ -111,24 +115,30 @@ func FlattenDataSourceCiliumIngressSpecInto(in kops.CiliumIngressSpec, out map[s
 		}(in)
 	}(in.Enabled)
 	out["enforce_https"] = func(in *bool) interface{} {
-		return func(in *bool) interface{} {
+		if in == nil {
+			return nil
+		}
+		return []interface{}{map[string]interface{}{"value": func(in *bool) interface{} {
 			if in == nil {
 				return nil
 			}
 			return func(in bool) interface{} {
 				return FlattenBool(bool(in))
 			}(*in)
-		}(in)
+		}(in)}}
 	}(in.EnforceHttps)
 	out["enable_secrets_sync"] = func(in *bool) interface{} {
-		return func(in *bool) interface{} {
+		if in == nil {
+			return nil
+		}
+		return []interface{}{map[string]interface{}{"value": func(in *bool) interface{} {
 			if in == nil {
 				return nil
 			}
 			return func(in bool) interface{} {
 				return FlattenBool(bool(in))
 			}(*in)
-		}(in)
+		}(in)}}
 	}(in.EnableSecretsSync)
 	out["load_balancer_annotation_prefixes"] = func(in string) interface{} {
 		return FlattenString(string(in))
