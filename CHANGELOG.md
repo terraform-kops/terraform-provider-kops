@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.35.0](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.34.5...v1.35.0) - 2026-02-27
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.291.0 to 1.292.0 in the aws-sdk group by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/411
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.292.0 to 1.293.0 in the aws-sdk group by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/413
+
 ## [v1.34.5](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.34.4...v1.34.5) - 2026-02-25
 - fix: add state migration for nullable fields by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/409
 
