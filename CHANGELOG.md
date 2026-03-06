@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.35.0](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.34.5...v1.35.0) - 2026-03-06
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.291.0 to 1.292.0 in the aws-sdk group by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/411
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.292.0 to 1.293.0 in the aws-sdk group by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/413
+- chore(deps): bump github.com/hashicorp/terraform-plugin-sdk/v2 from 2.38.2 to 2.39.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/414
+- chore(deps): bump crazy-max/ghaction-import-gpg from 6 to 7 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/415
+- chore(deps): bump the aws-sdk group with 4 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/416
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.293.1 to 1.294.0 in the aws-sdk group by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/417
+
 ## [v1.34.5](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.34.4...v1.34.5) - 2026-02-25
 - fix: add state migration for nullable fields by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/409
 
