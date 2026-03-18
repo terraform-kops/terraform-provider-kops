@@ -13,9 +13,11 @@ var _ = Schema
 func DataSourceWarmPoolSpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"min_size":              ComputedInt(),
-			"max_size":              ComputedInt(),
-			"enable_lifecycle_hook": ComputedBool(),
+			"min_size":               ComputedInt(),
+			"max_size":               ComputedInt(),
+			"enable_lifecycle_hook":  ComputedBool(),
+			"lifecycle_hook_timeout": ComputedInt(),
+			"additional_images":      ComputedList(String()),
 		},
 	}
 
@@ -52,6 +54,37 @@ func ExpandDataSourceWarmPoolSpec(in map[string]interface{}) kops.WarmPoolSpec {
 		EnableLifecycleHook: func(in interface{}) bool {
 			return bool(ExpandBool(in))
 		}(in["enable_lifecycle_hook"]),
+		LifecycleHookTimeout: func(in interface{}) *int32 {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *int32 {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in int32) *int32 {
+					return &in
+				}(int32(ExpandInt(in)))
+			}(in)
+		}(in["lifecycle_hook_timeout"]),
+		AdditionalImages: func(in interface{}) []string {
+			return func(in interface{}) []string {
+				if in == nil {
+					return nil
+				}
+				var out []string
+				for _, in := range in.([]interface{}) {
+					out = append(out, string(ExpandString(in)))
+				}
+				return out
+			}(in)
+		}(in["additional_images"]),
 	}
 }
 
@@ -72,6 +105,25 @@ func FlattenDataSourceWarmPoolSpecInto(in kops.WarmPoolSpec, out map[string]inte
 	out["enable_lifecycle_hook"] = func(in bool) interface{} {
 		return FlattenBool(bool(in))
 	}(in.EnableLifecycleHook)
+	out["lifecycle_hook_timeout"] = func(in *int32) interface{} {
+		return func(in *int32) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in int32) interface{} {
+				return FlattenInt(int(in))
+			}(*in)
+		}(in)
+	}(in.LifecycleHookTimeout)
+	out["additional_images"] = func(in []string) interface{} {
+		return func(in []string) []interface{} {
+			var out []interface{}
+			for _, in := range in {
+				out = append(out, FlattenString(string(in)))
+			}
+			return out
+		}(in)
+	}(in.AdditionalImages)
 }
 
 func FlattenDataSourceWarmPoolSpec(in kops.WarmPoolSpec) map[string]interface{} {

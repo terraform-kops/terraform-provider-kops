@@ -22,6 +22,7 @@ func TestExpandResourceServiceAccountIssuerDiscoveryConfig(t *testing.T) {
 			args: args{
 				in: map[string]interface{}{
 					"discovery_store":          "",
+					"discovery_service":        nil,
 					"enable_aws_oidc_provider": false,
 					"additional_audiences":     func() []interface{} { return nil }(),
 				},
@@ -42,6 +43,7 @@ func TestExpandResourceServiceAccountIssuerDiscoveryConfig(t *testing.T) {
 func TestFlattenResourceServiceAccountIssuerDiscoveryConfigInto(t *testing.T) {
 	_default := map[string]interface{}{
 		"discovery_store":          "",
+		"discovery_service":        nil,
 		"enable_aws_oidc_provider": false,
 		"additional_audiences":     func() []interface{} { return nil }(),
 	}
@@ -66,6 +68,17 @@ func TestFlattenResourceServiceAccountIssuerDiscoveryConfigInto(t *testing.T) {
 				in: func() kops.ServiceAccountIssuerDiscoveryConfig {
 					subject := kops.ServiceAccountIssuerDiscoveryConfig{}
 					subject.DiscoveryStore = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "DiscoveryService - default",
+			args: args{
+				in: func() kops.ServiceAccountIssuerDiscoveryConfig {
+					subject := kops.ServiceAccountIssuerDiscoveryConfig{}
+					subject.DiscoveryService = nil
 					return subject
 				}(),
 			},
@@ -108,6 +121,7 @@ func TestFlattenResourceServiceAccountIssuerDiscoveryConfigInto(t *testing.T) {
 func TestFlattenResourceServiceAccountIssuerDiscoveryConfig(t *testing.T) {
 	_default := map[string]interface{}{
 		"discovery_store":          "",
+		"discovery_service":        nil,
 		"enable_aws_oidc_provider": false,
 		"additional_audiences":     func() []interface{} { return nil }(),
 	}
@@ -132,6 +146,17 @@ func TestFlattenResourceServiceAccountIssuerDiscoveryConfig(t *testing.T) {
 				in: func() kops.ServiceAccountIssuerDiscoveryConfig {
 					subject := kops.ServiceAccountIssuerDiscoveryConfig{}
 					subject.DiscoveryStore = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "DiscoveryService - default",
+			args: args{
+				in: func() kops.ServiceAccountIssuerDiscoveryConfig {
+					subject := kops.ServiceAccountIssuerDiscoveryConfig{}
+					subject.DiscoveryService = nil
 					return subject
 				}(),
 			},

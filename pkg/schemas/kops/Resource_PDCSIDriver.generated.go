@@ -13,7 +13,9 @@ var _ = Schema
 func ResourcePDCSIDriver() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"enabled": OptionalBool(),
+			"enabled":                    OptionalBool(),
+			"version":                    OptionalString(),
+			"default_storage_class_name": OptionalString(),
 		},
 	}
 
@@ -44,6 +46,44 @@ func ExpandResourcePDCSIDriver(in map[string]interface{}) kops.PDCSIDriver {
 				}(bool(ExpandBool(in)))
 			}(in)
 		}(in["enabled"]),
+		Version: func(in interface{}) *string {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *string {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in string) *string {
+					return &in
+				}(string(ExpandString(in)))
+			}(in)
+		}(in["version"]),
+		DefaultStorageClassName: func(in interface{}) *string {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *string {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in string) *string {
+					return &in
+				}(string(ExpandString(in)))
+			}(in)
+		}(in["default_storage_class_name"]),
 	}
 }
 
@@ -58,6 +98,26 @@ func FlattenResourcePDCSIDriverInto(in kops.PDCSIDriver, out map[string]interfac
 			}(*in)
 		}(in)
 	}(in.Enabled)
+	out["version"] = func(in *string) interface{} {
+		return func(in *string) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in string) interface{} {
+				return FlattenString(string(in))
+			}(*in)
+		}(in)
+	}(in.Version)
+	out["default_storage_class_name"] = func(in *string) interface{} {
+		return func(in *string) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in string) interface{} {
+				return FlattenString(string(in))
+			}(*in)
+		}(in)
+	}(in.DefaultStorageClassName)
 }
 
 func FlattenResourcePDCSIDriver(in kops.PDCSIDriver) map[string]interface{} {

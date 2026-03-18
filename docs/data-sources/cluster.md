@@ -251,6 +251,8 @@ The following arguments are supported:
 - `min_size` - (Computed) - Int - MinSize is the minimum size of the warm pool.
 - `max_size` - (Computed) - Int - MaxSize is the maximum size of the warm pool. The desired size of the instance group<br />is subtracted from this number to determine the desired size of the warm pool<br />(unless the resulting number is smaller than MinSize).<br />The default is the instance group's MaxSize.
 - `enable_lifecycle_hook` - (Computed) - Bool - EnableLifecyleHook determines if an ASG lifecycle hook will be added ensuring that nodeup runs to completion.<br />Note that the metadata API must be protected from arbitrary Pods when this is enabled.
+- `lifecycle_hook_timeout` - (Computed) - Int - LifecycleHookTimeout is the timeout for the ASG lifecycle hook in seconds.
+- `additional_images` - (Computed) - List(String) - AdditionalImages is a list of additional container images to pull into the warm pool instances.
 
 ### azure_spec
 
@@ -300,6 +302,8 @@ PDCSIDriver is the config for the GCP PD CSI driver.
 The following arguments are supported:
 
 - `enabled` - (Computed) - Bool - Enabled enables the GCP PD CSI driver.
+- `version` - (Computed) - String - Version is the container image tag used.<br />Default: The latest stable release which is compatible with your Kubernetes version.
+- `default_storage_class_name` - (Computed) - String - Default StorageClassName is the name of the default StorageClass created for GCP PD CSI driver.
 
 ### hetzner_spec
 
@@ -629,6 +633,7 @@ The following arguments are supported:
 - `use_ecr_credentials_for_mirrors` - (Computed) - Bool - Enables Kubelet ECR Credential helper to pass credentials to containerd mirrors, to use ECR as a pull-through cache.
 - `install_cri_ctl` - (Computed) - Bool - InstallCriCtl installs crictl (default "false").
 - `install_nerd_ctl` - (Computed) - Bool - InstallNerdCtl installs nerdctl (default "false").
+- `sandbox_image` - (Computed) - String - SandboxImage is the image used for the sandbox container.
 
 ### nvidia_gpu_config
 
@@ -705,7 +710,7 @@ The pod this Toleration is attached to tolerates any taint that matches<br />the
 The following arguments are supported:
 
 - `key` - (Computed) - String - Key is the taint key that the toleration applies to. Empty means match all taint keys.<br />If the key is empty, operator must be Exists; this combination means to match all values and all keys.<br />+optional.
-- `operator` - (Computed) - String - Operator represents a key's relationship to the value.<br />Valid operators are Exists and Equal. Defaults to Equal.<br />Exists is equivalent to wildcard for value, so that a pod can<br />tolerate all taints of a particular category.<br />+optional.
+- `operator` - (Computed) - String - Operator represents a key's relationship to the value.<br />Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.<br />Exists is equivalent to wildcard for value, so that a pod can<br />tolerate all taints of a particular category.<br />Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).<br />+optional.
 - `value` - (Computed) - String - Value is the taint value the toleration matches to.<br />If the operator is Exists, the value should be empty, otherwise just a regular string.<br />+optional.
 - `effect` - (Computed) - String - Effect indicates the taint effect to match. Empty means match all taint effects.<br />When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.<br />+optional.
 - `toleration_seconds` - (Computed) - Int - TolerationSeconds represents the period of time the toleration (which must be<br />of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,<br />it is not set, which means tolerate the taint forever (do not evict). Zero and<br />negative values will be treated as 0 (evict immediately) by the system.<br />+optional.
@@ -982,6 +987,7 @@ The following arguments are supported:
 - `cors_allowed_origins` - (Computed) - List(String) - CorsAllowedOrigins is a list of origins for CORS. An allowed origin can be a regular<br />expression to support subdomain matching. If this list is empty CORS will not be enabled.
 - `default_not_ready_toleration_seconds` - (Computed) - Int - DefaultNotReadyTolerationSeconds indicates the tolerationSeconds of the toleration for notReady:NoExecute that is added by default to every pod that does not already have such a toleration.
 - `default_unreachable_toleration_seconds` - (Computed) - Int - DefaultUnreachableTolerationSeconds indicates the tolerationSeconds of the toleration for unreachable:NoExecute that is added by default to every pod that does not already have such a toleration.
+- `delete_collection_workers` - (Computed) - Int - DeleteCollectionWorkers indicates the number of workers spawned for DeleteCollection call. These are used to speed up namespace cleanup.
 - `env` - (Computed) - List([env_var](#env_var)) - Env allows users to pass in env variables to the apiserver container.<br />This can be useful to control some environment runtime settings, such as GOMEMLIMIT and GOCG to tweak the memory settings of the apiserver<br />This also allows the flexibility for adding any other variables for future use cases.
 
 ### env_var
@@ -1267,7 +1273,7 @@ The following arguments are supported:
 - `log_level` - (Computed) - Int - LogLevel is the logging level of the kubelet.
 - `pod_manifest_path` - (Computed) - String - config is the path to the config file or directory of files.
 - `hostname_override` - (Computed) - String - HostnameOverride is the hostname used to identify the kubelet instead of the actual hostname.
-- `pod_infra_container_image` - (Computed) - String - PodInfraContainerImage is the image whose network/ipc containers in each pod will use.
+- `pod_infra_container_image` - (Computed) - String - PodInfraContainerImage is the image whose network/ipc containers in each pod will use.<br />DEPRECATED: Image garbage collector will get sandbox image information from CRI.
 - `seccomp_default` - (Computed) - Bool - SeccompDefault enables the use of `RuntimeDefault` as the default seccomp profile for all workloads.
 - `seccomp_profile_root` - (Computed) - String - SeccompProfileRoot is the directory path for seccomp profiles.
 - `allow_privileged` - (Computed) - Bool - AllowPrivileged enables containers to request privileged mode (defaults to false).
@@ -1299,6 +1305,7 @@ The following arguments are supported:
 - `network_plugin_mtu` - (Computed) - Int - NetworkPluginMTU is the MTU to be passed to the network plugin,<br />and overrides the default MTU for cases where it cannot be automatically<br />computed (such as IPSEC).
 - `image_minimum_gc_age` - (Computed) - Duration - imageMinimumGCAge is the minimum age for an unused image before it is garbage collected. Default: "2m".
 - `image_maximum_gc_age` - (Computed) - Duration - imageMaximumGCAge is the maximum age an image can be unused before it is garbage collected.<br />The default of this field is "0s", which disables this field--meaning images won't be garbage<br />collected based on being unused for too long. Default: "0s" (disabled).
+- `max_parallel_image_pulls` - (Computed) - Int - MaxParallelImagePulls sets the maximum number of image pulls in parallel.<br />This field cannot be set if SerializeImagePulls is true.<br />Setting it to nil means no limit.<br />Default: nil.
 - `image_gc_high_threshold_percent` - (Computed) - Int - ImageGCHighThresholdPercent is the percent of disk usage after which<br />image garbage collection is always run.
 - `image_gc_low_threshold_percent` - (Computed) - Int - ImageGCLowThresholdPercent is the percent of disk usage before which<br />image garbage collection is never run. Lowest disk usage to garbage<br />collect to.
 - `image_pull_progress_deadline` - (Computed) - Duration - ImagePullProgressDeadline is the timeout for image pulls<br />If no pulling progress is made before this deadline, the image pulling will be cancelled. (default 1m0s).
@@ -1347,6 +1354,7 @@ The following arguments are supported:
 - `shutdown_grace_period` - (Computed) - Duration - ShutdownGracePeriod specifies the total duration that the node should delay the shutdown by.<br />Default: 30s.
 - `shutdown_grace_period_critical_pods` - (Computed) - Duration - ShutdownGracePeriodCriticalPods specifies the duration used to terminate critical pods during a node shutdown.<br />Default: 10s.
 - `memory_swap_behavior` - (Computed) - String - MemorySwapBehavior defines how swap is used by container workloads.<br />Supported values: LimitedSwap, "UnlimitedSwap.
+- `crash_loop_back_off_max_container_restart_period` - (Computed) - Duration - CrashLoopBackOffMaxContainerRestartPeriod is the maximum duration the backoff delay can accrue to for container restarts, minimum 1 second, maximum 300 seconds. If not set, defaults to the internal crashloopbackoff maximum (300s).
 
 ### cloud_configuration
 
@@ -2127,8 +2135,19 @@ ServiceAccountIssuerDiscoveryConfig configures an OIDC Issuer.
 The following arguments are supported:
 
 - `discovery_store` - (Computed) - String - DiscoveryStore is the VFS path to where OIDC Issuer Discovery metadata is stored.
+- `discovery_service` - (Computed) - [discovery_service_options](#discovery_service_options) - DiscoveryService configures discovery using a hosted discovery service.
 - `enable_aws_oidc_provider` - (Computed) - Bool - EnableAWSOIDCProvider will provision an AWS OIDC provider that trusts the ServiceAccount Issuer.
 - `additional_audiences` - (Computed) - List(String) - AdditionalAudiences adds user defined audiences to the provisioned AWS OIDC provider.
+
+### discovery_service_options
+
+DiscoveryServiceOptions configures a hosted discovery service.<br />We leave open the possibility of configurable certificates etc in future.
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `url` - (Computed) - String - URL is the base URL of the discovery service, including universe ID if applicable.
 
 ### snapshot_controller_config
 

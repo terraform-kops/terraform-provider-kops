@@ -21,9 +21,11 @@ func TestExpandDataSourceWarmPoolSpec(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
-					"min_size":              0,
-					"max_size":              nil,
-					"enable_lifecycle_hook": false,
+					"min_size":               0,
+					"max_size":               nil,
+					"enable_lifecycle_hook":  false,
+					"lifecycle_hook_timeout": nil,
+					"additional_images":      func() []interface{} { return nil }(),
 				},
 			},
 			want: _default,
@@ -41,9 +43,11 @@ func TestExpandDataSourceWarmPoolSpec(t *testing.T) {
 
 func TestFlattenDataSourceWarmPoolSpecInto(t *testing.T) {
 	_default := map[string]interface{}{
-		"min_size":              0,
-		"max_size":              nil,
-		"enable_lifecycle_hook": false,
+		"min_size":               0,
+		"max_size":               nil,
+		"enable_lifecycle_hook":  false,
+		"lifecycle_hook_timeout": nil,
+		"additional_images":      func() []interface{} { return nil }(),
 	}
 	type args struct {
 		in kops.WarmPoolSpec
@@ -88,6 +92,28 @@ func TestFlattenDataSourceWarmPoolSpecInto(t *testing.T) {
 				in: func() kops.WarmPoolSpec {
 					subject := kops.WarmPoolSpec{}
 					subject.EnableLifecycleHook = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "LifecycleHookTimeout - default",
+			args: args{
+				in: func() kops.WarmPoolSpec {
+					subject := kops.WarmPoolSpec{}
+					subject.LifecycleHookTimeout = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "AdditionalImages - default",
+			args: args{
+				in: func() kops.WarmPoolSpec {
+					subject := kops.WarmPoolSpec{}
+					subject.AdditionalImages = nil
 					return subject
 				}(),
 			},
@@ -107,9 +133,11 @@ func TestFlattenDataSourceWarmPoolSpecInto(t *testing.T) {
 
 func TestFlattenDataSourceWarmPoolSpec(t *testing.T) {
 	_default := map[string]interface{}{
-		"min_size":              0,
-		"max_size":              nil,
-		"enable_lifecycle_hook": false,
+		"min_size":               0,
+		"max_size":               nil,
+		"enable_lifecycle_hook":  false,
+		"lifecycle_hook_timeout": nil,
+		"additional_images":      func() []interface{} { return nil }(),
 	}
 	type args struct {
 		in kops.WarmPoolSpec
@@ -154,6 +182,28 @@ func TestFlattenDataSourceWarmPoolSpec(t *testing.T) {
 				in: func() kops.WarmPoolSpec {
 					subject := kops.WarmPoolSpec{}
 					subject.EnableLifecycleHook = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "LifecycleHookTimeout - default",
+			args: args{
+				in: func() kops.WarmPoolSpec {
+					subject := kops.WarmPoolSpec{}
+					subject.LifecycleHookTimeout = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "AdditionalImages - default",
+			args: args{
+				in: func() kops.WarmPoolSpec {
+					subject := kops.WarmPoolSpec{}
+					subject.AdditionalImages = nil
 					return subject
 				}(),
 			},

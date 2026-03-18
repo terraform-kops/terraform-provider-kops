@@ -12,6 +12,7 @@ func ResourceServiceAccountIssuerDiscoveryConfig() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"discovery_store":          OptionalString(),
+			"discovery_service":        OptionalStruct(ResourceDiscoveryServiceOptions()),
 			"enable_aws_oidc_provider": OptionalBool(),
 			"additional_audiences":     OptionalList(String()),
 		},
@@ -28,6 +29,24 @@ func ExpandResourceServiceAccountIssuerDiscoveryConfig(in map[string]interface{}
 		DiscoveryStore: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["discovery_store"]),
+		DiscoveryService: func(in interface{}) *kops.DiscoveryServiceOptions {
+			return func(in interface{}) *kops.DiscoveryServiceOptions {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in kops.DiscoveryServiceOptions) *kops.DiscoveryServiceOptions {
+					return &in
+				}(func(in interface{}) kops.DiscoveryServiceOptions {
+					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+						return ExpandResourceDiscoveryServiceOptions(in[0].(map[string]interface{}))
+					}
+					return kops.DiscoveryServiceOptions{}
+				}(in))
+			}(in)
+		}(in["discovery_service"]),
 		EnableAWSOIDCProvider: func(in interface{}) bool {
 			return bool(ExpandBool(in))
 		}(in["enable_aws_oidc_provider"]),
@@ -50,6 +69,18 @@ func FlattenResourceServiceAccountIssuerDiscoveryConfigInto(in kops.ServiceAccou
 	out["discovery_store"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.DiscoveryStore)
+	out["discovery_service"] = func(in *kops.DiscoveryServiceOptions) interface{} {
+		return func(in *kops.DiscoveryServiceOptions) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in kops.DiscoveryServiceOptions) interface{} {
+				return func(in kops.DiscoveryServiceOptions) []interface{} {
+					return []interface{}{FlattenResourceDiscoveryServiceOptions(in)}
+				}(in)
+			}(*in)
+		}(in)
+	}(in.DiscoveryService)
 	out["enable_aws_oidc_provider"] = func(in bool) interface{} {
 		return FlattenBool(bool(in))
 	}(in.EnableAWSOIDCProvider)

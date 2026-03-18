@@ -415,6 +415,8 @@ func main() {
 		generate(corev1.FileKeySelector{},
 			required("Key"),
 		),
+		// 1.35
+		generate(kops.DiscoveryServiceOptions{}),
 	)
 	build(
 		"Config",
@@ -669,5 +671,7 @@ func main() {
 		generate(corev1.FileKeySelector{},
 			required("Key"),
 		),
+		// 1.35
+		generate(kops.DiscoveryServiceOptions{}),
 	)
 }

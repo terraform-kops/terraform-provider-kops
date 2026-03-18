@@ -129,6 +129,7 @@ func TestExpandDataSourceKubeAPIServerConfig(t *testing.T) {
 					"cors_allowed_origins":                         func() []interface{} { return nil }(),
 					"default_not_ready_toleration_seconds":         nil,
 					"default_unreachable_toleration_seconds":       nil,
+					"delete_collection_workers":                    0,
 					"env":                                          func() []interface{} { return nil }(),
 				},
 			},
@@ -255,6 +256,7 @@ func TestFlattenDataSourceKubeAPIServerConfigInto(t *testing.T) {
 		"cors_allowed_origins":                         func() []interface{} { return nil }(),
 		"default_not_ready_toleration_seconds":         nil,
 		"default_unreachable_toleration_seconds":       nil,
+		"delete_collection_workers":                    0,
 		"env":                                          func() []interface{} { return nil }(),
 	}
 	type args struct {
@@ -1455,6 +1457,17 @@ func TestFlattenDataSourceKubeAPIServerConfigInto(t *testing.T) {
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
 					subject.DefaultUnreachableTolerationSeconds = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "DeleteCollectionWorkers - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.DeleteCollectionWorkers = 0
 					return subject
 				}(),
 			},
@@ -1593,6 +1606,7 @@ func TestFlattenDataSourceKubeAPIServerConfig(t *testing.T) {
 		"cors_allowed_origins":                         func() []interface{} { return nil }(),
 		"default_not_ready_toleration_seconds":         nil,
 		"default_unreachable_toleration_seconds":       nil,
+		"delete_collection_workers":                    0,
 		"env":                                          func() []interface{} { return nil }(),
 	}
 	type args struct {
@@ -2793,6 +2807,17 @@ func TestFlattenDataSourceKubeAPIServerConfig(t *testing.T) {
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
 					subject.DefaultUnreachableTolerationSeconds = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "DeleteCollectionWorkers - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.DeleteCollectionWorkers = 0
 					return subject
 				}(),
 			},

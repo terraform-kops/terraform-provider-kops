@@ -61,6 +61,7 @@ func DataSourceKubeletConfigSpec() *schema.Resource {
 			"network_plugin_mtu":                       ComputedInt(),
 			"image_minimum_gc_age":                     ComputedDuration(),
 			"image_maximum_gc_age":                     ComputedDuration(),
+			"max_parallel_image_pulls":                 ComputedInt(),
 			"image_gc_high_threshold_percent":          ComputedInt(),
 			"image_gc_low_threshold_percent":           ComputedInt(),
 			"image_pull_progress_deadline":             ComputedDuration(),
@@ -109,6 +110,7 @@ func DataSourceKubeletConfigSpec() *schema.Resource {
 			"shutdown_grace_period":                    ComputedDuration(),
 			"shutdown_grace_period_critical_pods":      ComputedDuration(),
 			"memory_swap_behavior":                     ComputedString(),
+			"crash_loop_back_off_max_container_restart_period": ComputedDuration(),
 		},
 	}
 
@@ -664,6 +666,25 @@ func ExpandDataSourceKubeletConfigSpec(in map[string]interface{}) kops.KubeletCo
 				}(ExpandDuration(in))
 			}(in)
 		}(in["image_maximum_gc_age"]),
+		MaxParallelImagePulls: func(in interface{}) *int32 {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *int32 {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in int32) *int32 {
+					return &in
+				}(int32(ExpandInt(in)))
+			}(in)
+		}(in["max_parallel_image_pulls"]),
 		ImageGCHighThresholdPercent: func(in interface{}) *int32 {
 			if in == nil {
 				return nil
@@ -1337,6 +1358,25 @@ func ExpandDataSourceKubeletConfigSpec(in map[string]interface{}) kops.KubeletCo
 		MemorySwapBehavior: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["memory_swap_behavior"]),
+		CrashLoopBackOffMaxContainerRestartPeriod: func(in interface{}) *meta.Duration {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *meta.Duration {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in meta.Duration) *meta.Duration {
+					return &in
+				}(ExpandDuration(in))
+			}(in)
+		}(in["crash_loop_back_off_max_container_restart_period"]),
 	}
 }
 
@@ -1661,6 +1701,16 @@ func FlattenDataSourceKubeletConfigSpecInto(in kops.KubeletConfigSpec, out map[s
 			}(*in)
 		}(in)
 	}(in.ImageMaximumGCAge)
+	out["max_parallel_image_pulls"] = func(in *int32) interface{} {
+		return func(in *int32) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in int32) interface{} {
+				return FlattenInt(int(in))
+			}(*in)
+		}(in)
+	}(in.MaxParallelImagePulls)
 	out["image_gc_high_threshold_percent"] = func(in *int32) interface{} {
 		return func(in *int32) interface{} {
 			if in == nil {
@@ -2049,6 +2099,16 @@ func FlattenDataSourceKubeletConfigSpecInto(in kops.KubeletConfigSpec, out map[s
 	out["memory_swap_behavior"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.MemorySwapBehavior)
+	out["crash_loop_back_off_max_container_restart_period"] = func(in *meta.Duration) interface{} {
+		return func(in *meta.Duration) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in meta.Duration) interface{} {
+				return FlattenDuration(in)
+			}(*in)
+		}(in)
+	}(in.CrashLoopBackOffMaxContainerRestartPeriod)
 }
 
 func FlattenDataSourceKubeletConfigSpec(in kops.KubeletConfigSpec) map[string]interface{} {

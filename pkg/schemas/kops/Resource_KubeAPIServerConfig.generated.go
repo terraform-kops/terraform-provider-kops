@@ -125,6 +125,7 @@ func ResourceKubeAPIServerConfig() *schema.Resource {
 			"cors_allowed_origins":                         OptionalList(String()),
 			"default_not_ready_toleration_seconds":         OptionalInt(),
 			"default_unreachable_toleration_seconds":       OptionalInt(),
+			"delete_collection_workers":                    OptionalInt(),
 			"env":                                          OptionalList(coreschemas.ResourceEnvVar()),
 		},
 	}
@@ -1571,6 +1572,9 @@ func ExpandResourceKubeAPIServerConfig(in map[string]interface{}) kops.KubeAPISe
 				}(int64(ExpandInt(in)))
 			}(in)
 		}(in["default_unreachable_toleration_seconds"]),
+		DeleteCollectionWorkers: func(in interface{}) int {
+			return int(ExpandInt(in))
+		}(in["delete_collection_workers"]),
 		Env: func(in interface{}) []core.EnvVar {
 			return func(in interface{}) []core.EnvVar {
 				if in == nil {
@@ -2440,6 +2444,9 @@ func FlattenResourceKubeAPIServerConfigInto(in kops.KubeAPIServerConfig, out map
 			}(*in)
 		}(in)
 	}(in.DefaultUnreachableTolerationSeconds)
+	out["delete_collection_workers"] = func(in int) interface{} {
+		return FlattenInt(int(in))
+	}(in.DeleteCollectionWorkers)
 	out["env"] = func(in []core.EnvVar) interface{} {
 		return func(in []core.EnvVar) []interface{} {
 			var out []interface{}
