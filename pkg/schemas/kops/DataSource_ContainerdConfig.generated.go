@@ -33,6 +33,7 @@ func DataSourceContainerdConfig() *schema.Resource {
 			"use_ecr_credentials_for_mirrors": ComputedBool(),
 			"install_cri_ctl":                 ComputedBool(),
 			"install_nerd_ctl":                ComputedBool(),
+			"sandbox_image":                   ComputedString(),
 		},
 	}
 
@@ -300,6 +301,25 @@ func ExpandDataSourceContainerdConfig(in map[string]interface{}) kops.Containerd
 		InstallNerdCtl: func(in interface{}) bool {
 			return bool(ExpandBool(in))
 		}(in["install_nerd_ctl"]),
+		SandboxImage: func(in interface{}) *string {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *string {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in string) *string {
+					return &in
+				}(string(ExpandString(in)))
+			}(in)
+		}(in["sandbox_image"]),
 	}
 }
 
@@ -479,6 +499,16 @@ func FlattenDataSourceContainerdConfigInto(in kops.ContainerdConfig, out map[str
 	out["install_nerd_ctl"] = func(in bool) interface{} {
 		return FlattenBool(bool(in))
 	}(in.InstallNerdCtl)
+	out["sandbox_image"] = func(in *string) interface{} {
+		return func(in *string) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in string) interface{} {
+				return FlattenString(string(in))
+			}(*in)
+		}(in)
+	}(in.SandboxImage)
 }
 
 func FlattenDataSourceContainerdConfig(in kops.ContainerdConfig) map[string]interface{} {

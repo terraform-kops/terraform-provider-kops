@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a Terraform provider for kOps (Kubernetes Operations) that enables managing Kubernetes clusters through Terraform without shell scripts or YAML templating. It integrates directly with the kOps API using pure Go code.
 
-**Current kOps version**: v1.34.0
+**Current kOps version**: v1.35.0
 **Compatible Terraform versions**: 1.5.x and higher
 
 ## Build & Development Commands

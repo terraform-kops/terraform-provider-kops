@@ -21,7 +21,9 @@ func TestExpandDataSourcePDCSIDriver(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
-					"enabled": nil,
+					"enabled":                    nil,
+					"version":                    nil,
+					"default_storage_class_name": nil,
 				},
 			},
 			want: _default,
@@ -39,7 +41,9 @@ func TestExpandDataSourcePDCSIDriver(t *testing.T) {
 
 func TestFlattenDataSourcePDCSIDriverInto(t *testing.T) {
 	_default := map[string]interface{}{
-		"enabled": nil,
+		"enabled":                    nil,
+		"version":                    nil,
+		"default_storage_class_name": nil,
 	}
 	type args struct {
 		in kops.PDCSIDriver
@@ -67,6 +71,28 @@ func TestFlattenDataSourcePDCSIDriverInto(t *testing.T) {
 			},
 			want: _default,
 		},
+		{
+			name: "Version - default",
+			args: args{
+				in: func() kops.PDCSIDriver {
+					subject := kops.PDCSIDriver{}
+					subject.Version = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "DefaultStorageClassName - default",
+			args: args{
+				in: func() kops.PDCSIDriver {
+					subject := kops.PDCSIDriver{}
+					subject.DefaultStorageClassName = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -81,7 +107,9 @@ func TestFlattenDataSourcePDCSIDriverInto(t *testing.T) {
 
 func TestFlattenDataSourcePDCSIDriver(t *testing.T) {
 	_default := map[string]interface{}{
-		"enabled": nil,
+		"enabled":                    nil,
+		"version":                    nil,
+		"default_storage_class_name": nil,
 	}
 	type args struct {
 		in kops.PDCSIDriver
@@ -104,6 +132,28 @@ func TestFlattenDataSourcePDCSIDriver(t *testing.T) {
 				in: func() kops.PDCSIDriver {
 					subject := kops.PDCSIDriver{}
 					subject.Enabled = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "Version - default",
+			args: args{
+				in: func() kops.PDCSIDriver {
+					subject := kops.PDCSIDriver{}
+					subject.Version = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "DefaultStorageClassName - default",
+			args: args{
+				in: func() kops.PDCSIDriver {
+					subject := kops.PDCSIDriver{}
+					subject.DefaultStorageClassName = nil
 					return subject
 				}(),
 			},

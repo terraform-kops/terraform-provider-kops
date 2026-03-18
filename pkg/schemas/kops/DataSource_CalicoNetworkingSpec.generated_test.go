@@ -47,7 +47,7 @@ func TestExpandDataSourceCalicoNetworkingSpec(t *testing.T) {
 					"typha_prometheus_metrics_port":      0,
 					"typha_replicas":                     0,
 					"vxlan_mode":                         "",
-					"wireguard_enabled":                  false,
+					"wireguard_enabled":                  nil,
 				},
 			},
 			want: _default,
@@ -91,7 +91,7 @@ func TestFlattenDataSourceCalicoNetworkingSpecInto(t *testing.T) {
 		"typha_prometheus_metrics_port":      0,
 		"typha_replicas":                     0,
 		"vxlan_mode":                         "",
-		"wireguard_enabled":                  false,
+		"wireguard_enabled":                  nil,
 	}
 	type args struct {
 		in kops.CalicoNetworkingSpec
@@ -399,7 +399,7 @@ func TestFlattenDataSourceCalicoNetworkingSpecInto(t *testing.T) {
 			args: args{
 				in: func() kops.CalicoNetworkingSpec {
 					subject := kops.CalicoNetworkingSpec{}
-					subject.WireguardEnabled = false
+					subject.WireguardEnabled = nil
 					return subject
 				}(),
 			},
@@ -445,7 +445,7 @@ func TestFlattenDataSourceCalicoNetworkingSpec(t *testing.T) {
 		"typha_prometheus_metrics_port":      0,
 		"typha_replicas":                     0,
 		"vxlan_mode":                         "",
-		"wireguard_enabled":                  false,
+		"wireguard_enabled":                  nil,
 	}
 	type args struct {
 		in kops.CalicoNetworkingSpec
@@ -753,7 +753,7 @@ func TestFlattenDataSourceCalicoNetworkingSpec(t *testing.T) {
 			args: args{
 				in: func() kops.CalicoNetworkingSpec {
 					subject := kops.CalicoNetworkingSpec{}
-					subject.WireguardEnabled = false
+					subject.WireguardEnabled = nil
 					return subject
 				}(),
 			},

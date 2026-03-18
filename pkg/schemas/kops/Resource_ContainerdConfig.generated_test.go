@@ -38,6 +38,7 @@ func TestExpandResourceContainerdConfig(t *testing.T) {
 					"use_ecr_credentials_for_mirrors": false,
 					"install_cri_ctl":                 false,
 					"install_nerd_ctl":                false,
+					"sandbox_image":                   nil,
 				},
 			},
 			want: _default,
@@ -72,6 +73,7 @@ func TestFlattenResourceContainerdConfigInto(t *testing.T) {
 		"use_ecr_credentials_for_mirrors": false,
 		"install_cri_ctl":                 false,
 		"install_nerd_ctl":                false,
+		"sandbox_image":                   nil,
 	}
 	type args struct {
 		in kops.ContainerdConfig
@@ -270,6 +272,17 @@ func TestFlattenResourceContainerdConfigInto(t *testing.T) {
 				in: func() kops.ContainerdConfig {
 					subject := kops.ContainerdConfig{}
 					subject.InstallNerdCtl = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "SandboxImage - default",
+			args: args{
+				in: func() kops.ContainerdConfig {
+					subject := kops.ContainerdConfig{}
+					subject.SandboxImage = nil
 					return subject
 				}(),
 			},
@@ -306,6 +319,7 @@ func TestFlattenResourceContainerdConfig(t *testing.T) {
 		"use_ecr_credentials_for_mirrors": false,
 		"install_cri_ctl":                 false,
 		"install_nerd_ctl":                false,
+		"sandbox_image":                   nil,
 	}
 	type args struct {
 		in kops.ContainerdConfig
@@ -504,6 +518,17 @@ func TestFlattenResourceContainerdConfig(t *testing.T) {
 				in: func() kops.ContainerdConfig {
 					subject := kops.ContainerdConfig{}
 					subject.InstallNerdCtl = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "SandboxImage - default",
+			args: args{
+				in: func() kops.ContainerdConfig {
+					subject := kops.ContainerdConfig{}
+					subject.SandboxImage = nil
 					return subject
 				}(),
 			},

@@ -68,6 +68,7 @@ func TestExpandDataSourceKubeletConfigSpec(t *testing.T) {
 					"network_plugin_mtu":                       nil,
 					"image_minimum_gc_age":                     nil,
 					"image_maximum_gc_age":                     nil,
+					"max_parallel_image_pulls":                 nil,
 					"image_gc_high_threshold_percent":          nil,
 					"image_gc_low_threshold_percent":           nil,
 					"image_pull_progress_deadline":             nil,
@@ -116,6 +117,7 @@ func TestExpandDataSourceKubeletConfigSpec(t *testing.T) {
 					"shutdown_grace_period":                    nil,
 					"shutdown_grace_period_critical_pods":      nil,
 					"memory_swap_behavior":                     "",
+					"crash_loop_back_off_max_container_restart_period": nil,
 				},
 			},
 			want: _default,
@@ -180,6 +182,7 @@ func TestFlattenDataSourceKubeletConfigSpecInto(t *testing.T) {
 		"network_plugin_mtu":                       nil,
 		"image_minimum_gc_age":                     nil,
 		"image_maximum_gc_age":                     nil,
+		"max_parallel_image_pulls":                 nil,
 		"image_gc_high_threshold_percent":          nil,
 		"image_gc_low_threshold_percent":           nil,
 		"image_pull_progress_deadline":             nil,
@@ -228,6 +231,7 @@ func TestFlattenDataSourceKubeletConfigSpecInto(t *testing.T) {
 		"shutdown_grace_period":                    nil,
 		"shutdown_grace_period_critical_pods":      nil,
 		"memory_swap_behavior":                     "",
+		"crash_loop_back_off_max_container_restart_period": nil,
 	}
 	type args struct {
 		in kops.KubeletConfigSpec
@@ -762,6 +766,17 @@ func TestFlattenDataSourceKubeletConfigSpecInto(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "MaxParallelImagePulls - default",
+			args: args{
+				in: func() kops.KubeletConfigSpec {
+					subject := kops.KubeletConfigSpec{}
+					subject.MaxParallelImagePulls = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "ImageGCHighThresholdPercent - default",
 			args: args{
 				in: func() kops.KubeletConfigSpec {
@@ -1284,6 +1299,17 @@ func TestFlattenDataSourceKubeletConfigSpecInto(t *testing.T) {
 				in: func() kops.KubeletConfigSpec {
 					subject := kops.KubeletConfigSpec{}
 					subject.MemorySwapBehavior = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CrashLoopBackOffMaxContainerRestartPeriod - default",
+			args: args{
+				in: func() kops.KubeletConfigSpec {
+					subject := kops.KubeletConfigSpec{}
+					subject.CrashLoopBackOffMaxContainerRestartPeriod = nil
 					return subject
 				}(),
 			},
@@ -1350,6 +1376,7 @@ func TestFlattenDataSourceKubeletConfigSpec(t *testing.T) {
 		"network_plugin_mtu":                       nil,
 		"image_minimum_gc_age":                     nil,
 		"image_maximum_gc_age":                     nil,
+		"max_parallel_image_pulls":                 nil,
 		"image_gc_high_threshold_percent":          nil,
 		"image_gc_low_threshold_percent":           nil,
 		"image_pull_progress_deadline":             nil,
@@ -1398,6 +1425,7 @@ func TestFlattenDataSourceKubeletConfigSpec(t *testing.T) {
 		"shutdown_grace_period":                    nil,
 		"shutdown_grace_period_critical_pods":      nil,
 		"memory_swap_behavior":                     "",
+		"crash_loop_back_off_max_container_restart_period": nil,
 	}
 	type args struct {
 		in kops.KubeletConfigSpec
@@ -1932,6 +1960,17 @@ func TestFlattenDataSourceKubeletConfigSpec(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "MaxParallelImagePulls - default",
+			args: args{
+				in: func() kops.KubeletConfigSpec {
+					subject := kops.KubeletConfigSpec{}
+					subject.MaxParallelImagePulls = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "ImageGCHighThresholdPercent - default",
 			args: args{
 				in: func() kops.KubeletConfigSpec {
@@ -2454,6 +2493,17 @@ func TestFlattenDataSourceKubeletConfigSpec(t *testing.T) {
 				in: func() kops.KubeletConfigSpec {
 					subject := kops.KubeletConfigSpec{}
 					subject.MemorySwapBehavior = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CrashLoopBackOffMaxContainerRestartPeriod - default",
+			args: args{
+				in: func() kops.KubeletConfigSpec {
+					subject := kops.KubeletConfigSpec{}
+					subject.CrashLoopBackOffMaxContainerRestartPeriod = nil
 					return subject
 				}(),
 			},

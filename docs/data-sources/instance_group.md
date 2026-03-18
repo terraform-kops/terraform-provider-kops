@@ -218,7 +218,7 @@ The following arguments are supported:
 - `log_level` - (Computed) - Int - LogLevel is the logging level of the kubelet.
 - `pod_manifest_path` - (Computed) - String - config is the path to the config file or directory of files.
 - `hostname_override` - (Computed) - String - HostnameOverride is the hostname used to identify the kubelet instead of the actual hostname.
-- `pod_infra_container_image` - (Computed) - String - PodInfraContainerImage is the image whose network/ipc containers in each pod will use.
+- `pod_infra_container_image` - (Computed) - String - PodInfraContainerImage is the image whose network/ipc containers in each pod will use.<br />DEPRECATED: Image garbage collector will get sandbox image information from CRI.
 - `seccomp_default` - (Computed) - Bool - SeccompDefault enables the use of `RuntimeDefault` as the default seccomp profile for all workloads.
 - `seccomp_profile_root` - (Computed) - String - SeccompProfileRoot is the directory path for seccomp profiles.
 - `allow_privileged` - (Computed) - Bool - AllowPrivileged enables containers to request privileged mode (defaults to false).
@@ -250,6 +250,7 @@ The following arguments are supported:
 - `network_plugin_mtu` - (Computed) - Int - NetworkPluginMTU is the MTU to be passed to the network plugin,<br />and overrides the default MTU for cases where it cannot be automatically<br />computed (such as IPSEC).
 - `image_minimum_gc_age` - (Computed) - Duration - imageMinimumGCAge is the minimum age for an unused image before it is garbage collected. Default: "2m".
 - `image_maximum_gc_age` - (Computed) - Duration - imageMaximumGCAge is the maximum age an image can be unused before it is garbage collected.<br />The default of this field is "0s", which disables this field--meaning images won't be garbage<br />collected based on being unused for too long. Default: "0s" (disabled).
+- `max_parallel_image_pulls` - (Computed) - Int - MaxParallelImagePulls sets the maximum number of image pulls in parallel.<br />This field cannot be set if SerializeImagePulls is true.<br />Setting it to nil means no limit.<br />Default: nil.
 - `image_gc_high_threshold_percent` - (Computed) - Int - ImageGCHighThresholdPercent is the percent of disk usage after which<br />image garbage collection is always run.
 - `image_gc_low_threshold_percent` - (Computed) - Int - ImageGCLowThresholdPercent is the percent of disk usage before which<br />image garbage collection is never run. Lowest disk usage to garbage<br />collect to.
 - `image_pull_progress_deadline` - (Computed) - Duration - ImagePullProgressDeadline is the timeout for image pulls<br />If no pulling progress is made before this deadline, the image pulling will be cancelled. (default 1m0s).
@@ -298,6 +299,7 @@ The following arguments are supported:
 - `shutdown_grace_period` - (Computed) - Duration - ShutdownGracePeriod specifies the total duration that the node should delay the shutdown by.<br />Default: 30s.
 - `shutdown_grace_period_critical_pods` - (Computed) - Duration - ShutdownGracePeriodCriticalPods specifies the duration used to terminate critical pods during a node shutdown.<br />Default: 10s.
 - `memory_swap_behavior` - (Computed) - String - MemorySwapBehavior defines how swap is used by container workloads.<br />Supported values: LimitedSwap, "UnlimitedSwap.
+- `crash_loop_back_off_max_container_restart_period` - (Computed) - Duration - CrashLoopBackOffMaxContainerRestartPeriod is the maximum duration the backoff delay can accrue to for container restarts, minimum 1 second, maximum 300 seconds. If not set, defaults to the internal crashloopbackoff maximum (300s).
 
 ### mixed_instances_policy_spec
 
@@ -398,6 +400,8 @@ The following arguments are supported:
 - `min_size` - (Computed) - Int - MinSize is the minimum size of the warm pool.
 - `max_size` - (Computed) - Int - MaxSize is the maximum size of the warm pool. The desired size of the instance group<br />is subtracted from this number to determine the desired size of the warm pool<br />(unless the resulting number is smaller than MinSize).<br />The default is the instance group's MaxSize.
 - `enable_lifecycle_hook` - (Computed) - Bool - EnableLifecyleHook determines if an ASG lifecycle hook will be added ensuring that nodeup runs to completion.<br />Note that the metadata API must be protected from arbitrary Pods when this is enabled.
+- `lifecycle_hook_timeout` - (Computed) - Int - LifecycleHookTimeout is the timeout for the ASG lifecycle hook in seconds.
+- `additional_images` - (Computed) - List(String) - AdditionalImages is a list of additional container images to pull into the warm pool instances.
 
 ### containerd_config
 
@@ -424,6 +428,7 @@ The following arguments are supported:
 - `use_ecr_credentials_for_mirrors` - (Computed) - Bool - Enables Kubelet ECR Credential helper to pass credentials to containerd mirrors, to use ECR as a pull-through cache.
 - `install_cri_ctl` - (Computed) - Bool - InstallCriCtl installs crictl (default "false").
 - `install_nerd_ctl` - (Computed) - Bool - InstallNerdCtl installs nerdctl (default "false").
+- `sandbox_image` - (Computed) - String - SandboxImage is the image used for the sandbox container.
 
 ### packages_config
 
