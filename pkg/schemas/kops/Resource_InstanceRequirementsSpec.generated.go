@@ -11,8 +11,9 @@ var _ = Schema
 func ResourceInstanceRequirementsSpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"cpu":    OptionalStruct(ResourceMinMaxSpec()),
-			"memory": OptionalStruct(ResourceMinMaxSpec()),
+			"cpu":                     OptionalStruct(ResourceMinMaxSpec()),
+			"memory":                  OptionalStruct(ResourceMinMaxSpec()),
+			"excluded_instance_types": OptionalList(String()),
 		},
 	}
 
@@ -60,6 +61,18 @@ func ExpandResourceInstanceRequirementsSpec(in map[string]interface{}) kops.Inst
 				}(in))
 			}(in)
 		}(in["memory"]),
+		ExcludedInstanceTypes: func(in interface{}) []string {
+			return func(in interface{}) []string {
+				if in == nil {
+					return nil
+				}
+				var out []string
+				for _, in := range in.([]interface{}) {
+					out = append(out, string(ExpandString(in)))
+				}
+				return out
+			}(in)
+		}(in["excluded_instance_types"]),
 	}
 }
 
@@ -88,6 +101,15 @@ func FlattenResourceInstanceRequirementsSpecInto(in kops.InstanceRequirementsSpe
 			}(*in)
 		}(in)
 	}(in.Memory)
+	out["excluded_instance_types"] = func(in []string) interface{} {
+		return func(in []string) []interface{} {
+			var out []interface{}
+			for _, in := range in {
+				out = append(out, FlattenString(string(in)))
+			}
+			return out
+		}(in)
+	}(in.ExcludedInstanceTypes)
 }
 
 func FlattenResourceInstanceRequirementsSpec(in kops.InstanceRequirementsSpec) map[string]interface{} {

@@ -54,6 +54,7 @@ func TestExpandResourceCiliumNetworkingSpec(t *testing.T) {
 					"bpf_neigh_global_max":              0,
 					"bpf_policy_map_max":                0,
 					"bpflb_map_max":                     0,
+					"bpflb_sock":                        false,
 					"bpflb_sock_host_ns_only":           false,
 					"preallocate_bpf_maps":              false,
 					"sidecar_istio_proxy_image":         "",
@@ -75,6 +76,7 @@ func TestExpandResourceCiliumNetworkingSpec(t *testing.T) {
 					"enable_service_topology":           false,
 					"ingress":                           nil,
 					"gateway_api":                       nil,
+					"extra_config":                      func() map[string]interface{} { return nil }(),
 				},
 			},
 			want: _default,
@@ -125,6 +127,7 @@ func TestFlattenResourceCiliumNetworkingSpecInto(t *testing.T) {
 		"bpf_neigh_global_max":              0,
 		"bpf_policy_map_max":                0,
 		"bpflb_map_max":                     0,
+		"bpflb_sock":                        false,
 		"bpflb_sock_host_ns_only":           false,
 		"preallocate_bpf_maps":              false,
 		"sidecar_istio_proxy_image":         "",
@@ -146,6 +149,7 @@ func TestFlattenResourceCiliumNetworkingSpecInto(t *testing.T) {
 		"enable_service_topology":           false,
 		"ingress":                           nil,
 		"gateway_api":                       nil,
+		"extra_config":                      func() map[string]interface{} { return nil }(),
 	}
 	type args struct {
 		in kops.CiliumNetworkingSpec
@@ -526,6 +530,17 @@ func TestFlattenResourceCiliumNetworkingSpecInto(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "BPFLBSock - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.BPFLBSock = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "BPFLBSockHostNSOnly - default",
 			args: args{
 				in: func() kops.CiliumNetworkingSpec {
@@ -751,6 +766,17 @@ func TestFlattenResourceCiliumNetworkingSpecInto(t *testing.T) {
 				in: func() kops.CiliumNetworkingSpec {
 					subject := kops.CiliumNetworkingSpec{}
 					subject.GatewayAPI = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ExtraConfig - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.ExtraConfig = nil
 					return subject
 				}(),
 			},
@@ -803,6 +829,7 @@ func TestFlattenResourceCiliumNetworkingSpec(t *testing.T) {
 		"bpf_neigh_global_max":              0,
 		"bpf_policy_map_max":                0,
 		"bpflb_map_max":                     0,
+		"bpflb_sock":                        false,
 		"bpflb_sock_host_ns_only":           false,
 		"preallocate_bpf_maps":              false,
 		"sidecar_istio_proxy_image":         "",
@@ -824,6 +851,7 @@ func TestFlattenResourceCiliumNetworkingSpec(t *testing.T) {
 		"enable_service_topology":           false,
 		"ingress":                           nil,
 		"gateway_api":                       nil,
+		"extra_config":                      func() map[string]interface{} { return nil }(),
 	}
 	type args struct {
 		in kops.CiliumNetworkingSpec
@@ -1204,6 +1232,17 @@ func TestFlattenResourceCiliumNetworkingSpec(t *testing.T) {
 			want: _default,
 		},
 		{
+			name: "BPFLBSock - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.BPFLBSock = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
 			name: "BPFLBSockHostNSOnly - default",
 			args: args{
 				in: func() kops.CiliumNetworkingSpec {
@@ -1429,6 +1468,17 @@ func TestFlattenResourceCiliumNetworkingSpec(t *testing.T) {
 				in: func() kops.CiliumNetworkingSpec {
 					subject := kops.CiliumNetworkingSpec{}
 					subject.GatewayAPI = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ExtraConfig - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.ExtraConfig = nil
 					return subject
 				}(),
 			},

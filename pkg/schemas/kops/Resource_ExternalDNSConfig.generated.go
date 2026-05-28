@@ -13,9 +13,10 @@ var _ = Schema
 func ResourceExternalDNSConfig() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"watch_ingress":   OptionalBool(),
-			"watch_namespace": OptionalString(),
-			"provider":        OptionalString(),
+			"watch_ingress":       OptionalBool(),
+			"watch_namespace":     OptionalString(),
+			"provider":            OptionalString(),
+			"priority_class_name": OptionalString(),
 		},
 	}
 
@@ -52,6 +53,25 @@ func ExpandResourceExternalDNSConfig(in map[string]interface{}) kops.ExternalDNS
 		Provider: func(in interface{}) kops.ExternalDNSProvider {
 			return kops.ExternalDNSProvider(ExpandString(in))
 		}(in["provider"]),
+		PriorityClassName: func(in interface{}) *string {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *string {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in string) *string {
+					return &in
+				}(string(ExpandString(in)))
+			}(in)
+		}(in["priority_class_name"]),
 	}
 }
 
@@ -72,6 +92,16 @@ func FlattenResourceExternalDNSConfigInto(in kops.ExternalDNSConfig, out map[str
 	out["provider"] = func(in kops.ExternalDNSProvider) interface{} {
 		return FlattenString(string(in))
 	}(in.Provider)
+	out["priority_class_name"] = func(in *string) interface{} {
+		return func(in *string) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in string) interface{} {
+				return FlattenString(string(in))
+			}(*in)
+		}(in)
+	}(in.PriorityClassName)
 }
 
 func FlattenResourceExternalDNSConfig(in kops.ExternalDNSConfig) map[string]interface{} {

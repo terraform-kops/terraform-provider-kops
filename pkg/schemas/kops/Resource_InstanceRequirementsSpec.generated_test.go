@@ -21,8 +21,9 @@ func TestExpandResourceInstanceRequirementsSpec(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
-					"cpu":    nil,
-					"memory": nil,
+					"cpu":                     nil,
+					"memory":                  nil,
+					"excluded_instance_types": func() []interface{} { return nil }(),
 				},
 			},
 			want: _default,
@@ -40,8 +41,9 @@ func TestExpandResourceInstanceRequirementsSpec(t *testing.T) {
 
 func TestFlattenResourceInstanceRequirementsSpecInto(t *testing.T) {
 	_default := map[string]interface{}{
-		"cpu":    nil,
-		"memory": nil,
+		"cpu":                     nil,
+		"memory":                  nil,
+		"excluded_instance_types": func() []interface{} { return nil }(),
 	}
 	type args struct {
 		in kops.InstanceRequirementsSpec
@@ -75,6 +77,17 @@ func TestFlattenResourceInstanceRequirementsSpecInto(t *testing.T) {
 				in: func() kops.InstanceRequirementsSpec {
 					subject := kops.InstanceRequirementsSpec{}
 					subject.Memory = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ExcludedInstanceTypes - default",
+			args: args{
+				in: func() kops.InstanceRequirementsSpec {
+					subject := kops.InstanceRequirementsSpec{}
+					subject.ExcludedInstanceTypes = nil
 					return subject
 				}(),
 			},
@@ -94,8 +107,9 @@ func TestFlattenResourceInstanceRequirementsSpecInto(t *testing.T) {
 
 func TestFlattenResourceInstanceRequirementsSpec(t *testing.T) {
 	_default := map[string]interface{}{
-		"cpu":    nil,
-		"memory": nil,
+		"cpu":                     nil,
+		"memory":                  nil,
+		"excluded_instance_types": func() []interface{} { return nil }(),
 	}
 	type args struct {
 		in kops.InstanceRequirementsSpec
@@ -129,6 +143,17 @@ func TestFlattenResourceInstanceRequirementsSpec(t *testing.T) {
 				in: func() kops.InstanceRequirementsSpec {
 					subject := kops.InstanceRequirementsSpec{}
 					subject.Memory = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ExcludedInstanceTypes - default",
+			args: args{
+				in: func() kops.InstanceRequirementsSpec {
+					subject := kops.InstanceRequirementsSpec{}
+					subject.ExcludedInstanceTypes = nil
 					return subject
 				}(),
 			},
