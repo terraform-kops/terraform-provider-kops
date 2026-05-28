@@ -11,8 +11,9 @@ var _ = Schema
 func DataSourceInstanceRequirementsSpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"cpu":    ComputedStruct(DataSourceMinMaxSpec()),
-			"memory": ComputedStruct(DataSourceMinMaxSpec()),
+			"cpu":                     ComputedStruct(DataSourceMinMaxSpec()),
+			"memory":                  ComputedStruct(DataSourceMinMaxSpec()),
+			"excluded_instance_types": ComputedList(String()),
 		},
 	}
 
@@ -60,6 +61,18 @@ func ExpandDataSourceInstanceRequirementsSpec(in map[string]interface{}) kops.In
 				}(in))
 			}(in)
 		}(in["memory"]),
+		ExcludedInstanceTypes: func(in interface{}) []string {
+			return func(in interface{}) []string {
+				if in == nil {
+					return nil
+				}
+				var out []string
+				for _, in := range in.([]interface{}) {
+					out = append(out, string(ExpandString(in)))
+				}
+				return out
+			}(in)
+		}(in["excluded_instance_types"]),
 	}
 }
 
@@ -88,6 +101,15 @@ func FlattenDataSourceInstanceRequirementsSpecInto(in kops.InstanceRequirementsS
 			}(*in)
 		}(in)
 	}(in.Memory)
+	out["excluded_instance_types"] = func(in []string) interface{} {
+		return func(in []string) []interface{} {
+			var out []interface{}
+			for _, in := range in {
+				out = append(out, FlattenString(string(in)))
+			}
+			return out
+		}(in)
+	}(in.ExcludedInstanceTypes)
 }
 
 func FlattenDataSourceInstanceRequirementsSpec(in kops.InstanceRequirementsSpec) map[string]interface{} {

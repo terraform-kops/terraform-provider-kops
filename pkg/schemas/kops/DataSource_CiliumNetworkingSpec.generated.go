@@ -47,6 +47,7 @@ func DataSourceCiliumNetworkingSpec() *schema.Resource {
 			"bpf_neigh_global_max":              ComputedInt(),
 			"bpf_policy_map_max":                ComputedInt(),
 			"bpflb_map_max":                     ComputedInt(),
+			"bpflb_sock":                        ComputedBool(),
 			"bpflb_sock_host_ns_only":           ComputedBool(),
 			"preallocate_bpf_maps":              ComputedBool(),
 			"sidecar_istio_proxy_image":         ComputedString(),
@@ -68,6 +69,7 @@ func DataSourceCiliumNetworkingSpec() *schema.Resource {
 			"enable_service_topology":           ComputedBool(),
 			"ingress":                           ComputedStruct(DataSourceCiliumIngressSpec()),
 			"gateway_api":                       ComputedStruct(DataSourceCiliumGatewayAPISpec()),
+			"extra_config":                      ComputedMap(String()),
 		},
 	}
 
@@ -351,6 +353,9 @@ func ExpandDataSourceCiliumNetworkingSpec(in map[string]interface{}) kops.Cilium
 		BPFLBMapMax: func(in interface{}) int {
 			return int(ExpandInt(in))
 		}(in["bpflb_map_max"]),
+		BPFLBSock: func(in interface{}) bool {
+			return bool(ExpandBool(in))
+		}(in["bpflb_sock"]),
 		BPFLBSockHostNSOnly: func(in interface{}) bool {
 			return bool(ExpandBool(in))
 		}(in["bpflb_sock_host_ns_only"]),
@@ -563,6 +568,23 @@ func ExpandDataSourceCiliumNetworkingSpec(in map[string]interface{}) kops.Cilium
 				}(in))
 			}(in)
 		}(in["gateway_api"]),
+		ExtraConfig: func(in interface{}) map[string]string {
+			return func(in interface{}) map[string]string {
+				if in == nil {
+					return nil
+				}
+				if in, ok := in.(map[string]interface{}); ok {
+					if len(in) > 0 {
+						out := map[string]string{}
+						for key, in := range in {
+							out[key] = string(ExpandString(in))
+						}
+						return out
+					}
+				}
+				return nil
+			}(in)
+		}(in["extra_config"]),
 	}
 }
 
@@ -745,6 +767,9 @@ func FlattenDataSourceCiliumNetworkingSpecInto(in kops.CiliumNetworkingSpec, out
 	out["bpflb_map_max"] = func(in int) interface{} {
 		return FlattenInt(int(in))
 	}(in.BPFLBMapMax)
+	out["bpflb_sock"] = func(in bool) interface{} {
+		return FlattenBool(bool(in))
+	}(in.BPFLBSock)
 	out["bpflb_sock_host_ns_only"] = func(in bool) interface{} {
 		return FlattenBool(bool(in))
 	}(in.BPFLBSockHostNSOnly)
@@ -876,6 +901,18 @@ func FlattenDataSourceCiliumNetworkingSpecInto(in kops.CiliumNetworkingSpec, out
 			}(*in)
 		}(in)
 	}(in.GatewayAPI)
+	out["extra_config"] = func(in map[string]string) interface{} {
+		return func(in map[string]string) map[string]interface{} {
+			if in == nil {
+				return nil
+			}
+			out := map[string]interface{}{}
+			for key, in := range in {
+				out[key] = FlattenString(string(in))
+			}
+			return out
+		}(in)
+	}(in.ExtraConfig)
 }
 
 func FlattenDataSourceCiliumNetworkingSpec(in kops.CiliumNetworkingSpec) map[string]interface{} {

@@ -21,9 +21,10 @@ func TestExpandDataSourceExternalDNSConfig(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
-					"watch_ingress":   nil,
-					"watch_namespace": "",
-					"provider":        "",
+					"watch_ingress":       nil,
+					"watch_namespace":     "",
+					"provider":            "",
+					"priority_class_name": nil,
 				},
 			},
 			want: _default,
@@ -41,9 +42,10 @@ func TestExpandDataSourceExternalDNSConfig(t *testing.T) {
 
 func TestFlattenDataSourceExternalDNSConfigInto(t *testing.T) {
 	_default := map[string]interface{}{
-		"watch_ingress":   nil,
-		"watch_namespace": "",
-		"provider":        "",
+		"watch_ingress":       nil,
+		"watch_namespace":     "",
+		"provider":            "",
+		"priority_class_name": nil,
 	}
 	type args struct {
 		in kops.ExternalDNSConfig
@@ -88,6 +90,17 @@ func TestFlattenDataSourceExternalDNSConfigInto(t *testing.T) {
 				in: func() kops.ExternalDNSConfig {
 					subject := kops.ExternalDNSConfig{}
 					subject.Provider = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "PriorityClassName - default",
+			args: args{
+				in: func() kops.ExternalDNSConfig {
+					subject := kops.ExternalDNSConfig{}
+					subject.PriorityClassName = nil
 					return subject
 				}(),
 			},
@@ -107,9 +120,10 @@ func TestFlattenDataSourceExternalDNSConfigInto(t *testing.T) {
 
 func TestFlattenDataSourceExternalDNSConfig(t *testing.T) {
 	_default := map[string]interface{}{
-		"watch_ingress":   nil,
-		"watch_namespace": "",
-		"provider":        "",
+		"watch_ingress":       nil,
+		"watch_namespace":     "",
+		"provider":            "",
+		"priority_class_name": nil,
 	}
 	type args struct {
 		in kops.ExternalDNSConfig
@@ -154,6 +168,17 @@ func TestFlattenDataSourceExternalDNSConfig(t *testing.T) {
 				in: func() kops.ExternalDNSConfig {
 					subject := kops.ExternalDNSConfig{}
 					subject.Provider = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "PriorityClassName - default",
+			args: args{
+				in: func() kops.ExternalDNSConfig {
+					subject := kops.ExternalDNSConfig{}
+					subject.PriorityClassName = nil
 					return subject
 				}(),
 			},

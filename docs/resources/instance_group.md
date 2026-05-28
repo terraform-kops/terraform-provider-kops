@@ -361,6 +361,7 @@ The following arguments are supported:
 
 - `cpu` - (Optional) - [min_max_spec](#min_max_spec)
 - `memory` - (Optional) - [min_max_spec](#min_max_spec)
+- `excluded_instance_types` - (Optional) - List(String) - ExcludedInstanceTypes is a list of instance types which will not be used by the instance group.<br />You can use strings with one or more wild cards, represented by an asterisk (*), to exclude an<br />instance type, size, or generation.
 
 ### min_max_spec
 

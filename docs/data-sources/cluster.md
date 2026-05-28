@@ -1377,6 +1377,7 @@ The following arguments are supported:
 - `watch_ingress` - (Computed) - Bool - WatchIngress indicates you want the dns-controller to watch and create dns entries for ingress resources.<br />Default: true if provider is 'external-dns', false otherwise.
 - `watch_namespace` - (Computed) - String - WatchNamespace is namespace to watch, defaults to all (use to control whom can creates dns entries).
 - `provider` - (Computed) - String - Provider determines which implementation of ExternalDNS to use.<br />'dns-controller' will use kOps DNS Controller.<br />'external-dns' will use kubernetes-sigs/external-dns.
+- `priority_class_name` - (Computed) - String - PriorityClassName overrides the priorityClassName on the dns-controller pod.<br />Defaults to "system-cluster-critical" when unset.
 
 ### ntp_config
 
@@ -1743,6 +1744,7 @@ The following arguments are supported:
 - `bpf_neigh_global_max` - (Computed) - Int - BPFNeighGlobalMax is the the maximum number of entries in the BPF Neighbor table.<br />Default: 524288.
 - `bpf_policy_map_max` - (Computed) - Int - BPFPolicyMapMax is the maximum number of entries in endpoint policy map.<br />Default: 16384.
 - `bpflb_map_max` - (Computed) - Int - BPFLBMapMax is the maximum number of entries in bpf lb service, backend and affinity maps.<br />Default: 65536.
+- `bpflb_sock` - (Computed) - Bool - BPFLBSock enables socket-based LB for E/W traffic.<br />Default: false.
 - `bpflb_sock_host_ns_only` - (Computed) - Bool - BPFLBSockHostNSOnly enables skipping socket LB for services when inside a pod namespace,<br />in favor of service LB at the pod interface. Socket LB is still used when in the host namespace.<br />Required by service mesh (e.g., Istio, Linkerd).<br />Default: false.
 - `preallocate_bpf_maps` - (Computed) - Bool - PreallocateBPFMaps reduces the per-packet latency at the expense of up-front memory allocation.<br />Default: true.
 - `sidecar_istio_proxy_image` - (Computed) - String - SidecarIstioProxyImage is the regular expression matching compatible Istio sidecar istio-proxy<br />container image names.<br />Default: cilium/istio_proxy.
@@ -1764,6 +1766,7 @@ The following arguments are supported:
 - `enable_service_topology` - (Computed) - Bool - EnableServiceTopology determine if cilium should use topology aware hints.
 - `ingress` - (Computed) - [cilium_ingress_spec](#cilium_ingress_spec) - Ingress specifies the configuration for Cilium Ingress settings.
 - `gateway_api` - (Computed) - [cilium_gateway_api_spec](#cilium_gateway_api_spec) - GatewayAPI specifies the configuration for Cilium Gateway API settings.
+- `extra_config` - (Computed) - Map(String) - ExtraConfig is appended to the cilium-config ConfigMap. Keys here override any value<br />rendered by kops. All values must be strings (e.g. "true", not true).
 
 ### hubble_spec
 
