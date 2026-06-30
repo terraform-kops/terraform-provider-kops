@@ -76,7 +76,7 @@ jobs:
           cache: true
 
       - name: Test goreleaser build
-        uses: goreleaser/goreleaser-action@v7.2.2
+        uses: goreleaser/goreleaser-action@v7.2.3
         with:
           version: latest
           args: build --timeout 60m -p 2 --snapshot
