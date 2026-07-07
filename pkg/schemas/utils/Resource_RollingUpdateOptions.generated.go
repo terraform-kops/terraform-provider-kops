@@ -141,6 +141,25 @@ func ExpandResourceRollingUpdateOptions(in map[string]interface{}) utils.Rolling
 		Force: func(in interface{}) bool {
 			return bool(ExpandBool(in))
 		}(in["force"]),
+		DrainTimeout: func(in interface{}) *meta.Duration {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *meta.Duration {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in meta.Duration) *meta.Duration {
+					return &in
+				}(ExpandDuration(in))
+			}(in)
+		}(in["drain_timeout"]),
 	}
 }
 
@@ -217,6 +236,16 @@ func FlattenResourceRollingUpdateOptionsInto(in utils.RollingUpdateOptions, out 
 	out["force"] = func(in bool) interface{} {
 		return FlattenBool(bool(in))
 	}(in.Force)
+	out["drain_timeout"] = func(in *meta.Duration) interface{} {
+		return func(in *meta.Duration) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in meta.Duration) interface{} {
+				return FlattenDuration(in)
+			}(*in)
+		}(in)
+	}(in.DrainTimeout)
 }
 
 func FlattenResourceRollingUpdateOptions(in utils.RollingUpdateOptions) map[string]interface{} {
