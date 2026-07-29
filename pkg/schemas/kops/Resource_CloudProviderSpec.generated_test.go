@@ -28,6 +28,7 @@ func TestExpandResourceCloudProviderSpec(t *testing.T) {
 					"hetzner":   nil,
 					"openstack": nil,
 					"scaleway":  nil,
+					"linode":    nil,
 				},
 			},
 			want: _default,
@@ -52,6 +53,7 @@ func TestFlattenResourceCloudProviderSpecInto(t *testing.T) {
 		"hetzner":   nil,
 		"openstack": nil,
 		"scaleway":  nil,
+		"linode":    nil,
 	}
 	type args struct {
 		in kops.CloudProviderSpec
@@ -140,6 +142,17 @@ func TestFlattenResourceCloudProviderSpecInto(t *testing.T) {
 				in: func() kops.CloudProviderSpec {
 					subject := kops.CloudProviderSpec{}
 					subject.Scaleway = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "Linode - default",
+			args: args{
+				in: func() kops.CloudProviderSpec {
+					subject := kops.CloudProviderSpec{}
+					subject.Linode = nil
 					return subject
 				}(),
 			},
@@ -166,6 +179,7 @@ func TestFlattenResourceCloudProviderSpec(t *testing.T) {
 		"hetzner":   nil,
 		"openstack": nil,
 		"scaleway":  nil,
+		"linode":    nil,
 	}
 	type args struct {
 		in kops.CloudProviderSpec
@@ -254,6 +268,17 @@ func TestFlattenResourceCloudProviderSpec(t *testing.T) {
 				in: func() kops.CloudProviderSpec {
 					subject := kops.CloudProviderSpec{}
 					subject.Scaleway = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "Linode - default",
+			args: args{
+				in: func() kops.CloudProviderSpec {
+					subject := kops.CloudProviderSpec{}
+					subject.Linode = nil
 					return subject
 				}(),
 			},

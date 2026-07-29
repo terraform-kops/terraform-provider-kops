@@ -111,6 +111,9 @@ func DataSourceKubeletConfigSpec() *schema.Resource {
 			"shutdown_grace_period_critical_pods":      ComputedDuration(),
 			"memory_swap_behavior":                     ComputedString(),
 			"crash_loop_back_off_max_container_restart_period": ComputedDuration(),
+			"kube_api_qps":                ComputedInt(),
+			"event_record_qps":            ComputedInt(),
+			"node_lease_duration_seconds": ComputedInt(),
 		},
 	}
 
@@ -1377,6 +1380,63 @@ func ExpandDataSourceKubeletConfigSpec(in map[string]interface{}) kops.KubeletCo
 				}(ExpandDuration(in))
 			}(in)
 		}(in["crash_loop_back_off_max_container_restart_period"]),
+		KubeAPIQPS: func(in interface{}) *int32 {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *int32 {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in int32) *int32 {
+					return &in
+				}(int32(ExpandInt(in)))
+			}(in)
+		}(in["kube_api_qps"]),
+		EventRecordQPS: func(in interface{}) *int32 {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *int32 {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in int32) *int32 {
+					return &in
+				}(int32(ExpandInt(in)))
+			}(in)
+		}(in["event_record_qps"]),
+		NodeLeaseDurationSeconds: func(in interface{}) *int32 {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *int32 {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in int32) *int32 {
+					return &in
+				}(int32(ExpandInt(in)))
+			}(in)
+		}(in["node_lease_duration_seconds"]),
 	}
 }
 
@@ -2109,6 +2169,36 @@ func FlattenDataSourceKubeletConfigSpecInto(in kops.KubeletConfigSpec, out map[s
 			}(*in)
 		}(in)
 	}(in.CrashLoopBackOffMaxContainerRestartPeriod)
+	out["kube_api_qps"] = func(in *int32) interface{} {
+		return func(in *int32) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in int32) interface{} {
+				return FlattenInt(int(in))
+			}(*in)
+		}(in)
+	}(in.KubeAPIQPS)
+	out["event_record_qps"] = func(in *int32) interface{} {
+		return func(in *int32) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in int32) interface{} {
+				return FlattenInt(int(in))
+			}(*in)
+		}(in)
+	}(in.EventRecordQPS)
+	out["node_lease_duration_seconds"] = func(in *int32) interface{} {
+		return func(in *int32) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in int32) interface{} {
+				return FlattenInt(int(in))
+			}(*in)
+		}(in)
+	}(in.NodeLeaseDurationSeconds)
 }
 
 func FlattenDataSourceKubeletConfigSpec(in kops.KubeletConfigSpec) map[string]interface{} {

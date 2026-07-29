@@ -39,6 +39,7 @@ func TestExpandResourceCalicoNetworkingSpec(t *testing.T) {
 					"iptables_backend":                   "",
 					"log_severity_screen":                "",
 					"mtu":                                nil,
+					"nf_tables_mode":                     "",
 					"prometheus_metrics_enabled":         false,
 					"prometheus_metrics_port":            0,
 					"prometheus_go_metrics_enabled":      false,
@@ -83,6 +84,7 @@ func TestFlattenResourceCalicoNetworkingSpecInto(t *testing.T) {
 		"iptables_backend":                   "",
 		"log_severity_screen":                "",
 		"mtu":                                nil,
+		"nf_tables_mode":                     "",
 		"prometheus_metrics_enabled":         false,
 		"prometheus_metrics_port":            0,
 		"prometheus_go_metrics_enabled":      false,
@@ -301,6 +303,17 @@ func TestFlattenResourceCalicoNetworkingSpecInto(t *testing.T) {
 				in: func() kops.CalicoNetworkingSpec {
 					subject := kops.CalicoNetworkingSpec{}
 					subject.MTU = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NFTablesMode - default",
+			args: args{
+				in: func() kops.CalicoNetworkingSpec {
+					subject := kops.CalicoNetworkingSpec{}
+					subject.NFTablesMode = ""
 					return subject
 				}(),
 			},
@@ -437,6 +450,7 @@ func TestFlattenResourceCalicoNetworkingSpec(t *testing.T) {
 		"iptables_backend":                   "",
 		"log_severity_screen":                "",
 		"mtu":                                nil,
+		"nf_tables_mode":                     "",
 		"prometheus_metrics_enabled":         false,
 		"prometheus_metrics_port":            0,
 		"prometheus_go_metrics_enabled":      false,
@@ -655,6 +669,17 @@ func TestFlattenResourceCalicoNetworkingSpec(t *testing.T) {
 				in: func() kops.CalicoNetworkingSpec {
 					subject := kops.CalicoNetworkingSpec{}
 					subject.MTU = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NFTablesMode - default",
+			args: args{
+				in: func() kops.CalicoNetworkingSpec {
+					subject := kops.CalicoNetworkingSpec{}
+					subject.NFTablesMode = ""
 					return subject
 				}(),
 			},

@@ -27,6 +27,7 @@ func DataSourceContainerdConfig() *schema.Resource {
 			"state":                           ComputedString(),
 			"version":                         ComputedString(),
 			"nvidia_gpu":                      ComputedStruct(DataSourceNvidiaGPUConfig()),
+			"g_visor":                         ComputedStruct(DataSourceGVisorConfig()),
 			"runc":                            ComputedStruct(DataSourceRunc()),
 			"se_linux_enabled":                ComputedBool(),
 			"nri":                             ComputedStruct(DataSourceNRIConfig()),
@@ -253,6 +254,24 @@ func ExpandDataSourceContainerdConfig(in map[string]interface{}) kops.Containerd
 				}(in))
 			}(in)
 		}(in["nvidia_gpu"]),
+		GVisor: func(in interface{}) *kops.GVisorConfig {
+			return func(in interface{}) *kops.GVisorConfig {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in kops.GVisorConfig) *kops.GVisorConfig {
+					return &in
+				}(func(in interface{}) kops.GVisorConfig {
+					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+						return ExpandDataSourceGVisorConfig(in[0].(map[string]interface{}))
+					}
+					return kops.GVisorConfig{}
+				}(in))
+			}(in)
+		}(in["g_visor"]),
 		Runc: func(in interface{}) *kops.Runc {
 			return func(in interface{}) *kops.Runc {
 				if in == nil {
@@ -463,6 +482,18 @@ func FlattenDataSourceContainerdConfigInto(in kops.ContainerdConfig, out map[str
 			}(*in)
 		}(in)
 	}(in.NvidiaGPU)
+	out["g_visor"] = func(in *kops.GVisorConfig) interface{} {
+		return func(in *kops.GVisorConfig) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in kops.GVisorConfig) interface{} {
+				return func(in kops.GVisorConfig) []interface{} {
+					return []interface{}{FlattenDataSourceGVisorConfig(in)}
+				}(in)
+			}(*in)
+		}(in)
+	}(in.GVisor)
 	out["runc"] = func(in *kops.Runc) interface{} {
 		return func(in *kops.Runc) interface{} {
 			if in == nil {

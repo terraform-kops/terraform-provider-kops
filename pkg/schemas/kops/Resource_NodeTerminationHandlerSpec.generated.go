@@ -20,6 +20,7 @@ func ResourceNodeTerminationHandlerSpec() *schema.Resource {
 			"enable_scheduled_event_draining":   Nullable(OptionalBool()),
 			"enable_rebalance_monitoring":       OptionalBool(),
 			"enable_rebalance_draining":         OptionalBool(),
+			"enable_out_of_service_taint":       OptionalBool(),
 			"enable_prometheus_metrics":         OptionalBool(),
 			"enable_sqs_termination_draining":   Nullable(OptionalBool()),
 			"exclude_from_load_balancers":       Nullable(OptionalBool()),
@@ -157,6 +158,25 @@ func ExpandResourceNodeTerminationHandlerSpec(in map[string]interface{}) kops.No
 				}(bool(ExpandBool(in)))
 			}(in)
 		}(in["enable_rebalance_draining"]),
+		EnableOutOfServiceTaint: func(in interface{}) *bool {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
+		}(in["enable_out_of_service_taint"]),
 		EnablePrometheusMetrics: func(in interface{}) *bool {
 			if in == nil {
 				return nil
@@ -476,6 +496,16 @@ func FlattenResourceNodeTerminationHandlerSpecInto(in kops.NodeTerminationHandle
 			}(*in)
 		}(in)
 	}(in.EnableRebalanceDraining)
+	out["enable_out_of_service_taint"] = func(in *bool) interface{} {
+		return func(in *bool) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in bool) interface{} {
+				return FlattenBool(bool(in))
+			}(*in)
+		}(in)
+	}(in.EnableOutOfServiceTaint)
 	out["enable_prometheus_metrics"] = func(in *bool) interface{} {
 		return func(in *bool) interface{} {
 			if in == nil {

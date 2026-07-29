@@ -417,6 +417,9 @@ func main() {
 		),
 		// 1.35
 		generate(kops.DiscoveryServiceOptions{}),
+		// 1.36
+		generate(kops.GVisorConfig{}),
+		generate(kops.LinodeSpec{}),
 	)
 	build(
 		"Config",
@@ -673,5 +676,8 @@ func main() {
 		),
 		// 1.35
 		generate(kops.DiscoveryServiceOptions{}),
+		// 1.36
+		generate(kops.GVisorConfig{}),
+		generate(kops.LinodeSpec{}),
 	)
 }

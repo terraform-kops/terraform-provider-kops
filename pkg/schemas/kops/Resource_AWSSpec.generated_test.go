@@ -29,6 +29,7 @@ func TestExpandResourceAWSSpec(t *testing.T) {
 					"node_ip_families":               func() []interface{} { return nil }(),
 					"disable_security_group_ingress": nil,
 					"elb_security_group":             nil,
+					"nlb_security_group_mode":        nil,
 					"spotinst_product":               nil,
 					"spotinst_orientation":           nil,
 					"binaries_location":              nil,
@@ -57,6 +58,7 @@ func TestFlattenResourceAWSSpecInto(t *testing.T) {
 		"node_ip_families":               func() []interface{} { return nil }(),
 		"disable_security_group_ingress": nil,
 		"elb_security_group":             nil,
+		"nlb_security_group_mode":        nil,
 		"spotinst_product":               nil,
 		"spotinst_orientation":           nil,
 		"binaries_location":              nil,
@@ -159,6 +161,17 @@ func TestFlattenResourceAWSSpecInto(t *testing.T) {
 				in: func() kops.AWSSpec {
 					subject := kops.AWSSpec{}
 					subject.ElbSecurityGroup = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NLBSecurityGroupMode - default",
+			args: args{
+				in: func() kops.AWSSpec {
+					subject := kops.AWSSpec{}
+					subject.NLBSecurityGroupMode = nil
 					return subject
 				}(),
 			},
@@ -219,6 +232,7 @@ func TestFlattenResourceAWSSpec(t *testing.T) {
 		"node_ip_families":               func() []interface{} { return nil }(),
 		"disable_security_group_ingress": nil,
 		"elb_security_group":             nil,
+		"nlb_security_group_mode":        nil,
 		"spotinst_product":               nil,
 		"spotinst_orientation":           nil,
 		"binaries_location":              nil,
@@ -321,6 +335,17 @@ func TestFlattenResourceAWSSpec(t *testing.T) {
 				in: func() kops.AWSSpec {
 					subject := kops.AWSSpec{}
 					subject.ElbSecurityGroup = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NLBSecurityGroupMode - default",
+			args: args{
+				in: func() kops.AWSSpec {
+					subject := kops.AWSSpec{}
+					subject.NLBSecurityGroupMode = nil
 					return subject
 				}(),
 			},

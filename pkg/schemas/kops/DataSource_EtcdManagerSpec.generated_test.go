@@ -27,6 +27,7 @@ func TestExpandDataSourceEtcdManagerSpec(t *testing.T) {
 					"backup_retention_days":   nil,
 					"discovery_poll_interval": nil,
 					"listen_metrics_ur_ls":    func() []interface{} { return nil }(),
+					"listen_client_httpur_ls": func() []interface{} { return nil }(),
 					"log_level":               nil,
 				},
 			},
@@ -51,6 +52,7 @@ func TestFlattenDataSourceEtcdManagerSpecInto(t *testing.T) {
 		"backup_retention_days":   nil,
 		"discovery_poll_interval": nil,
 		"listen_metrics_ur_ls":    func() []interface{} { return nil }(),
+		"listen_client_httpur_ls": func() []interface{} { return nil }(),
 		"log_level":               nil,
 	}
 	type args struct {
@@ -129,6 +131,17 @@ func TestFlattenDataSourceEtcdManagerSpecInto(t *testing.T) {
 				in: func() kops.EtcdManagerSpec {
 					subject := kops.EtcdManagerSpec{}
 					subject.ListenMetricsURLs = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ListenClientHTTPURLs - default",
+			args: args{
+				in: func() kops.EtcdManagerSpec {
+					subject := kops.EtcdManagerSpec{}
+					subject.ListenClientHTTPURLs = nil
 					return subject
 				}(),
 			},
@@ -165,6 +178,7 @@ func TestFlattenDataSourceEtcdManagerSpec(t *testing.T) {
 		"backup_retention_days":   nil,
 		"discovery_poll_interval": nil,
 		"listen_metrics_ur_ls":    func() []interface{} { return nil }(),
+		"listen_client_httpur_ls": func() []interface{} { return nil }(),
 		"log_level":               nil,
 	}
 	type args struct {
@@ -243,6 +257,17 @@ func TestFlattenDataSourceEtcdManagerSpec(t *testing.T) {
 				in: func() kops.EtcdManagerSpec {
 					subject := kops.EtcdManagerSpec{}
 					subject.ListenMetricsURLs = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ListenClientHTTPURLs - default",
+			args: args{
+				in: func() kops.EtcdManagerSpec {
+					subject := kops.EtcdManagerSpec{}
+					subject.ListenClientHTTPURLs = nil
 					return subject
 				}(),
 			},

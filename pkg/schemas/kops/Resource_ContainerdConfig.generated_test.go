@@ -32,6 +32,7 @@ func TestExpandResourceContainerdConfig(t *testing.T) {
 					"state":                           nil,
 					"version":                         nil,
 					"nvidia_gpu":                      nil,
+					"g_visor":                         nil,
 					"runc":                            nil,
 					"se_linux_enabled":                false,
 					"nri":                             nil,
@@ -67,6 +68,7 @@ func TestFlattenResourceContainerdConfigInto(t *testing.T) {
 		"state":                           nil,
 		"version":                         nil,
 		"nvidia_gpu":                      nil,
+		"g_visor":                         nil,
 		"runc":                            nil,
 		"se_linux_enabled":                false,
 		"nri":                             nil,
@@ -206,6 +208,17 @@ func TestFlattenResourceContainerdConfigInto(t *testing.T) {
 				in: func() kops.ContainerdConfig {
 					subject := kops.ContainerdConfig{}
 					subject.NvidiaGPU = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "GVisor - default",
+			args: args{
+				in: func() kops.ContainerdConfig {
+					subject := kops.ContainerdConfig{}
+					subject.GVisor = nil
 					return subject
 				}(),
 			},
@@ -313,6 +326,7 @@ func TestFlattenResourceContainerdConfig(t *testing.T) {
 		"state":                           nil,
 		"version":                         nil,
 		"nvidia_gpu":                      nil,
+		"g_visor":                         nil,
 		"runc":                            nil,
 		"se_linux_enabled":                false,
 		"nri":                             nil,
@@ -452,6 +466,17 @@ func TestFlattenResourceContainerdConfig(t *testing.T) {
 				in: func() kops.ContainerdConfig {
 					subject := kops.ContainerdConfig{}
 					subject.NvidiaGPU = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "GVisor - default",
+			args: args{
+				in: func() kops.ContainerdConfig {
+					subject := kops.ContainerdConfig{}
+					subject.GVisor = nil
 					return subject
 				}(),
 			},

@@ -21,6 +21,7 @@ func ResourceAWSSpec() *schema.Resource {
 			"node_ip_families":               OptionalList(String()),
 			"disable_security_group_ingress": OptionalBool(),
 			"elb_security_group":             OptionalString(),
+			"nlb_security_group_mode":        OptionalString(),
 			"spotinst_product":               OptionalString(),
 			"spotinst_orientation":           OptionalString(),
 			"binaries_location":              OptionalString(),
@@ -175,6 +176,25 @@ func ExpandResourceAWSSpec(in map[string]interface{}) kops.AWSSpec {
 				}(string(ExpandString(in)))
 			}(in)
 		}(in["elb_security_group"]),
+		NLBSecurityGroupMode: func(in interface{}) *string {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *string {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in string) *string {
+					return &in
+				}(string(ExpandString(in)))
+			}(in)
+		}(in["nlb_security_group_mode"]),
 		SpotinstProduct: func(in interface{}) *string {
 			if in == nil {
 				return nil
@@ -325,6 +345,16 @@ func FlattenResourceAWSSpecInto(in kops.AWSSpec, out map[string]interface{}) {
 			}(*in)
 		}(in)
 	}(in.ElbSecurityGroup)
+	out["nlb_security_group_mode"] = func(in *string) interface{} {
+		return func(in *string) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in string) interface{} {
+				return FlattenString(string(in))
+			}(*in)
+		}(in)
+	}(in.NLBSecurityGroupMode)
 	out["spotinst_product"] = func(in *string) interface{} {
 		return func(in *string) interface{} {
 			if in == nil {

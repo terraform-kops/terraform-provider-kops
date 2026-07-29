@@ -18,6 +18,7 @@ func DataSourceCloudProviderSpec() *schema.Resource {
 			"hetzner":   ComputedStruct(DataSourceHetznerSpec()),
 			"openstack": ComputedStruct(DataSourceOpenstackSpec()),
 			"scaleway":  ComputedStruct(DataSourceScalewaySpec()),
+			"linode":    ComputedStruct(DataSourceLinodeSpec()),
 		},
 	}
 
@@ -155,6 +156,24 @@ func ExpandDataSourceCloudProviderSpec(in map[string]interface{}) kops.CloudProv
 				}(in))
 			}(in)
 		}(in["scaleway"]),
+		Linode: func(in interface{}) *kops.LinodeSpec {
+			return func(in interface{}) *kops.LinodeSpec {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in kops.LinodeSpec) *kops.LinodeSpec {
+					return &in
+				}(func(in interface{}) kops.LinodeSpec {
+					if in, ok := in.([]interface{}); ok && len(in) == 1 && in[0] != nil {
+						return ExpandDataSourceLinodeSpec(in[0].(map[string]interface{}))
+					}
+					return kops.LinodeSpec{}
+				}(in))
+			}(in)
+		}(in["linode"]),
 	}
 }
 
@@ -243,6 +262,18 @@ func FlattenDataSourceCloudProviderSpecInto(in kops.CloudProviderSpec, out map[s
 			}(*in)
 		}(in)
 	}(in.Scaleway)
+	out["linode"] = func(in *kops.LinodeSpec) interface{} {
+		return func(in *kops.LinodeSpec) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in kops.LinodeSpec) interface{} {
+				return func(in kops.LinodeSpec) []interface{} {
+					return []interface{}{FlattenDataSourceLinodeSpec(in)}
+				}(in)
+			}(*in)
+		}(in)
+	}(in.Linode)
 }
 
 func FlattenDataSourceCloudProviderSpec(in kops.CloudProviderSpec) map[string]interface{} {

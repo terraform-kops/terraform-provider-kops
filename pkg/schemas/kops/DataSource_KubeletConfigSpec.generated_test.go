@@ -118,6 +118,9 @@ func TestExpandDataSourceKubeletConfigSpec(t *testing.T) {
 					"shutdown_grace_period_critical_pods":      nil,
 					"memory_swap_behavior":                     "",
 					"crash_loop_back_off_max_container_restart_period": nil,
+					"kube_api_qps":                nil,
+					"event_record_qps":            nil,
+					"node_lease_duration_seconds": nil,
 				},
 			},
 			want: _default,
@@ -232,6 +235,9 @@ func TestFlattenDataSourceKubeletConfigSpecInto(t *testing.T) {
 		"shutdown_grace_period_critical_pods":      nil,
 		"memory_swap_behavior":                     "",
 		"crash_loop_back_off_max_container_restart_period": nil,
+		"kube_api_qps":                nil,
+		"event_record_qps":            nil,
+		"node_lease_duration_seconds": nil,
 	}
 	type args struct {
 		in kops.KubeletConfigSpec
@@ -1310,6 +1316,39 @@ func TestFlattenDataSourceKubeletConfigSpecInto(t *testing.T) {
 				in: func() kops.KubeletConfigSpec {
 					subject := kops.KubeletConfigSpec{}
 					subject.CrashLoopBackOffMaxContainerRestartPeriod = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "KubeApiQPS - default",
+			args: args{
+				in: func() kops.KubeletConfigSpec {
+					subject := kops.KubeletConfigSpec{}
+					subject.KubeAPIQPS = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EventRecordQPS - default",
+			args: args{
+				in: func() kops.KubeletConfigSpec {
+					subject := kops.KubeletConfigSpec{}
+					subject.EventRecordQPS = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NodeLeaseDurationSeconds - default",
+			args: args{
+				in: func() kops.KubeletConfigSpec {
+					subject := kops.KubeletConfigSpec{}
+					subject.NodeLeaseDurationSeconds = nil
 					return subject
 				}(),
 			},
@@ -1426,6 +1465,9 @@ func TestFlattenDataSourceKubeletConfigSpec(t *testing.T) {
 		"shutdown_grace_period_critical_pods":      nil,
 		"memory_swap_behavior":                     "",
 		"crash_loop_back_off_max_container_restart_period": nil,
+		"kube_api_qps":                nil,
+		"event_record_qps":            nil,
+		"node_lease_duration_seconds": nil,
 	}
 	type args struct {
 		in kops.KubeletConfigSpec
@@ -2504,6 +2546,39 @@ func TestFlattenDataSourceKubeletConfigSpec(t *testing.T) {
 				in: func() kops.KubeletConfigSpec {
 					subject := kops.KubeletConfigSpec{}
 					subject.CrashLoopBackOffMaxContainerRestartPeriod = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "KubeApiQPS - default",
+			args: args{
+				in: func() kops.KubeletConfigSpec {
+					subject := kops.KubeletConfigSpec{}
+					subject.KubeAPIQPS = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EventRecordQPS - default",
+			args: args{
+				in: func() kops.KubeletConfigSpec {
+					subject := kops.KubeletConfigSpec{}
+					subject.EventRecordQPS = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NodeLeaseDurationSeconds - default",
+			args: args{
+				in: func() kops.KubeletConfigSpec {
+					subject := kops.KubeletConfigSpec{}
+					subject.NodeLeaseDurationSeconds = nil
 					return subject
 				}(),
 			},
