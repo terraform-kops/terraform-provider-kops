@@ -1,5 +1,19 @@
 # Changelog
 
+## [v1.36.0](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.35.2...v1.36.0) - 2026-07-30
+
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.312.0 to 1.313.0 in the aws-sdk group by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/471
+- chore(deps): bump the aws-sdk group with 2 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/473
+- chore(deps): bump golang.org/x/tools from 0.47.0 to 0.48.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/475
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.314.0 to 1.315.0 in the aws-sdk group by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/474
+- chore(deps): bump the aws-sdk group across 1 directory with 3 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/477
+- chore(deps): bump actions/setup-go from 6 to 7 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/479
+- chore(deps): bump the aws-sdk group with 4 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/480
+- chore(deps): bump the aws-sdk group with 4 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/481
+- feat: upgrade kOps to v1.36.1 by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/482
+- chore(deps): bump the k8s group across 1 directory with 3 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/484
+- chore(deps): bump the aws-sdk group across 1 directory with 4 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/483
+
 ## [v1.35.2](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.35.1...v1.35.2) - 2026-07-07
 
 - chore(deps): bump the aws-sdk group with 4 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/451
