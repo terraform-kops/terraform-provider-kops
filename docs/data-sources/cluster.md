@@ -148,6 +148,7 @@ The following arguments are supported:
 - `hetzner` - (Computed) - [hetzner_spec](#hetzner_spec) - Hetzner configures the Hetzner cloud provider.
 - `openstack` - (Computed) - [openstack_spec](#openstack_spec) - Openstack configures the Openstack cloud provider.
 - `scaleway` - (Computed) - [scaleway_spec](#scaleway_spec) - Scaleway configures the Scaleway cloud provider.
+- `linode` - (Computed) - [linode_spec](#linode_spec) - Linode configures the Linode (Akamai) cloud provider.
 
 ### aws_spec
 
@@ -165,6 +166,7 @@ The following arguments are supported:
 - `node_ip_families` - (Computed) - List(String) - NodeIPFamilies control the IP families reported for each node.
 - `disable_security_group_ingress` - (Computed) - Bool - DisableSecurityGroupIngress disables the Cloud Controller Manager's creation<br />of an AWS Security Group for each load balancer provisioned for a Service.
 - `elb_security_group` - (Computed) - String - ElbSecurityGroup specifies an existing AWS Security group for the Cloud Controller<br />Manager to assign to each ELB provisioned for a Service, instead of creating<br />one per ELB.
+- `nlb_security_group_mode` - (Computed) - String - NLBSecurityGroupMode determines if the Cloud Controller Manager supports and manages<br />security groups for Network Load Balancers (AWS only). Valid value: "Managed".
 - `spotinst_product` - (Computed) - String - Spotinst cloud-config specs.
 - `spotinst_orientation` - (Computed) - String
 - `binaries_location` - (Computed) - String - BinariesLocation is the location of the AWS cloud provider binaries.
@@ -200,6 +202,7 @@ The following arguments are supported:
 - `enable_scheduled_event_draining` - (Computed) - Bool([Nullable](#nullable-arguments)) - EnableScheduledEventDraining makes node termination handler drain nodes before the maintenance window starts for an EC2 instance scheduled event.<br />Cannot be disabled in queue-processor mode.<br />Default: true.
 - `enable_rebalance_monitoring` - (Computed) - Bool - EnableRebalanceMonitoring makes node termination handler cordon nodes when the rebalance recommendation notice is received.<br />In queue-processor mode, cannot be enabled without rebalance draining.<br />Default: false.
 - `enable_rebalance_draining` - (Computed) - Bool - EnableRebalanceDraining makes node termination handler drain nodes when the rebalance recommendation notice is received.<br />Default: false.
+- `enable_out_of_service_taint` - (Computed) - Bool - EnableOutOfServiceTaint makes node termination handler apply the node.kubernetes.io/out-of-service taint<br />to nodes during non-graceful shutdown, allowing Kubernetes to quickly detach volumes and reschedule pods.<br />Default: false.
 - `enable_prometheus_metrics` - (Computed) - Bool - EnablePrometheusMetrics enables the "/metrics" endpoint.<br />Default: false.
 - `enable_sqs_termination_draining` - (Computed) - Bool([Nullable](#nullable-arguments)) - EnableSQSTerminationDraining enables queue-processor mode which drains nodes when an SQS termination event is received.<br />Default: true.
 - `exclude_from_load_balancers` - (Computed) - Bool([Nullable](#nullable-arguments)) - ExcludeFromLoadBalancers makes node termination handler will mark for exclusion from load balancers before node are cordoned.<br />Default: true.
@@ -420,6 +423,13 @@ ScalewaySpec configures the Scaleway cloud provider.
 
 This resource has no attributes.
 
+### linode_spec
+
+LinodeSpec configures the Linode (Akamai) cloud provider.
+
+
+This resource has no attributes.
+
 ### gossip_config
 
 #### Argument Reference
@@ -487,7 +497,7 @@ EtcdClusterSpec is the etcd cluster specification.
 
 The following arguments are supported:
 
-- `name` - (Computed) - String - Name is the name of the etcd cluster (main, events etc).
+- `name` - (Computed) - String - Name is the name of the etcd cluster (main, events, leases etc).
 - `provider` - (Computed) - String - Provider is the provider used to run etcd: Manager, Legacy.<br />Defaults to Manager.
 - `member` - (Computed) - List([etcd_member_spec](#etcd_member_spec)) - Members stores the configurations for each member of the cluster (including the data volume).
 - `version` - (Computed) - String - Version is the version of etcd to run.
@@ -541,6 +551,7 @@ The following arguments are supported:
 - `backup_retention_days` - (Computed) - Int - BackupRetentionDays which is used for backups. The default is 90 days.
 - `discovery_poll_interval` - (Computed) - Duration - DiscoveryPollInterval which is used for discovering other cluster members. The default is 60 seconds.
 - `listen_metrics_ur_ls` - (Computed) - List(String) - ListenMetricsURLs is the list of URLs to listen on that will respond to both the /metrics and /health endpoints.
+- `listen_client_httpur_ls` - (Computed) - List(String) - ListenClientHTTPURLs is the list of URLs to listen on for HTTP-only client traffic.
 - `log_level` - (Computed) - Int - LogLevel allows the klog library verbose log level to be set for etcd-manager. The default is 6.<br />https://github.com/google/glog#verbose-logging.
 
 ### env_var
@@ -617,7 +628,7 @@ ContainerdConfig is the configuration for containerd.
 The following arguments are supported:
 
 - `address` - (Computed) - String - Address of containerd's GRPC server (default "/run/containerd/containerd.sock").
-- `config_additions` - (Computed) - Map(IntOrString) - ConfigAdditions adds additional config entries to the generated config file.
+- `config_additions` - (Computed) - Map(IntOrString) - ConfigAdditions adds additional config entries to the generated config file.<br />Paths are written to the config as-is, so they must match the schema version of the<br />configured containerd: v2 paths (e.g. plugins."io.containerd.grpc.v1.cri".*) for<br />containerd < 2.0, v3 paths (e.g. plugins."io.containerd.cri.v1.runtime".*) for >= 2.0.
 - `config_override` - (Computed) - String - ConfigOverride is the complete containerd config file provided by the user.
 - `log_level` - (Computed) - String - LogLevel controls the logging details [trace, debug, info, warn, error, fatal, panic] (default "info").
 - `packages` - (Computed) - [packages_config](#packages_config) - Packages overrides the URL and hash for the packages.
@@ -627,6 +638,7 @@ The following arguments are supported:
 - `state` - (Computed) - String - State directory for execution state files (default "/run/containerd").
 - `version` - (Computed) - String - Version used to pick the containerd package.
 - `nvidia_gpu` - (Computed) - [nvidia_gpu_config](#nvidia_gpu_config) - NvidiaGPU configures the Nvidia GPU runtime.
+- `g_visor` - (Computed) - [g_visor_config](#g_visor_config) - GVisor configures the gVisor (runsc) sandboxed runtime.
 - `runc` - (Computed) - [runc](#runc) - Runc configures the runc runtime.
 - `se_linux_enabled` - (Computed) - Bool - SelinuxEnabled enables SELinux support.
 - `nri` - (Computed) - [nri_config](#nri_config) - NRI configures the Node Resource Interface.
@@ -655,6 +667,17 @@ DCGMExporterConfig configures the DCGM exporter.<br />Only the DCGMExporterConfi
 The following arguments are supported:
 
 - `enabled` - (Computed) - Bool - Enabled determines if kOps will install the DCGM exporter.
+
+### g_visor_config
+
+GVisorConfig configures the gVisor sandboxed container runtime.<br />When enabled, kOps installs runsc and containerd-shim-runsc-v1,<br />registers the "runsc" runtime handler in containerd, and deploys<br />a Kubernetes RuntimeClass named "gvisor".
+
+#### Argument Reference
+
+The following arguments are supported:
+
+- `enabled` - (Computed) - Bool - Enabled determines if kOps will install the gVisor runtime.
+- `platform` - (Computed) - String - Platform is the gVisor execution platform: "systrap" (default, works<br />everywhere including VMs) or "kvm" (bare-metal with KVM support).
 
 ### runc
 
@@ -884,6 +907,7 @@ The following arguments are supported:
 - `log_format` - (Computed) - String - LogFormat is the logging format of the api.<br />Supported values: text, json.<br />Default: text.
 - `log_level` - (Computed) - Int - LogLevel is the logging level of the api.
 - `cloud_provider` - (Computed) - String - CloudProvider is the name of the cloudProvider we are using, aws, gce etcd.
+- `compaction_interval` - (Computed) - Duration - CompactionInterval is an interval of requesting compaction from apiserver.<br />If the value is 0, no compaction will be issued.
 - `secure_port` - (Computed) - Int - SecurePort is the port the kube runs on.
 - `insecure_port` - (Computed) - Int - InsecurePort is the port the insecure api runs.
 - `address` - (Computed) - String - Address is the binding address for the kube api: Deprecated - use insecure-bind-address and bind-address.
@@ -967,6 +991,7 @@ The following arguments are supported:
 - `http2_max_streams_per_connection` - (Computed) - Int - HTTP2MaxStreamsPerConnection sets the limit that the server gives to clients for the maximum number of streams in an HTTP/2 connection. Zero means to use golang's default.
 - `etcd_quorum_read` - (Computed) - Bool - EtcdQuorumRead configures the etcd-quorum-read flag, which forces consistent reads from etcd.
 - `request_timeout` - (Computed) - Duration - RequestTimeout configures the duration a handler must keep a request open before timing it out. (default 1m0s).
+- `storage_initialization_timeout` - (Computed) - Duration - StorageInitializationTimeout is the maximum amount of time to wait for the storage layer to initialize before declaring kube-apiserver ready.<br />Increasing this value allows etcd more time to become ready on new control-plane nodes before kube-apiserver gives up and crashes.<br />Default is 1m0s.
 - `min_request_timeout` - (Computed) - Int - MinRequestTimeout configures the minimum number of seconds a handler must keep a request open before timing it out.<br />Currently only honored by the watch request handler.
 - `watch_cache` - (Computed) - Bool - Used to disable watch caching in the apiserver, defaults to enabling caching by omission.
 - `watch_cache_sizes` - (Computed) - List(String) - Set the watch-cache-sizes parameter for the apiserver<br />The only meaningful value is setting to 0, which disable caches for specific object types.<br />Setting any values other than 0 for a resource will yield no effect since the caches are dynamic.
@@ -1188,6 +1213,7 @@ The following arguments are supported:
 - `cpu_request` - (Computed) - Quantity - CPURequest of NodeTerminationHandler container.<br />Default: 200m.
 - `node_status_update_frequency` - (Computed) - Duration - NodeStatusUpdateFrequency is the duration between node status updates. (default: 5m).
 - `concurrent_node_syncs` - (Computed) - Int - ConcurrentNodeSyncs is the number of workers concurrently synchronizing nodes. (default: 1).
+- `azure_node_manager_image` - (Computed) - String - AzureNodeManagerImage is the OCI image of the Azure cloud node manager.
 
 ### kube_scheduler_config
 
@@ -1263,8 +1289,8 @@ The following arguments are supported:
 - `authorization_mode` - (Computed) - String - AuthorizationMode is the authorization mode the kubelet is running in.
 - `bootstrap_kubeconfig` - (Computed) - String - BootstrapKubeconfig is the path to a kubeconfig file that will be used to get client certificate for kubelet.
 - `client_ca_file` - (Computed) - String - ClientCAFile is the path to a CA certificate.
-- `tls_cert_file` - (Computed) - String - TODO: Remove unused TLSCertFile.
-- `tls_private_key_file` - (Computed) - String - TODO: Remove unused TLSPrivateKeyFile.
+- `tls_cert_file` - (Computed) - String - TLSCertFile is the path to the kubelet's serving cert. Set automatically<br />by nodeup to a cert+CA bundle; users should not set this directly.
+- `tls_private_key_file` - (Computed) - String - TLSPrivateKeyFile is the path to the private key for the kubelet's<br />serving cert. Set automatically by nodeup; users should not set this directly.
 - `tls_cipher_suites` - (Computed) - List(String) - TLSCipherSuites indicates the allowed TLS cipher suite.
 - `tls_min_version` - (Computed) - String - TLSMinVersion indicates the minimum TLS version allowed.
 - `kubeconfig_path` - (Computed) - String - KubeconfigPath is the path of kubeconfig for the kubelet.
@@ -1303,7 +1329,7 @@ The following arguments are supported:
 - `non_masquerade_cidr` - (Computed) - String - NonMasqueradeCIDR configures masquerading: traffic to IPs outside this range will use IP masquerade.
 - `enable_custom_metrics` - (Computed) - Bool - Enable gathering custom metrics.
 - `network_plugin_mtu` - (Computed) - Int - NetworkPluginMTU is the MTU to be passed to the network plugin,<br />and overrides the default MTU for cases where it cannot be automatically<br />computed (such as IPSEC).
-- `image_minimum_gc_age` - (Computed) - Duration - imageMinimumGCAge is the minimum age for an unused image before it is garbage collected. Default: "2m".
+- `image_minimum_gc_age` - (Computed) - Duration - imageMinimumGCAge is the minimum age for an unused image before it is garbage collected. Default: "2m"<br />Kept as a flag so explicit zero is preserved; the upstream config field is non-pointer with omitempty and would drop a zero value.
 - `image_maximum_gc_age` - (Computed) - Duration - imageMaximumGCAge is the maximum age an image can be unused before it is garbage collected.<br />The default of this field is "0s", which disables this field--meaning images won't be garbage<br />collected based on being unused for too long. Default: "0s" (disabled).
 - `max_parallel_image_pulls` - (Computed) - Int - MaxParallelImagePulls sets the maximum number of image pulls in parallel.<br />This field cannot be set if SerializeImagePulls is true.<br />Setting it to nil means no limit.<br />Default: nil.
 - `image_gc_high_threshold_percent` - (Computed) - Int - ImageGCHighThresholdPercent is the percent of disk usage after which<br />image garbage collection is always run.
@@ -1324,28 +1350,28 @@ The following arguments are supported:
 - `system_reserved` - (Computed) - Map(String) - Capture resource reservation for OS system daemons like sshd, udev, etc.
 - `system_reserved_cgroup` - (Computed) - String - Parent control group for OS system daemons.
 - `enforce_node_allocatable` - (Computed) - String - Enforce Allocatable across pods whenever the overall usage across all pods exceeds Allocatable.
-- `runtime_request_timeout` - (Computed) - Duration - RuntimeRequestTimeout is timeout for runtime requests on - pull, logs, exec and attach.
-- `volume_stats_agg_period` - (Computed) - Duration - VolumeStatsAggPeriod is the interval for kubelet to calculate and cache the volume disk usage for all pods and volumes.
+- `runtime_request_timeout` - (Computed) - Duration - RuntimeRequestTimeout is timeout for runtime requests on - pull, logs, exec and attach<br />Kept as a flag so explicit zero is preserved; the upstream config field is non-pointer with omitempty and would drop a zero value.
+- `volume_stats_agg_period` - (Computed) - Duration - VolumeStatsAggPeriod is the interval for kubelet to calculate and cache the volume disk usage for all pods and volumes<br />Kept as a flag so explicit zero is preserved; the upstream config field is non-pointer with omitempty and would drop a zero value.
 - `fail_swap_on` - (Computed) - Bool - Tells the Kubelet to fail to start if swap is enabled on the node.
 - `experimental_allowed_unsafe_sysctls` - (Computed) - List(String) - ExperimentalAllowedUnsafeSysctls are passed to the kubelet config to whitelist allowable sysctls<br />Was promoted to beta and renamed. https://github.com/kubernetes/kubernetes/pull/63717.
 - `allowed_unsafe_sysctls` - (Computed) - List(String) - AllowedUnsafeSysctls are passed to the kubelet config to whitelist allowable sysctls.
-- `streaming_connection_idle_timeout` - (Computed) - Duration - StreamingConnectionIdleTimeout is the maximum time a streaming connection can be idle before the connection is automatically closed.
+- `streaming_connection_idle_timeout` - (Computed) - Duration - StreamingConnectionIdleTimeout is the maximum time a streaming connection can be idle before the connection is automatically closed<br />Kept as a flag so explicit zero is preserved; the upstream config field is non-pointer with omitempty and would drop a zero value.
 - `docker_disable_shared_pid` - (Computed) - Bool - DockerDisableSharedPID was removed.
 - `root_dir` - (Computed) - String - RootDir is the directory path for managing kubelet files (volume mounts,etc).
 - `authentication_token_webhook` - (Computed) - Bool - AuthenticationTokenWebhook uses the TokenReview API to determine authentication for bearer tokens.
-- `authentication_token_webhook_cache_ttl` - (Computed) - Duration - AuthenticationTokenWebhook sets the duration to cache responses from the webhook token authenticator. Default is 2m. (default 2m0s).
+- `authentication_token_webhook_cache_ttl` - (Computed) - Duration - AuthenticationTokenWebhook sets the duration to cache responses from the webhook token authenticator. Default is 2m. (default 2m0s)<br />Kept as a flag so explicit zero is preserved; the upstream config field is non-pointer with omitempty and would drop a zero value.
 - `cpu_cfs_quota` - (Computed) - Bool([Nullable](#nullable-arguments)) - CPUCFSQuota enables CPU CFS quota enforcement for containers that specify CPU limits.
 - `cpu_cfs_quota_period` - (Computed) - Duration - CPUCFSQuotaPeriod sets CPU CFS quota period value, cpu.cfs_period_us, defaults to Linux Kernel default.
 - `cpu_manager_policy` - (Computed) - String - CpuManagerPolicy allows for changing the default policy of None to static.
 - `registry_pull_qps` - (Computed) - Int - RegistryPullQPS if > 0, limit registry pull QPS to this value.  If 0, unlimited. (default 5).
-- `registry_burst` - (Computed) - Int - RegistryBurst Maximum size of a bursty pulls, temporarily allows pulls to burst to this number, while still not exceeding registry-qps. Only used if --registry-qps > 0 (default 10).
+- `registry_burst` - (Computed) - Int - RegistryBurst Maximum size of a bursty pulls, temporarily allows pulls to burst to this number, while still not exceeding registry-qps. Only used if --registry-qps > 0 (default 10)<br />Kept as a flag so explicit zero is preserved; the upstream config field is non-pointer with omitempty and would drop a zero value.
 - `topology_manager_policy` - (Computed) - String - TopologyManagerPolicy determines the allocation policy for the topology manager.
 - `rotate_certificates` - (Computed) - Bool - rotateCertificates enables client certificate rotation.
 - `protect_kernel_defaults` - (Computed) - Bool - Default kubelet behaviour for kernel tuning. If set, kubelet errors if any of kernel tunables is different than kubelet defaults.<br />DEPRECATED: This parameter should be set via the config file specified by the Kubelet's --config flag.
 - `cgroup_driver` - (Computed) - String - CgroupDriver allows the explicit setting of the kubelet cgroup driver.<br />DEPRECATED: The cgroup driver is automatically detected.
 - `housekeeping_interval` - (Computed) - Duration - HousekeepingInterval allows to specify interval between container housekeepings.
 - `event_qps` - (Computed) - Int - EventQPS if > 0, limit event creations per second to this value.  If 0, unlimited.
-- `event_burst` - (Computed) - Int - EventBurst temporarily allows event records to burst to this number, while still not exceeding EventQPS. Only used if EventQPS > 0.
+- `event_burst` - (Computed) - Int - EventBurst temporarily allows event records to burst to this number, while still not exceeding EventQPS. Only used if EventQPS > 0.<br />Kept as a flag so explicit zero is preserved; the upstream config field is non-pointer with omitempty and would drop a zero value.
 - `container_log_max_size` - (Computed) - String - ContainerLogMaxSize is the maximum size (e.g. 10Mi) of container log file before it is rotated.
 - `container_log_max_files` - (Computed) - Int - ContainerLogMaxFiles is the maximum number of container log files that can be present for a container. The number must be >= 2.
 - `enable_cadvisor_json_endpoints` - (Computed) - Bool - EnableCadvisorJsonEndpoints enables cAdvisor json `/spec` and `/stats/*` endpoints. Defaults to False.
@@ -1355,6 +1381,9 @@ The following arguments are supported:
 - `shutdown_grace_period_critical_pods` - (Computed) - Duration - ShutdownGracePeriodCriticalPods specifies the duration used to terminate critical pods during a node shutdown.<br />Default: 10s.
 - `memory_swap_behavior` - (Computed) - String - MemorySwapBehavior defines how swap is used by container workloads.<br />Supported values: LimitedSwap, "UnlimitedSwap.
 - `crash_loop_back_off_max_container_restart_period` - (Computed) - Duration - CrashLoopBackOffMaxContainerRestartPeriod is the maximum duration the backoff delay can accrue to for container restarts, minimum 1 second, maximum 300 seconds. If not set, defaults to the internal crashloopbackoff maximum (300s).
+- `kube_api_qps` - (Computed) - Int - KubeAPIQPS Burst to use while talking with kubernetes apiserver. (default 50).
+- `event_record_qps` - (Computed) - Int - EventRecordQPS is the maximum event creations per second. If 0, there is no limit enforced.<br />Default: 50.
+- `node_lease_duration_seconds` - (Computed) - Int - NodeLeaseDurationSeconds is the duration the Kubelet will set on its corresponding Lease, in seconds.<br />Default: 40.
 
 ### cloud_configuration
 
@@ -1625,7 +1654,7 @@ The following arguments are supported:
 - `version` - (Computed) - String - Version overrides the Calico container image tag.
 - `allow_ip_forwarding` - (Computed) - Bool - AllowIPForwarding enable ip_forwarding setting within the container namespace.<br />(default: false).
 - `aws_src_dst_check` - (Computed) - String - AWSSrcDstCheck enables/disables ENI source/destination checks (AWS IPv4 only)<br />Options: Disable (default for IPv4), Enable, or DoNothing.
-- `bpf_enabled` - (Computed) - Bool - BPFEnabled enables the eBPF dataplane mode.
+- `bpf_enabled` - (Computed) - Bool - BPFEnabled enables the eBPF dataplane mode. When set to true, kube-proxy<br />must be disabled (spec.kubeProxy.enabled=false); kops will default it<br />at cluster creation. Calico's BPF mode replaces kube-proxy and from<br />v3.31 binds the kube-proxy healthz port (10256), so running both<br />produces a port conflict.
 - `bpf_external_service_mode` - (Computed) - String - BPFExternalServiceMode controls how traffic from outside the cluster to NodePorts and ClusterIPs is handled.<br />In Tunnel mode, packet is tunneled from the ingress host to the host with the backing pod and back again.<br />In DSR mode, traffic is tunneled to the host with the backing pod and then returned directly;<br />this requires a network that allows direct return.<br />Default: Tunnel (other options: DSR).
 - `bpf_kube_proxy_iptables_cleanup_enabled` - (Computed) - Bool - BPFKubeProxyIptablesCleanupEnabled controls whether Felix will clean up the iptables rules<br />created by the Kubernetes kube-proxy; should only be enabled if kube-proxy is not running.
 - `bpf_log_level` - (Computed) - String - BPFLogLevel controls the log level used by the BPF programs. The logs are emitted<br />to the BPF trace pipe, accessible with the command tc exec BPF debug.<br />Default: Off (other options: Info, Debug).
@@ -1639,6 +1668,7 @@ The following arguments are supported:
 - `iptables_backend` - (Computed) - String - IptablesBackend controls which variant of iptables binary Felix uses<br />Default: Auto (other options: Legacy, NFT).
 - `log_severity_screen` - (Computed) - String - LogSeverityScreen lets us set the desired log level. (Default: info).
 - `mtu` - (Computed) - Int - MTU to be set in the cni-network-config for calico.
+- `nf_tables_mode` - (Computed) - String - NFTablesMode configures nftables support in Felix<br />Options: Disabled, Enabled, Auto.
 - `prometheus_metrics_enabled` - (Computed) - Bool - PrometheusMetricsEnabled can be set to enable the experimental Prometheus<br />metrics server (default: false).
 - `prometheus_metrics_port` - (Computed) - Int - PrometheusMetricsPort is the TCP port that the experimental Prometheus<br />metrics server should bind to (default: 9091).
 - `prometheus_go_metrics_enabled` - (Computed) - Bool - PrometheusGoMetricsEnabled enables Prometheus Go runtime metrics collection.
@@ -1725,6 +1755,7 @@ The following arguments are supported:
 - `enable_local_redirect_policy` - (Computed) - Bool - EnableLocalRedirectPolicy that enables pod traffic destined to an IP address and port/protocol<br />tuple or Kubernetes service to be redirected locally to backend pod(s) within a node, using eBPF.<br />https://docs.cilium.io/en/stable/network/kubernetes/local-redirect-policy/<br />Default: false.
 - `enable_bpf_masquerade` - (Computed) - Bool - EnableBPFMasquerade enables masquerading packets from endpoints leaving the host with BPF instead of iptables.<br />Default: false.
 - `enable_endpoint_health_checking` - (Computed) - Bool([Nullable](#nullable-arguments)) - EnableEndpointHealthChecking enables connectivity health checking between virtual endpoints.<br />Default: true.
+- `enable_host_firewall` - (Computed) - Bool - EnableHostFirewall enables the host firewall in the Cilium agent.<br />Default: false.
 - `enable_prometheus_metrics` - (Computed) - Bool - EnablePrometheusMetrics enables the Cilium "/metrics" endpoint for both the agent and the operator.
 - `enable_encryption` - (Computed) - Bool - EnableEncryption enables Cilium Encryption.<br />Default: false.
 - `encryption_type` - (Computed) - String - EncryptionType specifies Cilium Encryption method ("ipsec", "wireguard").<br />Default: ipsec.

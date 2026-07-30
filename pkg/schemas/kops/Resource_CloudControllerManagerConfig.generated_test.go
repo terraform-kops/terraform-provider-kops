@@ -38,6 +38,7 @@ func TestExpandResourceCloudControllerManagerConfig(t *testing.T) {
 					"cpu_request":                     nil,
 					"node_status_update_frequency":    nil,
 					"concurrent_node_syncs":           nil,
+					"azure_node_manager_image":        "",
 				},
 			},
 			want: _default,
@@ -72,6 +73,7 @@ func TestFlattenResourceCloudControllerManagerConfigInto(t *testing.T) {
 		"cpu_request":                     nil,
 		"node_status_update_frequency":    nil,
 		"concurrent_node_syncs":           nil,
+		"azure_node_manager_image":        "",
 	}
 	type args struct {
 		in kops.CloudControllerManagerConfig
@@ -270,6 +272,17 @@ func TestFlattenResourceCloudControllerManagerConfigInto(t *testing.T) {
 				in: func() kops.CloudControllerManagerConfig {
 					subject := kops.CloudControllerManagerConfig{}
 					subject.ConcurrentNodeSyncs = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "AzureNodeManagerImage - default",
+			args: args{
+				in: func() kops.CloudControllerManagerConfig {
+					subject := kops.CloudControllerManagerConfig{}
+					subject.AzureNodeManagerImage = ""
 					return subject
 				}(),
 			},
@@ -306,6 +319,7 @@ func TestFlattenResourceCloudControllerManagerConfig(t *testing.T) {
 		"cpu_request":                     nil,
 		"node_status_update_frequency":    nil,
 		"concurrent_node_syncs":           nil,
+		"azure_node_manager_image":        "",
 	}
 	type args struct {
 		in kops.CloudControllerManagerConfig
@@ -504,6 +518,17 @@ func TestFlattenResourceCloudControllerManagerConfig(t *testing.T) {
 				in: func() kops.CloudControllerManagerConfig {
 					subject := kops.CloudControllerManagerConfig{}
 					subject.ConcurrentNodeSyncs = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "AzureNodeManagerImage - default",
+			args: args{
+				in: func() kops.CloudControllerManagerConfig {
+					subject := kops.CloudControllerManagerConfig{}
+					subject.AzureNodeManagerImage = ""
 					return subject
 				}(),
 			},

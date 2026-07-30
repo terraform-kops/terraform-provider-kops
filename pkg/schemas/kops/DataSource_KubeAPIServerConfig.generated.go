@@ -22,6 +22,7 @@ func DataSourceKubeAPIServerConfig() *schema.Resource {
 			"log_format":                                   ComputedString(),
 			"log_level":                                    ComputedInt(),
 			"cloud_provider":                               ComputedString(),
+			"compaction_interval":                          ComputedDuration(),
 			"secure_port":                                  ComputedInt(),
 			"insecure_port":                                ComputedInt(),
 			"address":                                      ComputedString(),
@@ -105,6 +106,7 @@ func DataSourceKubeAPIServerConfig() *schema.Resource {
 			"http2_max_streams_per_connection":             ComputedInt(),
 			"etcd_quorum_read":                             ComputedBool(),
 			"request_timeout":                              ComputedDuration(),
+			"storage_initialization_timeout":               ComputedDuration(),
 			"min_request_timeout":                          ComputedInt(),
 			"watch_cache":                                  ComputedBool(),
 			"watch_cache_sizes":                            ComputedList(String()),
@@ -169,6 +171,25 @@ func ExpandDataSourceKubeAPIServerConfig(in map[string]interface{}) kops.KubeAPI
 		CloudProvider: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["cloud_provider"]),
+		CompactionInterval: func(in interface{}) *meta.Duration {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *meta.Duration {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in meta.Duration) *meta.Duration {
+					return &in
+				}(ExpandDuration(in))
+			}(in)
+		}(in["compaction_interval"]),
 		SecurePort: func(in interface{}) int32 {
 			return int32(ExpandInt(in))
 		}(in["secure_port"]),
@@ -1227,6 +1248,25 @@ func ExpandDataSourceKubeAPIServerConfig(in map[string]interface{}) kops.KubeAPI
 				}(ExpandDuration(in))
 			}(in)
 		}(in["request_timeout"]),
+		StorageInitializationTimeout: func(in interface{}) *meta.Duration {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *meta.Duration {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in meta.Duration) *meta.Duration {
+					return &in
+				}(ExpandDuration(in))
+			}(in)
+		}(in["storage_initialization_timeout"]),
 		MinRequestTimeout: func(in interface{}) *int32 {
 			if in == nil {
 				return nil
@@ -1618,6 +1658,16 @@ func FlattenDataSourceKubeAPIServerConfigInto(in kops.KubeAPIServerConfig, out m
 	out["cloud_provider"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.CloudProvider)
+	out["compaction_interval"] = func(in *meta.Duration) interface{} {
+		return func(in *meta.Duration) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in meta.Duration) interface{} {
+				return FlattenDuration(in)
+			}(*in)
+		}(in)
+	}(in.CompactionInterval)
 	out["secure_port"] = func(in int32) interface{} {
 		return FlattenInt(int(in))
 	}(in.SecurePort)
@@ -2249,6 +2299,16 @@ func FlattenDataSourceKubeAPIServerConfigInto(in kops.KubeAPIServerConfig, out m
 			}(*in)
 		}(in)
 	}(in.RequestTimeout)
+	out["storage_initialization_timeout"] = func(in *meta.Duration) interface{} {
+		return func(in *meta.Duration) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in meta.Duration) interface{} {
+				return FlattenDuration(in)
+			}(*in)
+		}(in)
+	}(in.StorageInitializationTimeout)
 	out["min_request_timeout"] = func(in *int32) interface{} {
 		return func(in *int32) interface{} {
 			if in == nil {

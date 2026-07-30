@@ -28,6 +28,7 @@ func DataSourceCiliumNetworkingSpec() *schema.Resource {
 			"enable_local_redirect_policy":      ComputedBool(),
 			"enable_bpf_masquerade":             ComputedBool(),
 			"enable_endpoint_health_checking":   Nullable(ComputedBool()),
+			"enable_host_firewall":              ComputedBool(),
 			"enable_prometheus_metrics":         ComputedBool(),
 			"enable_encryption":                 ComputedBool(),
 			"encryption_type":                   ComputedString(),
@@ -252,6 +253,25 @@ func ExpandDataSourceCiliumNetworkingSpec(in map[string]interface{}) kops.Cilium
 				}(bool(ExpandBool(in)))
 			}(in)
 		}(in["enable_endpoint_health_checking"]),
+		EnableHostFirewall: func(in interface{}) *bool {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
+		}(in["enable_host_firewall"]),
 		EnablePrometheusMetrics: func(in interface{}) bool {
 			return bool(ExpandBool(in))
 		}(in["enable_prometheus_metrics"]),
@@ -685,6 +705,16 @@ func FlattenDataSourceCiliumNetworkingSpecInto(in kops.CiliumNetworkingSpec, out
 			}(*in)
 		}(in)}}
 	}(in.EnableEndpointHealthChecking)
+	out["enable_host_firewall"] = func(in *bool) interface{} {
+		return func(in *bool) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in bool) interface{} {
+				return FlattenBool(bool(in))
+			}(*in)
+		}(in)
+	}(in.EnableHostFirewall)
 	out["enable_prometheus_metrics"] = func(in bool) interface{} {
 		return FlattenBool(bool(in))
 	}(in.EnablePrometheusMetrics)

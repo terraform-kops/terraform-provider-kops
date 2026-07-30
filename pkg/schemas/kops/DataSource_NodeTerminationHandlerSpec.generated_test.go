@@ -27,6 +27,7 @@ func TestExpandDataSourceNodeTerminationHandlerSpec(t *testing.T) {
 					"enable_scheduled_event_draining":   nil,
 					"enable_rebalance_monitoring":       nil,
 					"enable_rebalance_draining":         nil,
+					"enable_out_of_service_taint":       nil,
 					"enable_prometheus_metrics":         nil,
 					"enable_sqs_termination_draining":   nil,
 					"exclude_from_load_balancers":       nil,
@@ -62,6 +63,7 @@ func TestFlattenDataSourceNodeTerminationHandlerSpecInto(t *testing.T) {
 		"enable_scheduled_event_draining":   nil,
 		"enable_rebalance_monitoring":       nil,
 		"enable_rebalance_draining":         nil,
+		"enable_out_of_service_taint":       nil,
 		"enable_prometheus_metrics":         nil,
 		"enable_sqs_termination_draining":   nil,
 		"exclude_from_load_balancers":       nil,
@@ -151,6 +153,17 @@ func TestFlattenDataSourceNodeTerminationHandlerSpecInto(t *testing.T) {
 				in: func() kops.NodeTerminationHandlerSpec {
 					subject := kops.NodeTerminationHandlerSpec{}
 					subject.EnableRebalanceDraining = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EnableOutOfServiceTaint - default",
+			args: args{
+				in: func() kops.NodeTerminationHandlerSpec {
+					subject := kops.NodeTerminationHandlerSpec{}
+					subject.EnableOutOfServiceTaint = nil
 					return subject
 				}(),
 			},
@@ -308,6 +321,7 @@ func TestFlattenDataSourceNodeTerminationHandlerSpec(t *testing.T) {
 		"enable_scheduled_event_draining":   nil,
 		"enable_rebalance_monitoring":       nil,
 		"enable_rebalance_draining":         nil,
+		"enable_out_of_service_taint":       nil,
 		"enable_prometheus_metrics":         nil,
 		"enable_sqs_termination_draining":   nil,
 		"exclude_from_load_balancers":       nil,
@@ -397,6 +411,17 @@ func TestFlattenDataSourceNodeTerminationHandlerSpec(t *testing.T) {
 				in: func() kops.NodeTerminationHandlerSpec {
 					subject := kops.NodeTerminationHandlerSpec{}
 					subject.EnableRebalanceDraining = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EnableOutOfServiceTaint - default",
+			args: args{
+				in: func() kops.NodeTerminationHandlerSpec {
+					subject := kops.NodeTerminationHandlerSpec{}
+					subject.EnableOutOfServiceTaint = nil
 					return subject
 				}(),
 			},

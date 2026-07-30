@@ -35,6 +35,7 @@ func TestExpandDataSourceCiliumNetworkingSpec(t *testing.T) {
 					"enable_local_redirect_policy":      nil,
 					"enable_bpf_masquerade":             nil,
 					"enable_endpoint_health_checking":   nil,
+					"enable_host_firewall":              nil,
 					"enable_prometheus_metrics":         false,
 					"enable_encryption":                 false,
 					"encryption_type":                   "",
@@ -108,6 +109,7 @@ func TestFlattenDataSourceCiliumNetworkingSpecInto(t *testing.T) {
 		"enable_local_redirect_policy":      nil,
 		"enable_bpf_masquerade":             nil,
 		"enable_endpoint_health_checking":   nil,
+		"enable_host_firewall":              nil,
 		"enable_prometheus_metrics":         false,
 		"enable_encryption":                 false,
 		"encryption_type":                   "",
@@ -315,6 +317,17 @@ func TestFlattenDataSourceCiliumNetworkingSpecInto(t *testing.T) {
 				in: func() kops.CiliumNetworkingSpec {
 					subject := kops.CiliumNetworkingSpec{}
 					subject.EnableEndpointHealthChecking = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EnableHostFirewall - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.EnableHostFirewall = nil
 					return subject
 				}(),
 			},
@@ -810,6 +823,7 @@ func TestFlattenDataSourceCiliumNetworkingSpec(t *testing.T) {
 		"enable_local_redirect_policy":      nil,
 		"enable_bpf_masquerade":             nil,
 		"enable_endpoint_health_checking":   nil,
+		"enable_host_firewall":              nil,
 		"enable_prometheus_metrics":         false,
 		"enable_encryption":                 false,
 		"encryption_type":                   "",
@@ -1017,6 +1031,17 @@ func TestFlattenDataSourceCiliumNetworkingSpec(t *testing.T) {
 				in: func() kops.CiliumNetworkingSpec {
 					subject := kops.CiliumNetworkingSpec{}
 					subject.EnableEndpointHealthChecking = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EnableHostFirewall - default",
+			args: args{
+				in: func() kops.CiliumNetworkingSpec {
+					subject := kops.CiliumNetworkingSpec{}
+					subject.EnableHostFirewall = nil
 					return subject
 				}(),
 			},

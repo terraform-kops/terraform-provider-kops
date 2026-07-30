@@ -26,6 +26,7 @@ func TestExpandResourceKubeAPIServerConfig(t *testing.T) {
 					"log_format":                                   "",
 					"log_level":                                    0,
 					"cloud_provider":                               "",
+					"compaction_interval":                          nil,
 					"secure_port":                                  0,
 					"insecure_port":                                nil,
 					"address":                                      "",
@@ -109,6 +110,7 @@ func TestExpandResourceKubeAPIServerConfig(t *testing.T) {
 					"http2_max_streams_per_connection":             nil,
 					"etcd_quorum_read":                             nil,
 					"request_timeout":                              nil,
+					"storage_initialization_timeout":               nil,
 					"min_request_timeout":                          nil,
 					"watch_cache":                                  nil,
 					"watch_cache_sizes":                            func() []interface{} { return nil }(),
@@ -153,6 +155,7 @@ func TestFlattenResourceKubeAPIServerConfigInto(t *testing.T) {
 		"log_format":                                   "",
 		"log_level":                                    0,
 		"cloud_provider":                               "",
+		"compaction_interval":                          nil,
 		"secure_port":                                  0,
 		"insecure_port":                                nil,
 		"address":                                      "",
@@ -236,6 +239,7 @@ func TestFlattenResourceKubeAPIServerConfigInto(t *testing.T) {
 		"http2_max_streams_per_connection":             nil,
 		"etcd_quorum_read":                             nil,
 		"request_timeout":                              nil,
+		"storage_initialization_timeout":               nil,
 		"min_request_timeout":                          nil,
 		"watch_cache":                                  nil,
 		"watch_cache_sizes":                            func() []interface{} { return nil }(),
@@ -324,6 +328,17 @@ func TestFlattenResourceKubeAPIServerConfigInto(t *testing.T) {
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
 					subject.CloudProvider = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CompactionInterval - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.CompactionInterval = nil
 					return subject
 				}(),
 			},
@@ -1237,6 +1252,17 @@ func TestFlattenResourceKubeAPIServerConfigInto(t *testing.T) {
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
 					subject.RequestTimeout = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "StorageInitializationTimeout - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.StorageInitializationTimeout = nil
 					return subject
 				}(),
 			},
@@ -1503,6 +1529,7 @@ func TestFlattenResourceKubeAPIServerConfig(t *testing.T) {
 		"log_format":                                   "",
 		"log_level":                                    0,
 		"cloud_provider":                               "",
+		"compaction_interval":                          nil,
 		"secure_port":                                  0,
 		"insecure_port":                                nil,
 		"address":                                      "",
@@ -1586,6 +1613,7 @@ func TestFlattenResourceKubeAPIServerConfig(t *testing.T) {
 		"http2_max_streams_per_connection":             nil,
 		"etcd_quorum_read":                             nil,
 		"request_timeout":                              nil,
+		"storage_initialization_timeout":               nil,
 		"min_request_timeout":                          nil,
 		"watch_cache":                                  nil,
 		"watch_cache_sizes":                            func() []interface{} { return nil }(),
@@ -1674,6 +1702,17 @@ func TestFlattenResourceKubeAPIServerConfig(t *testing.T) {
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
 					subject.CloudProvider = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CompactionInterval - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.CompactionInterval = nil
 					return subject
 				}(),
 			},
@@ -2587,6 +2626,17 @@ func TestFlattenResourceKubeAPIServerConfig(t *testing.T) {
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
 					subject.RequestTimeout = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "StorageInitializationTimeout - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.StorageInitializationTimeout = nil
 					return subject
 				}(),
 			},

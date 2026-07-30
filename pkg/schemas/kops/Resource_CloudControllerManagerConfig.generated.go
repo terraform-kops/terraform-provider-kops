@@ -32,6 +32,7 @@ func ResourceCloudControllerManagerConfig() *schema.Resource {
 			"cpu_request":                     OptionalQuantity(),
 			"node_status_update_frequency":    OptionalDuration(),
 			"concurrent_node_syncs":           OptionalInt(),
+			"azure_node_manager_image":        OptionalString(),
 		},
 	}
 
@@ -262,6 +263,9 @@ func ExpandResourceCloudControllerManagerConfig(in map[string]interface{}) kops.
 				}(int32(ExpandInt(in)))
 			}(in)
 		}(in["concurrent_node_syncs"]),
+		AzureNodeManagerImage: func(in interface{}) string {
+			return string(ExpandString(in))
+		}(in["azure_node_manager_image"]),
 	}
 }
 
@@ -395,6 +399,9 @@ func FlattenResourceCloudControllerManagerConfigInto(in kops.CloudControllerMana
 			}(*in)
 		}(in)
 	}(in.ConcurrentNodeSyncs)
+	out["azure_node_manager_image"] = func(in string) interface{} {
+		return FlattenString(string(in))
+	}(in.AzureNodeManagerImage)
 }
 
 func FlattenResourceCloudControllerManagerConfig(in kops.CloudControllerManagerConfig) map[string]interface{} {

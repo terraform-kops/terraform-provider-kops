@@ -20,6 +20,7 @@ func DataSourceEtcdManagerSpec() *schema.Resource {
 			"backup_retention_days":   ComputedInt(),
 			"discovery_poll_interval": ComputedDuration(),
 			"listen_metrics_ur_ls":    ComputedList(String()),
+			"listen_client_httpur_ls": ComputedList(String()),
 			"log_level":               ComputedInt(),
 		},
 	}
@@ -121,6 +122,18 @@ func ExpandDataSourceEtcdManagerSpec(in map[string]interface{}) kops.EtcdManager
 				return out
 			}(in)
 		}(in["listen_metrics_ur_ls"]),
+		ListenClientHTTPURLs: func(in interface{}) []string {
+			return func(in interface{}) []string {
+				if in == nil {
+					return nil
+				}
+				var out []string
+				for _, in := range in.([]interface{}) {
+					out = append(out, string(ExpandString(in)))
+				}
+				return out
+			}(in)
+		}(in["listen_client_httpur_ls"]),
 		LogLevel: func(in interface{}) *int32 {
 			if in == nil {
 				return nil
@@ -197,6 +210,15 @@ func FlattenDataSourceEtcdManagerSpecInto(in kops.EtcdManagerSpec, out map[strin
 			return out
 		}(in)
 	}(in.ListenMetricsURLs)
+	out["listen_client_httpur_ls"] = func(in []string) interface{} {
+		return func(in []string) []interface{} {
+			var out []interface{}
+			for _, in := range in {
+				out = append(out, FlattenString(string(in)))
+			}
+			return out
+		}(in)
+	}(in.ListenClientHTTPURLs)
 	out["log_level"] = func(in *int32) interface{} {
 		return func(in *int32) interface{} {
 			if in == nil {

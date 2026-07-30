@@ -32,6 +32,7 @@ func ResourceCalicoNetworkingSpec() *schema.Resource {
 			"iptables_backend":                   OptionalString(),
 			"log_severity_screen":                OptionalString(),
 			"mtu":                                OptionalInt(),
+			"nf_tables_mode":                     OptionalString(),
 			"prometheus_metrics_enabled":         OptionalBool(),
 			"prometheus_metrics_port":            OptionalInt(),
 			"prometheus_go_metrics_enabled":      OptionalBool(),
@@ -154,6 +155,9 @@ func ExpandResourceCalicoNetworkingSpec(in map[string]interface{}) kops.CalicoNe
 				}(int32(ExpandInt(in)))
 			}(in)
 		}(in["mtu"]),
+		NFTablesMode: func(in interface{}) string {
+			return string(ExpandString(in))
+		}(in["nf_tables_mode"]),
 		PrometheusMetricsEnabled: func(in interface{}) bool {
 			return bool(ExpandBool(in))
 		}(in["prometheus_metrics_enabled"]),
@@ -276,6 +280,9 @@ func FlattenResourceCalicoNetworkingSpecInto(in kops.CalicoNetworkingSpec, out m
 			}(*in)
 		}(in)
 	}(in.MTU)
+	out["nf_tables_mode"] = func(in string) interface{} {
+		return FlattenString(string(in))
+	}(in.NFTablesMode)
 	out["prometheus_metrics_enabled"] = func(in bool) interface{} {
 		return FlattenBool(bool(in))
 	}(in.PrometheusMetricsEnabled)
