@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.35.3](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.35.2...v1.35.3) - 2026-08-13
+
+- feat: backport admin credential lifetime to v1.35 by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/492
+
 ## [v1.35.2](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.35.1...v1.35.2) - 2026-07-07
 
 - chore(deps): bump the aws-sdk group with 4 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/451
