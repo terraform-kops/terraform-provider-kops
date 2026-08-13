@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.34.6](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.34.5...v1.34.6) - 2026-08-13
+
+- feat: backport drain timeout and admin credential lifetime to v1.34 by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/493
+
 ## [v1.34.5](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.34.4...v1.34.5) - 2026-02-25
 - fix: add state migration for nullable fields by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/409
 
