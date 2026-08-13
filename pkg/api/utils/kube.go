@@ -4,11 +4,22 @@ import (
 	"context"
 	"time"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
 	"k8s.io/kops/pkg/client/simple"
 	"k8s.io/kops/pkg/kubeconfig"
 	"k8s.io/kops/upup/pkg/fi/cloudup"
 )
+
+// adminDuration converts an optional admin credential lifetime into the form
+// expected by GetKubeConfigBuilder. A nil value keeps kops'
+// DefaultKubecfgAdminLifetime.
+func adminDuration(in *metav1.Duration) *time.Duration {
+	if in == nil {
+		return nil
+	}
+	return &in.Duration
+}
 
 func GetKubeConfigBuilder(clientset simple.Clientset, clusterName string, admin *time.Duration, internal bool) (*kubeconfig.KubeconfigBuilder, error) {
 	cluster, err := clientset.GetCluster(context.Background(), clusterName)
