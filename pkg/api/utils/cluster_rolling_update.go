@@ -36,6 +36,8 @@ type RollingUpdateOptions struct {
 	CloudOnly bool
 	// Force forces a rolling update
 	Force bool
+	// DrainTimeout is the maximum amount of time to wait while draining a node
+	DrainTimeout *metav1.Duration
 }
 
 func ClusterInstanceGroupsNeedingUpdate(clientset simple.Clientset, clusterName string) ([]string, error) {
@@ -167,6 +169,7 @@ func ClusterRollingUpdate(clientset simple.Clientset, clusterName string, option
 	PostDrainDelay := 5 * time.Second
 	ValidationTimeout := 15 * time.Minute
 	ValidateCount := 2
+	DrainTimeout := 15 * time.Minute
 	if options.MasterInterval != nil {
 		MasterInterval = options.MasterInterval.Duration
 	}
@@ -185,6 +188,9 @@ func ClusterRollingUpdate(clientset simple.Clientset, clusterName string, option
 	if options.ValidateCount != nil {
 		ValidateCount = *options.ValidateCount
 	}
+	if options.DrainTimeout != nil {
+		DrainTimeout = options.DrainTimeout.Duration
+	}
 	d := &instancegroups.RollingUpdateCluster{
 		Cluster:                 kc,
 		Clientset:               clientset,
@@ -202,6 +208,7 @@ func ClusterRollingUpdate(clientset simple.Clientset, clusterName string, option
 		PostDrainDelay:          PostDrainDelay,
 		ValidationTimeout:       ValidationTimeout,
 		ValidateCount:           ValidateCount,
+		DrainTimeout:            DrainTimeout,
 		ValidateTickDuration:    30 * time.Second,
 		ValidateSuccessDuration: 10 * time.Second,
 	}

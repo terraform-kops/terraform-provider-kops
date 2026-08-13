@@ -141,6 +141,7 @@ The following arguments are supported:
 - `validate_count` - (Optional) - Int - ValidateCount is the amount of time that a cluster needs to be validated after single node update.
 - `cloud_only` - (Optional) - Bool - CloudOnly perform rolling update without confirming progress with k8s.
 - `force` - (Optional) - Bool - Force forces a rolling update.
+- `drain_timeout` - (Optional) - Duration - DrainTimeout is the maximum amount of time to wait while draining a node.
 
 ### validate_options
 
