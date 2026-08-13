@@ -32,6 +32,7 @@ func TestExpandResourceClusterUpdater(t *testing.T) {
 					"validate": func() []interface{} {
 						return []interface{}{FlattenResourceValidateOptions(resources.ValidateOptions{})}
 					}(),
+					"admin_lifetime": nil,
 				},
 			},
 			want: _default,
@@ -60,6 +61,7 @@ func TestFlattenResourceClusterUpdaterInto(t *testing.T) {
 		"validate": func() []interface{} {
 			return []interface{}{FlattenResourceValidateOptions(resources.ValidateOptions{})}
 		}(),
+		"admin_lifetime": nil,
 	}
 	type args struct {
 		in resources.ClusterUpdater
@@ -148,6 +150,17 @@ func TestFlattenResourceClusterUpdaterInto(t *testing.T) {
 				in: func() resources.ClusterUpdater {
 					subject := resources.ClusterUpdater{}
 					subject.Validate = resources.ValidateOptions{}
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "AdminLifetime - default",
+			args: args{
+				in: func() resources.ClusterUpdater {
+					subject := resources.ClusterUpdater{}
+					subject.AdminLifetime = nil
 					return subject
 				}(),
 			},
@@ -178,6 +191,7 @@ func TestFlattenResourceClusterUpdater(t *testing.T) {
 		"validate": func() []interface{} {
 			return []interface{}{FlattenResourceValidateOptions(resources.ValidateOptions{})}
 		}(),
+		"admin_lifetime": nil,
 	}
 	type args struct {
 		in resources.ClusterUpdater
@@ -266,6 +280,17 @@ func TestFlattenResourceClusterUpdater(t *testing.T) {
 				in: func() resources.ClusterUpdater {
 					subject := resources.ClusterUpdater{}
 					subject.Validate = resources.ValidateOptions{}
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "AdminLifetime - default",
+			args: args{
+				in: func() resources.ClusterUpdater {
+					subject := resources.ClusterUpdater{}
+					subject.AdminLifetime = nil
 					return subject
 				}(),
 			},

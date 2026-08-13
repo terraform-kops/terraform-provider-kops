@@ -124,14 +124,14 @@ func filterInstanceGroups(items []kops.InstanceGroup, controlPlaneOnly bool, exc
 	return result
 }
 
-func ClusterRollingUpdate(clientset simple.Clientset, clusterName string, options RollingUpdateOptions, controlPlaneOnly bool, excludeInstanceGroups []string) error {
+func ClusterRollingUpdate(clientset simple.Clientset, clusterName string, options RollingUpdateOptions, controlPlaneOnly bool, excludeInstanceGroups []string, adminLifetime *metav1.Duration) error {
 	kc, err := clientset.GetCluster(context.Background(), clusterName)
 	if err != nil {
 		return err
 	}
 	var k8sClient kubernetes.Interface
 	var nodes []v1.Node
-	configBuilder, err := GetKubeConfigBuilder(clientset, clusterName, nil, false)
+	configBuilder, err := GetKubeConfigBuilder(clientset, clusterName, adminDuration(adminLifetime), false)
 	if err != nil {
 		return err
 	}
