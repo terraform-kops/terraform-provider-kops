@@ -2,6 +2,7 @@ package resources
 
 import (
 	"github.com/terraform-kops/terraform-provider-kops/pkg/api/utils"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/kops/pkg/client/simple"
 )
 
@@ -21,6 +22,8 @@ type ClusterUpdater struct {
 	RollingUpdate RollingUpdateOptions
 	// Validate holds cluster validation options
 	Validate ValidateOptions
+	// AdminLifetime is the lifetime of the admin credentials minted to talk to the kubernetes API. Raise it above the kops default of 18h when a rolling update is expected to run longer than the credentials would otherwise remain valid.
+	AdminLifetime *metav1.Duration
 }
 
 func (u *ClusterUpdater) UpdateCluster(clientset simple.Clientset, isNewResource bool) error {
@@ -35,12 +38,12 @@ func (u *ClusterUpdater) UpdateCluster(clientset simple.Clientset, isNewResource
 		}
 	}
 	if !u.Validate.Skip {
-		if err := utils.ClusterValidate(clientset, u.ClusterName, u.Validate.ValidateOptions); err != nil {
+		if err := utils.ClusterValidate(clientset, u.ClusterName, u.Validate.ValidateOptions, u.AdminLifetime); err != nil {
 			return err
 		}
 	}
 	if !u.RollingUpdate.Skip {
-		if err := utils.ClusterRollingUpdate(clientset, u.ClusterName, u.RollingUpdate.RollingUpdateOptions, true, u.RollingUpdate.ExcludeInstanceGroups); err != nil {
+		if err := utils.ClusterRollingUpdate(clientset, u.ClusterName, u.RollingUpdate.RollingUpdateOptions, true, u.RollingUpdate.ExcludeInstanceGroups, u.AdminLifetime); err != nil {
 			return err
 		}
 	}
@@ -59,12 +62,12 @@ func (u *ClusterUpdater) UpdateCluster(clientset simple.Clientset, isNewResource
 		}
 	}
 	if !u.Validate.Skip {
-		if err := utils.ClusterValidate(clientset, u.ClusterName, u.Validate.ValidateOptions); err != nil {
+		if err := utils.ClusterValidate(clientset, u.ClusterName, u.Validate.ValidateOptions, u.AdminLifetime); err != nil {
 			return err
 		}
 	}
 	if !u.RollingUpdate.Skip {
-		if err := utils.ClusterRollingUpdate(clientset, u.ClusterName, u.RollingUpdate.RollingUpdateOptions, false, u.RollingUpdate.ExcludeInstanceGroups); err != nil {
+		if err := utils.ClusterRollingUpdate(clientset, u.ClusterName, u.RollingUpdate.RollingUpdateOptions, false, u.RollingUpdate.ExcludeInstanceGroups, u.AdminLifetime); err != nil {
 			return err
 		}
 	}

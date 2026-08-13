@@ -1,9 +1,12 @@
 package schemas
 
 import (
+	"reflect"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/terraform-kops/terraform-provider-kops/pkg/api/resources"
 	. "github.com/terraform-kops/terraform-provider-kops/pkg/schemas"
+	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var _ = Schema
@@ -18,6 +21,7 @@ func ResourceClusterUpdater() *schema.Resource {
 			"apply":            OptionalStruct(ResourceApplyOptions()),
 			"rolling_update":   OptionalStruct(ResourceRollingUpdateOptions()),
 			"validate":         OptionalStruct(ResourceValidateOptions()),
+			"admin_lifetime":   OptionalDuration(),
 		},
 	}
 
@@ -79,6 +83,25 @@ func ExpandResourceClusterUpdater(in map[string]interface{}) resources.ClusterUp
 				return resources.ValidateOptions{}
 			}(in)
 		}(in["validate"]),
+		AdminLifetime: func(in interface{}) *meta.Duration {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *meta.Duration {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in meta.Duration) *meta.Duration {
+					return &in
+				}(ExpandDuration(in))
+			}(in)
+		}(in["admin_lifetime"]),
 	}
 }
 
@@ -119,6 +142,16 @@ func FlattenResourceClusterUpdaterInto(in resources.ClusterUpdater, out map[stri
 			return []interface{}{FlattenResourceValidateOptions(in)}
 		}(in)
 	}(in.Validate)
+	out["admin_lifetime"] = func(in *meta.Duration) interface{} {
+		return func(in *meta.Duration) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in meta.Duration) interface{} {
+				return FlattenDuration(in)
+			}(*in)
+		}(in)
+	}(in.AdminLifetime)
 }
 
 func FlattenResourceClusterUpdater(in resources.ClusterUpdater) map[string]interface{} {
