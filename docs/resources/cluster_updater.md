@@ -110,6 +110,7 @@ The following arguments are supported:
 - `apply` - (Optional) - [apply_options](#apply_options) - Apply holds cluster apply options.
 - `rolling_update` - (Optional) - [rolling_update_options](#rolling_update_options) - RollingUpdate holds cluster rolling update options.
 - `validate` - (Optional) - [validate_options](#validate_options) - Validate holds cluster validation options.
+- `admin_lifetime` - (Optional) - Duration - AdminLifetime is the lifetime of the admin credentials minted to talk to the kubernetes API. Raise it above the kops default of 18h when a rolling update is expected to run longer than the credentials would otherwise remain valid.
 
 ## Nested resources
 
@@ -141,6 +142,7 @@ The following arguments are supported:
 - `validate_count` - (Optional) - Int - ValidateCount is the amount of time that a cluster needs to be validated after single node update.
 - `cloud_only` - (Optional) - Bool - CloudOnly perform rolling update without confirming progress with k8s.
 - `force` - (Optional) - Bool - Force forces a rolling update.
+- `drain_timeout` - (Optional) - Duration - DrainTimeout is the maximum amount of time to wait while draining a node.
 
 ### validate_options
 

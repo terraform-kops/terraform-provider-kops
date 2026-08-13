@@ -31,6 +31,7 @@ func TestExpandResourceRollingUpdateOptions(t *testing.T) {
 					"validate_count":      nil,
 					"cloud_only":          false,
 					"force":               false,
+					"drain_timeout":       nil,
 				},
 			},
 			want: _default,
@@ -58,6 +59,7 @@ func TestFlattenResourceRollingUpdateOptionsInto(t *testing.T) {
 		"validate_count":      nil,
 		"cloud_only":          false,
 		"force":               false,
+		"drain_timeout":       nil,
 	}
 	type args struct {
 		in utils.RollingUpdateOptions
@@ -179,6 +181,17 @@ func TestFlattenResourceRollingUpdateOptionsInto(t *testing.T) {
 				in: func() utils.RollingUpdateOptions {
 					subject := utils.RollingUpdateOptions{}
 					subject.Force = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "DrainTimeout - default",
+			args: args{
+				in: func() utils.RollingUpdateOptions {
+					subject := utils.RollingUpdateOptions{}
+					subject.DrainTimeout = nil
 					return subject
 				}(),
 			},
@@ -208,6 +221,7 @@ func TestFlattenResourceRollingUpdateOptions(t *testing.T) {
 		"validate_count":      nil,
 		"cloud_only":          false,
 		"force":               false,
+		"drain_timeout":       nil,
 	}
 	type args struct {
 		in utils.RollingUpdateOptions
@@ -329,6 +343,17 @@ func TestFlattenResourceRollingUpdateOptions(t *testing.T) {
 				in: func() utils.RollingUpdateOptions {
 					subject := utils.RollingUpdateOptions{}
 					subject.Force = false
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "DrainTimeout - default",
+			args: args{
+				in: func() utils.RollingUpdateOptions {
+					subject := utils.RollingUpdateOptions{}
+					subject.DrainTimeout = nil
 					return subject
 				}(),
 			},
