@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.36.2](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.36.1...v1.36.2) - 2026-08-13
+
+- chore(deps): bump the aws-sdk group with 4 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/488
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.320.0 to 1.321.0 in the aws-sdk group by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/490
+- feat: support customizing kube API admin credential lifetime by @mmckeen in https://github.com/terraform-kops/terraform-provider-kops/pull/491
+
 ## [v1.36.1](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.36.0...v1.36.1) - 2026-08-09
 
 - chore(deps): bump the aws-sdk group with 4 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/485
