@@ -22,7 +22,7 @@ type ValidateOptions struct {
 	PollInterval *metav1.Duration
 }
 
-func makeValidator(clientset simple.Clientset, clusterName string) (validation.ClusterValidator, error) {
+func makeValidator(clientset simple.Clientset, clusterName string, adminLifetime *metav1.Duration) (validation.ClusterValidator, error) {
 	kc, err := clientset.GetCluster(context.Background(), clusterName)
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func makeValidator(clientset simple.Clientset, clusterName string) (validation.C
 	if len(list.Items) == 0 {
 		return nil, fmt.Errorf("no InstanceGroup objects found")
 	}
-	configBuilder, err := GetKubeConfigBuilder(clientset, clusterName, nil, false)
+	configBuilder, err := GetKubeConfigBuilder(clientset, clusterName, adminDuration(adminLifetime), false)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func makeValidator(clientset simple.Clientset, clusterName string) (validation.C
 }
 
 func ClusterIsValid(clientset simple.Clientset, clusterName string) (bool, error) {
-	if validator, err := makeValidator(clientset, clusterName); err != nil {
+	if validator, err := makeValidator(clientset, clusterName, nil); err != nil {
 		return false, err
 	} else {
 		result, err := validator.Validate(context.Background())
@@ -78,8 +78,8 @@ func ClusterIsValid(clientset simple.Clientset, clusterName string) (bool, error
 	}
 }
 
-func ClusterValidate(clientset simple.Clientset, clusterName string, options ValidateOptions) error {
-	if validator, err := makeValidator(clientset, clusterName); err != nil {
+func ClusterValidate(clientset simple.Clientset, clusterName string, options ValidateOptions, adminLifetime *metav1.Duration) error {
+	if validator, err := makeValidator(clientset, clusterName, adminLifetime); err != nil {
 		return err
 	} else {
 		timeout := time.Now()
