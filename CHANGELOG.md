@@ -1,5 +1,18 @@
 # Changelog
 
+## [v1.36.3](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.36.2...v1.36.3) - 2026-09-08
+
+- chore(deps): bump the aws-sdk group with 4 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/496
+- chore(deps): bump golang.org/x/tools from 0.48.0 to 0.49.0 by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/498
+- chore(deps): bump the aws-sdk group with 4 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/499
+- chore(deps): bump the k8s group with 3 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/500
+- chore(deps): bump the aws-sdk group with 4 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/501
+- chore(deps): bump the aws-sdk group with 4 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/503
+- chore(deps): bump the aws-sdk group with 4 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/504
+- chore(deps): bump the aws-sdk group with 3 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/505
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/service/ec2 from 1.326.0 to 1.328.0 in the aws-sdk group by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/506
+- chore(deps): bump the aws-sdk group with 4 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/507
+
 ## [v1.36.2](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.36.1...v1.36.2) - 2026-08-13
 
 - chore(deps): bump the aws-sdk group with 4 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/488
