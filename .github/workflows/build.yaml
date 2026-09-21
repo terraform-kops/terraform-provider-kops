@@ -49,7 +49,7 @@ jobs:
     steps:
       # cleanup Runner to avoid "no space left on device" error
       - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@v1.3.1
+        uses: jlumbroso/free-disk-space@v2.0.0
         with:
           # this might remove tools that are actually needed,
           # if set to "true" but frees about 6 GB
