@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.37.0](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.36.3...v1.37.0) - 2026-11-10
+
+- feat: upgrade kOps to v1.37.0 and k8s.io to v0.37.2 by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/531
+
 ## [v1.36.3](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.36.2...v1.36.3) - 2026-11-10
 
 - chore(deps): bump the aws-sdk group with 4 updates by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/496
