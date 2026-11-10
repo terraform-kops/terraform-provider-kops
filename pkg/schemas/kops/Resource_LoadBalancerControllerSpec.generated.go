@@ -14,15 +14,16 @@ var _ = Schema
 func ResourceLoadBalancerControllerSpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"enabled":        OptionalBool(),
-			"version":        OptionalString(),
-			"enable_waf":     OptionalBool(),
-			"enable_wa_fv2":  OptionalBool(),
-			"enable_shield":  OptionalBool(),
-			"cpu_request":    OptionalQuantity(),
-			"cpu_limit":      OptionalQuantity(),
-			"memory_request": OptionalQuantity(),
-			"memory_limit":   OptionalQuantity(),
+			"enabled":                      OptionalBool(),
+			"version":                      OptionalString(),
+			"enable_waf":                   OptionalBool(),
+			"enable_wa_fv2":                OptionalBool(),
+			"enable_shield":                OptionalBool(),
+			"cpu_request":                  OptionalQuantity(),
+			"cpu_limit":                    OptionalQuantity(),
+			"memory_request":               OptionalQuantity(),
+			"memory_limit":                 OptionalQuantity(),
+			"default_load_balancer_scheme": OptionalString(),
 		},
 	}
 
@@ -157,6 +158,25 @@ func ExpandResourceLoadBalancerControllerSpec(in map[string]interface{}) kops.Lo
 				}(ExpandQuantity(in))
 			}(in)
 		}(in["memory_limit"]),
+		DefaultLoadBalancerScheme: func(in interface{}) *string {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *string {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in string) *string {
+					return &in
+				}(string(ExpandString(in)))
+			}(in)
+		}(in["default_load_balancer_scheme"]),
 	}
 }
 
@@ -230,6 +250,16 @@ func FlattenResourceLoadBalancerControllerSpecInto(in kops.LoadBalancerControlle
 			}(*in)
 		}(in)
 	}(in.MemoryLimit)
+	out["default_load_balancer_scheme"] = func(in *string) interface{} {
+		return func(in *string) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in string) interface{} {
+				return FlattenString(string(in))
+			}(*in)
+		}(in)
+	}(in.DefaultLoadBalancerScheme)
 }
 
 func FlattenResourceLoadBalancerControllerSpec(in kops.LoadBalancerControllerSpec) map[string]interface{} {

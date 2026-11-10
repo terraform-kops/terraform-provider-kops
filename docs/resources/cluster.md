@@ -319,6 +319,7 @@ The following arguments are supported:
 - `cpu_limit` - (Optional) - Quantity - CPULimit, cpu limit compute resource for AWS Load Balancer Controller.<br />Default: 200m.
 - `memory_request` - (Optional) - Quantity - MemoryRequest, memory request compute resource for AWS Load Balancer Controller.<br />Default: 200Mi.
 - `memory_limit` - (Optional) - Quantity - MemoryLimit, memory limit compute resource for AWS Load Balancer Controller.<br />Default: 500Mi.
+- `default_load_balancer_scheme` - (Optional) - String - DefaultLoadBalancerScheme specifies the default scheme for the load balancer.<br />Default: "internet-facing".
 
 ### pod_identity_webhook_spec
 
@@ -1392,6 +1393,7 @@ The following arguments are supported:
 - `enable_debugging_handlers` - (Optional) - Bool - EnableDebuggingHandlers enables server endpoints for log collection and local running of containers and commands.
 - `register_node` - (Optional) - Bool - RegisterNode enables automatic registration with the apiserver.
 - `node_status_update_frequency` - (Optional) - Duration - NodeStatusUpdateFrequency Specifies how often kubelet posts node status to master (default 10s)<br />must work with nodeMonitorGracePeriod in KubeControllerManagerConfig.
+- `node_status_report_frequency` - (Optional) - Duration - NodeStatusReportFrequency is how often the kubelet posts node status to the apiserver when the status has not changed.<br />If unset, the kubelet uses nodeStatusUpdateFrequency when that field is set, and 5m otherwise.
 - `cluster_domain` - (Optional) - String - ClusterDomain is the DNS domain for this cluster.
 - `cluster_dns` - (Optional) - String - ClusterDNS is the IP address for a cluster DNS server.
 - `network_plugin_name` - (Optional) - String - NetworkPluginName is the name of the network plugin to be invoked for various events in kubelet/pod lifecycle.
