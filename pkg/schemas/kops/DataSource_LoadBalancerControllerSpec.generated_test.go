@@ -21,15 +21,16 @@ func TestExpandDataSourceLoadBalancerControllerSpec(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
-					"enabled":        nil,
-					"version":        nil,
-					"enable_waf":     false,
-					"enable_wa_fv2":  false,
-					"enable_shield":  false,
-					"cpu_request":    nil,
-					"cpu_limit":      nil,
-					"memory_request": nil,
-					"memory_limit":   nil,
+					"enabled":                      nil,
+					"version":                      nil,
+					"enable_waf":                   false,
+					"enable_wa_fv2":                false,
+					"enable_shield":                false,
+					"cpu_request":                  nil,
+					"cpu_limit":                    nil,
+					"memory_request":               nil,
+					"memory_limit":                 nil,
+					"default_load_balancer_scheme": nil,
 				},
 			},
 			want: _default,
@@ -47,15 +48,16 @@ func TestExpandDataSourceLoadBalancerControllerSpec(t *testing.T) {
 
 func TestFlattenDataSourceLoadBalancerControllerSpecInto(t *testing.T) {
 	_default := map[string]interface{}{
-		"enabled":        nil,
-		"version":        nil,
-		"enable_waf":     false,
-		"enable_wa_fv2":  false,
-		"enable_shield":  false,
-		"cpu_request":    nil,
-		"cpu_limit":      nil,
-		"memory_request": nil,
-		"memory_limit":   nil,
+		"enabled":                      nil,
+		"version":                      nil,
+		"enable_waf":                   false,
+		"enable_wa_fv2":                false,
+		"enable_shield":                false,
+		"cpu_request":                  nil,
+		"cpu_limit":                    nil,
+		"memory_request":               nil,
+		"memory_limit":                 nil,
+		"default_load_balancer_scheme": nil,
 	}
 	type args struct {
 		in kops.LoadBalancerControllerSpec
@@ -166,6 +168,17 @@ func TestFlattenDataSourceLoadBalancerControllerSpecInto(t *testing.T) {
 				in: func() kops.LoadBalancerControllerSpec {
 					subject := kops.LoadBalancerControllerSpec{}
 					subject.MemoryLimit = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "DefaultLoadBalancerScheme - default",
+			args: args{
+				in: func() kops.LoadBalancerControllerSpec {
+					subject := kops.LoadBalancerControllerSpec{}
+					subject.DefaultLoadBalancerScheme = nil
 					return subject
 				}(),
 			},
@@ -185,15 +198,16 @@ func TestFlattenDataSourceLoadBalancerControllerSpecInto(t *testing.T) {
 
 func TestFlattenDataSourceLoadBalancerControllerSpec(t *testing.T) {
 	_default := map[string]interface{}{
-		"enabled":        nil,
-		"version":        nil,
-		"enable_waf":     false,
-		"enable_wa_fv2":  false,
-		"enable_shield":  false,
-		"cpu_request":    nil,
-		"cpu_limit":      nil,
-		"memory_request": nil,
-		"memory_limit":   nil,
+		"enabled":                      nil,
+		"version":                      nil,
+		"enable_waf":                   false,
+		"enable_wa_fv2":                false,
+		"enable_shield":                false,
+		"cpu_request":                  nil,
+		"cpu_limit":                    nil,
+		"memory_request":               nil,
+		"memory_limit":                 nil,
+		"default_load_balancer_scheme": nil,
 	}
 	type args struct {
 		in kops.LoadBalancerControllerSpec
@@ -304,6 +318,17 @@ func TestFlattenDataSourceLoadBalancerControllerSpec(t *testing.T) {
 				in: func() kops.LoadBalancerControllerSpec {
 					subject := kops.LoadBalancerControllerSpec{}
 					subject.MemoryLimit = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "DefaultLoadBalancerScheme - default",
+			args: args{
+				in: func() kops.LoadBalancerControllerSpec {
+					subject := kops.LoadBalancerControllerSpec{}
+					subject.DefaultLoadBalancerScheme = nil
 					return subject
 				}(),
 			},

@@ -36,6 +36,7 @@ func DataSourceKubeletConfigSpec() *schema.Resource {
 			"enable_debugging_handlers":                ComputedBool(),
 			"register_node":                            ComputedBool(),
 			"node_status_update_frequency":             ComputedDuration(),
+			"node_status_report_frequency":             ComputedDuration(),
 			"cluster_domain":                           ComputedString(),
 			"cluster_dns":                              ComputedString(),
 			"network_plugin_name":                      ComputedString(),
@@ -356,6 +357,25 @@ func ExpandDataSourceKubeletConfigSpec(in map[string]interface{}) kops.KubeletCo
 				}(ExpandDuration(in))
 			}(in)
 		}(in["node_status_update_frequency"]),
+		NodeStatusReportFrequency: func(in interface{}) *meta.Duration {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *meta.Duration {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in meta.Duration) *meta.Duration {
+					return &in
+				}(ExpandDuration(in))
+			}(in)
+		}(in["node_status_report_frequency"]),
 		ClusterDomain: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["cluster_domain"]),
@@ -1579,6 +1599,16 @@ func FlattenDataSourceKubeletConfigSpecInto(in kops.KubeletConfigSpec, out map[s
 			}(*in)
 		}(in)
 	}(in.NodeStatusUpdateFrequency)
+	out["node_status_report_frequency"] = func(in *meta.Duration) interface{} {
+		return func(in *meta.Duration) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in meta.Duration) interface{} {
+				return FlattenDuration(in)
+			}(*in)
+		}(in)
+	}(in.NodeStatusReportFrequency)
 	out["cluster_domain"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.ClusterDomain)

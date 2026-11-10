@@ -43,6 +43,7 @@ func TestExpandDataSourceKubeletConfigSpec(t *testing.T) {
 					"enable_debugging_handlers":                nil,
 					"register_node":                            nil,
 					"node_status_update_frequency":             nil,
+					"node_status_report_frequency":             nil,
 					"cluster_domain":                           "",
 					"cluster_dns":                              "",
 					"network_plugin_name":                      nil,
@@ -160,6 +161,7 @@ func TestFlattenDataSourceKubeletConfigSpecInto(t *testing.T) {
 		"enable_debugging_handlers":                nil,
 		"register_node":                            nil,
 		"node_status_update_frequency":             nil,
+		"node_status_report_frequency":             nil,
 		"cluster_domain":                           "",
 		"cluster_dns":                              "",
 		"network_plugin_name":                      nil,
@@ -491,6 +493,17 @@ func TestFlattenDataSourceKubeletConfigSpecInto(t *testing.T) {
 				in: func() kops.KubeletConfigSpec {
 					subject := kops.KubeletConfigSpec{}
 					subject.NodeStatusUpdateFrequency = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NodeStatusReportFrequency - default",
+			args: args{
+				in: func() kops.KubeletConfigSpec {
+					subject := kops.KubeletConfigSpec{}
+					subject.NodeStatusReportFrequency = nil
 					return subject
 				}(),
 			},
@@ -1390,6 +1403,7 @@ func TestFlattenDataSourceKubeletConfigSpec(t *testing.T) {
 		"enable_debugging_handlers":                nil,
 		"register_node":                            nil,
 		"node_status_update_frequency":             nil,
+		"node_status_report_frequency":             nil,
 		"cluster_domain":                           "",
 		"cluster_dns":                              "",
 		"network_plugin_name":                      nil,
@@ -1721,6 +1735,17 @@ func TestFlattenDataSourceKubeletConfigSpec(t *testing.T) {
 				in: func() kops.KubeletConfigSpec {
 					subject := kops.KubeletConfigSpec{}
 					subject.NodeStatusUpdateFrequency = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "NodeStatusReportFrequency - default",
+			args: args{
+				in: func() kops.KubeletConfigSpec {
+					subject := kops.KubeletConfigSpec{}
+					subject.NodeStatusReportFrequency = nil
 					return subject
 				}(),
 			},
