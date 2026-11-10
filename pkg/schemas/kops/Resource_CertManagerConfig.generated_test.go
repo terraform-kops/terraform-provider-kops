@@ -21,13 +21,15 @@ func TestExpandResourceCertManagerConfig(t *testing.T) {
 			name: "default",
 			args: args{
 				in: map[string]interface{}{
-					"enabled":         nil,
-					"managed":         nil,
-					"image":           nil,
-					"default_issuer":  nil,
-					"nameservers":     func() []interface{} { return nil }(),
-					"hosted_zone_ids": func() []interface{} { return nil }(),
-					"feature_gates":   func() map[string]interface{} { return nil }(),
+					"enabled":                   nil,
+					"managed":                   nil,
+					"image":                     nil,
+					"default_issuer":            nil,
+					"nameservers":               func() []interface{} { return nil }(),
+					"hosted_zone_ids":           func() []interface{} { return nil }(),
+					"feature_gates":             func() map[string]interface{} { return nil }(),
+					"webhook_feature_gates":     func() map[string]interface{} { return nil }(),
+					"ca_injector_feature_gates": func() map[string]interface{} { return nil }(),
 				},
 			},
 			want: _default,
@@ -45,13 +47,15 @@ func TestExpandResourceCertManagerConfig(t *testing.T) {
 
 func TestFlattenResourceCertManagerConfigInto(t *testing.T) {
 	_default := map[string]interface{}{
-		"enabled":         nil,
-		"managed":         nil,
-		"image":           nil,
-		"default_issuer":  nil,
-		"nameservers":     func() []interface{} { return nil }(),
-		"hosted_zone_ids": func() []interface{} { return nil }(),
-		"feature_gates":   func() map[string]interface{} { return nil }(),
+		"enabled":                   nil,
+		"managed":                   nil,
+		"image":                     nil,
+		"default_issuer":            nil,
+		"nameservers":               func() []interface{} { return nil }(),
+		"hosted_zone_ids":           func() []interface{} { return nil }(),
+		"feature_gates":             func() map[string]interface{} { return nil }(),
+		"webhook_feature_gates":     func() map[string]interface{} { return nil }(),
+		"ca_injector_feature_gates": func() map[string]interface{} { return nil }(),
 	}
 	type args struct {
 		in kops.CertManagerConfig
@@ -140,6 +144,28 @@ func TestFlattenResourceCertManagerConfigInto(t *testing.T) {
 				in: func() kops.CertManagerConfig {
 					subject := kops.CertManagerConfig{}
 					subject.FeatureGates = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "WebhookFeatureGates - default",
+			args: args{
+				in: func() kops.CertManagerConfig {
+					subject := kops.CertManagerConfig{}
+					subject.WebhookFeatureGates = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CaInjectorFeatureGates - default",
+			args: args{
+				in: func() kops.CertManagerConfig {
+					subject := kops.CertManagerConfig{}
+					subject.CAInjectorFeatureGates = nil
 					return subject
 				}(),
 			},
@@ -159,13 +185,15 @@ func TestFlattenResourceCertManagerConfigInto(t *testing.T) {
 
 func TestFlattenResourceCertManagerConfig(t *testing.T) {
 	_default := map[string]interface{}{
-		"enabled":         nil,
-		"managed":         nil,
-		"image":           nil,
-		"default_issuer":  nil,
-		"nameservers":     func() []interface{} { return nil }(),
-		"hosted_zone_ids": func() []interface{} { return nil }(),
-		"feature_gates":   func() map[string]interface{} { return nil }(),
+		"enabled":                   nil,
+		"managed":                   nil,
+		"image":                     nil,
+		"default_issuer":            nil,
+		"nameservers":               func() []interface{} { return nil }(),
+		"hosted_zone_ids":           func() []interface{} { return nil }(),
+		"feature_gates":             func() map[string]interface{} { return nil }(),
+		"webhook_feature_gates":     func() map[string]interface{} { return nil }(),
+		"ca_injector_feature_gates": func() map[string]interface{} { return nil }(),
 	}
 	type args struct {
 		in kops.CertManagerConfig
@@ -254,6 +282,28 @@ func TestFlattenResourceCertManagerConfig(t *testing.T) {
 				in: func() kops.CertManagerConfig {
 					subject := kops.CertManagerConfig{}
 					subject.FeatureGates = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "WebhookFeatureGates - default",
+			args: args{
+				in: func() kops.CertManagerConfig {
+					subject := kops.CertManagerConfig{}
+					subject.WebhookFeatureGates = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "CaInjectorFeatureGates - default",
+			args: args{
+				in: func() kops.CertManagerConfig {
+					subject := kops.CertManagerConfig{}
+					subject.CAInjectorFeatureGates = nil
 					return subject
 				}(),
 			},

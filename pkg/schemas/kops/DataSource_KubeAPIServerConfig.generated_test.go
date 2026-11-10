@@ -129,6 +129,7 @@ func TestExpandDataSourceKubeAPIServerConfig(t *testing.T) {
 					"enable_profiling":                             nil,
 					"enable_contention_profiling":                  nil,
 					"cors_allowed_origins":                         func() []interface{} { return nil }(),
+					"strict_transport_security_directives":         func() []interface{} { return nil }(),
 					"default_not_ready_toleration_seconds":         nil,
 					"default_unreachable_toleration_seconds":       nil,
 					"delete_collection_workers":                    0,
@@ -258,6 +259,7 @@ func TestFlattenDataSourceKubeAPIServerConfigInto(t *testing.T) {
 		"enable_profiling":                             nil,
 		"enable_contention_profiling":                  nil,
 		"cors_allowed_origins":                         func() []interface{} { return nil }(),
+		"strict_transport_security_directives":         func() []interface{} { return nil }(),
 		"default_not_ready_toleration_seconds":         nil,
 		"default_unreachable_toleration_seconds":       nil,
 		"delete_collection_workers":                    0,
@@ -1461,6 +1463,17 @@ func TestFlattenDataSourceKubeAPIServerConfigInto(t *testing.T) {
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
 					subject.CorsAllowedOrigins = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "StrictTransportSecurityDirectives - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.StrictTransportSecurityDirectives = nil
 					return subject
 				}(),
 			},
@@ -1632,6 +1645,7 @@ func TestFlattenDataSourceKubeAPIServerConfig(t *testing.T) {
 		"enable_profiling":                             nil,
 		"enable_contention_profiling":                  nil,
 		"cors_allowed_origins":                         func() []interface{} { return nil }(),
+		"strict_transport_security_directives":         func() []interface{} { return nil }(),
 		"default_not_ready_toleration_seconds":         nil,
 		"default_unreachable_toleration_seconds":       nil,
 		"delete_collection_workers":                    0,
@@ -2835,6 +2849,17 @@ func TestFlattenDataSourceKubeAPIServerConfig(t *testing.T) {
 				in: func() kops.KubeAPIServerConfig {
 					subject := kops.KubeAPIServerConfig{}
 					subject.CorsAllowedOrigins = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "StrictTransportSecurityDirectives - default",
+			args: args{
+				in: func() kops.KubeAPIServerConfig {
+					subject := kops.KubeAPIServerConfig{}
+					subject.StrictTransportSecurityDirectives = nil
 					return subject
 				}(),
 			},

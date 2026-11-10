@@ -24,6 +24,7 @@ func TestExpandDataSourceAmazonVPCNetworkingSpec(t *testing.T) {
 					"image":                      "",
 					"init_image":                 "",
 					"network_policy_agent_image": "",
+					"enable_network_policy":      false,
 					"env":                        func() []interface{} { return nil }(),
 				},
 			},
@@ -45,6 +46,7 @@ func TestFlattenDataSourceAmazonVPCNetworkingSpecInto(t *testing.T) {
 		"image":                      "",
 		"init_image":                 "",
 		"network_policy_agent_image": "",
+		"enable_network_policy":      false,
 		"env":                        func() []interface{} { return nil }(),
 	}
 	type args struct {
@@ -90,6 +92,17 @@ func TestFlattenDataSourceAmazonVPCNetworkingSpecInto(t *testing.T) {
 				in: func() kops.AmazonVPCNetworkingSpec {
 					subject := kops.AmazonVPCNetworkingSpec{}
 					subject.NetworkPolicyAgentImage = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EnableNetworkPolicy - default",
+			args: args{
+				in: func() kops.AmazonVPCNetworkingSpec {
+					subject := kops.AmazonVPCNetworkingSpec{}
+					subject.EnableNetworkPolicy = false
 					return subject
 				}(),
 			},
@@ -123,6 +136,7 @@ func TestFlattenDataSourceAmazonVPCNetworkingSpec(t *testing.T) {
 		"image":                      "",
 		"init_image":                 "",
 		"network_policy_agent_image": "",
+		"enable_network_policy":      false,
 		"env":                        func() []interface{} { return nil }(),
 	}
 	type args struct {
@@ -168,6 +182,17 @@ func TestFlattenDataSourceAmazonVPCNetworkingSpec(t *testing.T) {
 				in: func() kops.AmazonVPCNetworkingSpec {
 					subject := kops.AmazonVPCNetworkingSpec{}
 					subject.NetworkPolicyAgentImage = ""
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "EnableNetworkPolicy - default",
+			args: args{
+				in: func() kops.AmazonVPCNetworkingSpec {
+					subject := kops.AmazonVPCNetworkingSpec{}
+					subject.EnableNetworkPolicy = false
 					return subject
 				}(),
 			},

@@ -14,6 +14,7 @@ func ResourceAmazonVPCNetworkingSpec() *schema.Resource {
 			"image":                      OptionalString(),
 			"init_image":                 OptionalString(),
 			"network_policy_agent_image": OptionalString(),
+			"enable_network_policy":      OptionalBool(),
 			"env":                        OptionalList(ResourceEnvVar()),
 		},
 	}
@@ -35,6 +36,9 @@ func ExpandResourceAmazonVPCNetworkingSpec(in map[string]interface{}) kops.Amazo
 		NetworkPolicyAgentImage: func(in interface{}) string {
 			return string(ExpandString(in))
 		}(in["network_policy_agent_image"]),
+		EnableNetworkPolicy: func(in interface{}) bool {
+			return bool(ExpandBool(in))
+		}(in["enable_network_policy"]),
 		Env: func(in interface{}) []kops.EnvVar {
 			return func(in interface{}) []kops.EnvVar {
 				if in == nil {
@@ -65,6 +69,9 @@ func FlattenResourceAmazonVPCNetworkingSpecInto(in kops.AmazonVPCNetworkingSpec,
 	out["network_policy_agent_image"] = func(in string) interface{} {
 		return FlattenString(string(in))
 	}(in.NetworkPolicyAgentImage)
+	out["enable_network_policy"] = func(in bool) interface{} {
+		return FlattenBool(bool(in))
+	}(in.EnableNetworkPolicy)
 	out["env"] = func(in []kops.EnvVar) interface{} {
 		return func(in []kops.EnvVar) []interface{} {
 			var out []interface{}

@@ -125,6 +125,7 @@ func ResourceKubeAPIServerConfig() *schema.Resource {
 			"enable_profiling":                             OptionalBool(),
 			"enable_contention_profiling":                  OptionalBool(),
 			"cors_allowed_origins":                         OptionalList(String()),
+			"strict_transport_security_directives":         OptionalList(String()),
 			"default_not_ready_toleration_seconds":         OptionalInt(),
 			"default_unreachable_toleration_seconds":       OptionalInt(),
 			"delete_collection_workers":                    OptionalInt(),
@@ -1574,6 +1575,18 @@ func ExpandResourceKubeAPIServerConfig(in map[string]interface{}) kops.KubeAPISe
 				return out
 			}(in)
 		}(in["cors_allowed_origins"]),
+		StrictTransportSecurityDirectives: func(in interface{}) []string {
+			return func(in interface{}) []string {
+				if in == nil {
+					return nil
+				}
+				var out []string
+				for _, in := range in.([]interface{}) {
+					out = append(out, string(ExpandString(in)))
+				}
+				return out
+			}(in)
+		}(in["strict_transport_security_directives"]),
 		DefaultNotReadyTolerationSeconds: func(in interface{}) *int64 {
 			if in == nil {
 				return nil
@@ -2484,6 +2497,15 @@ func FlattenResourceKubeAPIServerConfigInto(in kops.KubeAPIServerConfig, out map
 			return out
 		}(in)
 	}(in.CorsAllowedOrigins)
+	out["strict_transport_security_directives"] = func(in []string) interface{} {
+		return func(in []string) []interface{} {
+			var out []interface{}
+			for _, in := range in {
+				out = append(out, FlattenString(string(in)))
+			}
+			return out
+		}(in)
+	}(in.StrictTransportSecurityDirectives)
 	out["default_not_ready_toleration_seconds"] = func(in *int64) interface{} {
 		return func(in *int64) interface{} {
 			if in == nil {

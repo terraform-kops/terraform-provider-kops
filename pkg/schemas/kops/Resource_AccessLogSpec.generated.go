@@ -13,7 +13,6 @@ var _ = Schema
 func ResourceAccessLogSpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"interval":      OptionalInt(),
 			"bucket":        OptionalString(),
 			"bucket_prefix": OptionalString(),
 		},
@@ -27,9 +26,6 @@ func ExpandResourceAccessLogSpec(in map[string]interface{}) kops.AccessLogSpec {
 		panic("expand AccessLogSpec failure, in is nil")
 	}
 	return kops.AccessLogSpec{
-		Interval: func(in interface{}) int {
-			return int(ExpandInt(in))
-		}(in["interval"]),
 		Bucket: func(in interface{}) *string {
 			if in == nil {
 				return nil
@@ -72,9 +68,6 @@ func ExpandResourceAccessLogSpec(in map[string]interface{}) kops.AccessLogSpec {
 }
 
 func FlattenResourceAccessLogSpecInto(in kops.AccessLogSpec, out map[string]interface{}) {
-	out["interval"] = func(in int) interface{} {
-		return FlattenInt(int(in))
-	}(in.Interval)
 	out["bucket"] = func(in *string) interface{} {
 		return func(in *string) interface{} {
 			if in == nil {

@@ -13,7 +13,6 @@ var _ = Schema
 func DataSourceAccessLogSpec() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"interval":      ComputedInt(),
 			"bucket":        ComputedString(),
 			"bucket_prefix": ComputedString(),
 		},
@@ -27,9 +26,6 @@ func ExpandDataSourceAccessLogSpec(in map[string]interface{}) kops.AccessLogSpec
 		panic("expand AccessLogSpec failure, in is nil")
 	}
 	return kops.AccessLogSpec{
-		Interval: func(in interface{}) int {
-			return int(ExpandInt(in))
-		}(in["interval"]),
 		Bucket: func(in interface{}) *string {
 			if in == nil {
 				return nil
@@ -72,9 +68,6 @@ func ExpandDataSourceAccessLogSpec(in map[string]interface{}) kops.AccessLogSpec
 }
 
 func FlattenDataSourceAccessLogSpecInto(in kops.AccessLogSpec, out map[string]interface{}) {
-	out["interval"] = func(in int) interface{} {
-		return FlattenInt(int(in))
-	}(in.Interval)
 	out["bucket"] = func(in *string) interface{} {
 		return func(in *string) interface{} {
 			if in == nil {

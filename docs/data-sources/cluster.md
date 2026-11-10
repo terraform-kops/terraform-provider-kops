@@ -54,11 +54,11 @@ The following arguments are supported:
 - `addons` - (Computed) - List([addon_spec](#addon_spec)) - Additional addons that should be installed on the cluster.
 - `config_store` - (Computed) - [config_store_spec](#config_store_spec) - ConfigStore configures the stores that nodes use to get their configuration.
 - `cloud_provider` - (Computed) - [cloud_provider_spec](#cloud_provider_spec) - CloudProvider configures the cloud provider to use.
-- `gossip_config` - (Computed) - [gossip_config](#gossip_config) - GossipConfig for the cluster assuming the use of gossip DNS.
+- `gossip_config` - (Computed) - [gossip_config](#gossip_config) - GossipConfig has no effect and must not be set; gossip DNS support was removed in kOps 1.37.<br />Deprecated: remove this field from the cluster spec.
 - `container_runtime` - (Computed) - String - ContainerRuntime was removed.
 - `kubernetes_version` - (Computed) - String - The version of kubernetes to install (optional, and can be a "spec" like stable).
 - `dns_zone` - (Computed) - String - DNSZone is the DNS zone we should use when configuring DNS<br />This is because some clouds let us define a managed zone foo.bar, and then have<br />kubernetes.dev.foo.bar, without needing to define dev.foo.bar as a hosted zone.<br />DNSZone will probably be a suffix of the MasterPublicName.<br />Note that DNSZone can either by the host name of the zone (containing dots),<br />or can be an identifier for the zone.
-- `dns_controller_gossip_config` - (Computed) - [dns_controller_gossip_config](#dns_controller_gossip_config) - DNSControllerGossipConfig for the cluster assuming the use of gossip DNS.
+- `dns_controller_gossip_config` - (Computed) - [dns_controller_gossip_config](#dns_controller_gossip_config) - DNSControllerGossipConfig has no effect and must not be set; gossip DNS support was removed in kOps 1.37.<br />Deprecated: remove this field from the cluster spec.
 - `cluster_dns_domain` - (Computed) - String - ClusterDNSDomain is the suffix we use for internal DNS names (normally cluster.local).
 - `ssh_access` - (Computed) - List(String) - SSHAccess is a list of the CIDRs that can access SSH.
 - `node_port_access` - (Computed) - List(String) - NodePortAccess is a list of the CIDRs that can access the node ports range (30000-32767).
@@ -148,7 +148,7 @@ The following arguments are supported:
 - `hetzner` - (Computed) - [hetzner_spec](#hetzner_spec) - Hetzner configures the Hetzner cloud provider.
 - `openstack` - (Computed) - [openstack_spec](#openstack_spec) - Openstack configures the Openstack cloud provider.
 - `scaleway` - (Computed) - [scaleway_spec](#scaleway_spec) - Scaleway configures the Scaleway cloud provider.
-- `linode` - (Computed) - [linode_spec](#linode_spec) - Linode configures the Linode (Akamai) cloud provider.
+- `linode` - (Computed) - [linode_spec](#linode_spec) - Linode configures the Akamai (Linode) cloud provider.
 
 ### aws_spec
 
@@ -164,6 +164,7 @@ The following arguments are supported:
 - `pod_identity_webhook` - (Computed) - [pod_identity_webhook_spec](#pod_identity_webhook_spec) - PodIdentityWebhook determines the EKS Pod Identity Webhook configuration.
 - `warm_pool` - (Computed) - [warm_pool_spec](#warm_pool_spec) - WarmPool defines the default warm pool settings for instance groups.
 - `node_ip_families` - (Computed) - List(String) - NodeIPFamilies control the IP families reported for each node.
+- `use_ip_based_node_names` - (Computed) - Bool - UseIPBasedNodeNames names Kubernetes nodes after the EC2 private DNS name, e.g.<br />ip-10-0-0-1.eu-west-1.compute.internal, instead of the EC2 instance ID. When enabled, managed<br />subnets launch instances with IP-based EC2 hostnames; shared subnets must be configured with<br />IP-based hostnames by their owner. Not supported on IPv6-only clusters. Changing this value<br />only affects newly launched nodes; existing nodes must be replaced to be renamed.
 - `disable_security_group_ingress` - (Computed) - Bool - DisableSecurityGroupIngress disables the Cloud Controller Manager's creation<br />of an AWS Security Group for each load balancer provisioned for a Service.
 - `elb_security_group` - (Computed) - String - ElbSecurityGroup specifies an existing AWS Security group for the Cloud Controller<br />Manager to assign to each ELB provisioned for a Service, instead of creating<br />one per ELB.
 - `nlb_security_group_mode` - (Computed) - String - NLBSecurityGroupMode determines if the Cloud Controller Manager supports and manages<br />security groups for Network Load Balancers (AWS only). Valid value: "Managed".
@@ -426,12 +427,14 @@ This resource has no attributes.
 
 ### linode_spec
 
-LinodeSpec configures the Linode (Akamai) cloud provider.
+LinodeSpec configures the Akamai (Linode) cloud provider.
 
 
 This resource has no attributes.
 
 ### gossip_config
+
+GossipConfig has no effect and must not be set; gossip DNS support was removed in kOps 1.37.<br />Deprecated: remove this field from the cluster spec.
 
 #### Argument Reference
 
@@ -444,6 +447,8 @@ The following arguments are supported:
 
 ### gossip_config_secondary
 
+GossipConfigSecondary has no effect and must not be set; gossip DNS support was removed in kOps 1.37.<br />Deprecated: remove this field from the cluster spec.
+
 #### Argument Reference
 
 The following arguments are supported:
@@ -453,6 +458,8 @@ The following arguments are supported:
 - `secret` - (Computed) - String
 
 ### dns_controller_gossip_config
+
+DNSControllerGossipConfig has no effect and must not be set; gossip DNS support was removed in kOps 1.37.<br />Deprecated: remove this field from the cluster spec.
 
 #### Argument Reference
 
@@ -465,6 +472,8 @@ The following arguments are supported:
 - `seed` - (Computed) - String
 
 ### dns_controller_gossip_config_secondary
+
+DNSControllerGossipConfigSecondary has no effect and must not be set; gossip DNS support was removed in kOps 1.37.<br />Deprecated: remove this field from the cluster spec.
 
 #### Argument Reference
 
@@ -733,7 +742,7 @@ The pod this Toleration is attached to tolerates any taint that matches<br />the
 
 The following arguments are supported:
 
-- `key` - (Computed) - String - Key is the taint key that the toleration applies to. Empty means match all taint keys.<br />If the key is empty, operator must be Exists; this combination means to match all values and all keys.<br />+optional.
+- `key` - (Computed) - String - Key is the taint key that the toleration applies to. Empty means match all taint keys.<br />If the key is empty, operator must be Exists; this combination means to match all values and all keys.<br />+optional<br />+k8s:alpha(since: "1.37")=+k8s:optional<br />+k8s:alpha(since: "1.37")=+k8s:format=k8s-label-key.
 - `operator` - (Computed) - String - Operator represents a key's relationship to the value.<br />Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.<br />Exists is equivalent to wildcard for value, so that a pod can<br />tolerate all taints of a particular category.<br />Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).<br />+optional.
 - `value` - (Computed) - String - Value is the taint value the toleration matches to.<br />If the operator is Exists, the value should be empty, otherwise just a regular string.<br />+optional.
 - `effect` - (Computed) - String - Effect indicates the taint effect to match. Empty means match all taint effects.<br />When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.<br />+optional.
@@ -1011,6 +1020,7 @@ The following arguments are supported:
 - `enable_profiling` - (Computed) - Bool - EnableProfiling enables profiling via web interface host:port/debug/pprof/.
 - `enable_contention_profiling` - (Computed) - Bool - EnableContentionProfiling enables block profiling, if profiling is enabled.
 - `cors_allowed_origins` - (Computed) - List(String) - CorsAllowedOrigins is a list of origins for CORS. An allowed origin can be a regular<br />expression to support subdomain matching. If this list is empty CORS will not be enabled.
+- `strict_transport_security_directives` - (Computed) - List(String) - StrictTransportSecurityDirectives is a list of directives for HSTS, comma separated. If this list is empty, then HSTS directives will not be added. Example: 'max-age=31536000,includeSubDomains,preload'.
 - `default_not_ready_toleration_seconds` - (Computed) - Int - DefaultNotReadyTolerationSeconds indicates the tolerationSeconds of the toleration for notReady:NoExecute that is added by default to every pod that does not already have such a toleration.
 - `default_unreachable_toleration_seconds` - (Computed) - Int - DefaultUnreachableTolerationSeconds indicates the tolerationSeconds of the toleration for unreachable:NoExecute that is added by default to every pod that does not already have such a toleration.
 - `delete_collection_workers` - (Computed) - Int - DeleteCollectionWorkers indicates the number of workers spawned for DeleteCollection call. These are used to speed up namespace cleanup.
@@ -1073,7 +1083,7 @@ Selects a key from a ConfigMap.<br />+structType=atomic.
 The following arguments are supported:
 
 - `name` - (Computed) - String - Name of the referent.<br />This field is effectively required, but due to backwards compatibility is<br />allowed to be empty. Instances of this type with an empty value here are<br />almost certainly wrong.<br />More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names<br />+optional<br />+default=""<br />+kubebuilder:default=""<br />TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
-- `key` - (Required) - String - The key to select.
+- `key` - (Required) - String - The key to select from the ConfigMap's Data field.<br />Keys in the BinaryData field are not currently propagated to container env vars.
 - `optional` - (Computed) - Bool - Specify whether the ConfigMap or its key must be defined<br />+optional.
 
 ### secret_key_selector
@@ -1213,7 +1223,7 @@ The following arguments are supported:
 - `enable_leader_migration` - (Computed) - Bool - EnableLeaderMigration enables controller leader migration.
 - `cpu_request` - (Computed) - Quantity - CPURequest of NodeTerminationHandler container.<br />Default: 200m.
 - `node_status_update_frequency` - (Computed) - Duration - NodeStatusUpdateFrequency is the duration between node status updates. (default: 5m).
-- `concurrent_node_syncs` - (Computed) - Int - ConcurrentNodeSyncs is the number of workers concurrently synchronizing nodes. (default: 1).
+- `concurrent_node_syncs` - (Computed) - Int - ConcurrentNodeSyncs is the number of workers concurrently synchronizing nodes. (default: 5).
 - `azure_node_manager_image` - (Computed) - String - AzureNodeManagerImage is the OCI image of the Azure cloud node manager.
 
 ### kube_scheduler_config
@@ -1462,6 +1472,8 @@ The following arguments are supported:
 - `nameservers` - (Computed) - List(String) - nameservers is a list of nameserver IP addresses to use instead of the pod defaults.<br />Default: none.
 - `hosted_zone_ids` - (Computed) - List(String) - HostedZoneIDs is a list of route53 hostedzone IDs that cert-manager will be allowed to do dns-01 validation for.
 - `feature_gates` - (Computed) - Map(Bool) - FeatureGates is a list of experimental features that can be enabled or disabled.
+- `webhook_feature_gates` - (Computed) - Map(Bool) - WebhookFeatureGates is a list of experimental features that can be enabled or disabled for the webhook.
+- `ca_injector_feature_gates` - (Computed) - Map(Bool) - CAInjectorFeatureGates is a list of experimental features that can be enabled or disabled for the cainjector.
 
 ### networking_spec
 
@@ -1708,8 +1720,13 @@ The following arguments are supported:
 
 KuberouterNetworkingSpec declares that we want Kube-router networking.
 
+#### Argument Reference
 
-This resource has no attributes.
+The following arguments are supported:
+
+- `use_nf_tables_for_netpol` - (Computed) - Bool - UseNFTablesForNetpol makes the network policy controller enforce<br />NetworkPolicies with nftables instead of iptables and ipsets.<br />This is experimental upstream and only affects the network policy<br />controller; the service proxy and router controllers are unchanged.<br />Default: false.
+- `external_ip_ranges` - (Computed) - List(String) - ExternalIPRanges are the CIDRs from which Service externalIPs are accepted.<br />Setting this or LoadBalancerIPRanges turns on kube-router's strict external<br />IP validation, which drops any address outside the configured ranges.<br />Leaving both empty keeps strict validation off.
+- `load_balancer_ip_ranges` - (Computed) - List(String) - LoadBalancerIPRanges are the CIDRs from which Service loadBalancerIPs are<br />accepted. Setting this or ExternalIPRanges turns on kube-router's strict<br />external IP validation, which drops any address outside the configured<br />ranges. Leaving both empty keeps strict validation off.
 
 ### romana_networking_spec
 
@@ -1733,6 +1750,7 @@ The following arguments are supported:
 - `image` - (Computed) - String - Image is the container image name to use.
 - `init_image` - (Computed) - String - InitImage is the init container image name to use.
 - `network_policy_agent_image` - (Computed) - String - NetworkPolicyAgentImage is the container image to use for the network policy agent.
+- `enable_network_policy` - (Computed) - Bool - EnableNetworkPolicy enables enforcement of Kubernetes NetworkPolicy resources by the<br />network policy agent. The network policy controller must be deployed separately.
 - `env` - (Computed) - List([env_var](#env_var)) - Env is a list of environment variables to set in the container.
 
 ### cilium_networking_spec
@@ -1909,9 +1927,8 @@ LoadBalancerAccessSpec provides configuration details related to API LoadBalance
 
 The following arguments are supported:
 
-- `class` - (Computed) - String - LoadBalancerClass specifies the class of load balancer to create: Classic, Network.
+- `class` - (Computed) - String - LoadBalancerClass specifies the class of load balancer to create: Network.
 - `type` - (Computed) - String - Type of load balancer to create may Public or Internal.
-- `idle_timeout_seconds` - (Computed) - Int - IdleTimeoutSeconds sets the timeout of the api loadbalancer.
 - `security_group_override` - (Computed) - String - SecurityGroupOverride overrides the default Kops created SG for the load balancer.
 - `additional_security_groups` - (Computed) - List(String) - AdditionalSecurityGroups attaches additional security groups (e.g. sg-123456).
 - `use_for_internal_api` - (Computed) - Bool - UseForInternalAPI indicates whether the LB should be used by the kubelet.
@@ -1939,7 +1956,6 @@ The following arguments are supported:
 
 The following arguments are supported:
 
-- `interval` - (Computed) - Int - Interval is the publishing interval in minutes. This parameter is only used with classic load balancer.
 - `bucket` - (Computed) - String - Bucket is the S3 bucket name to store the logs in.
 - `bucket_prefix` - (Computed) - String - BucketPrefix is the S3 bucket prefix. Logs are stored in the root if not configured.
 
