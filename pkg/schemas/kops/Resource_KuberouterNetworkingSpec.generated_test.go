@@ -20,7 +20,11 @@ func TestExpandResourceKuberouterNetworkingSpec(t *testing.T) {
 		{
 			name: "default",
 			args: args{
-				in: map[string]interface{}{},
+				in: map[string]interface{}{
+					"use_nf_tables_for_netpol": nil,
+					"external_ip_ranges":       func() []interface{} { return nil }(),
+					"load_balancer_ip_ranges":  func() []interface{} { return nil }(),
+				},
 			},
 			want: _default,
 		},
@@ -36,7 +40,11 @@ func TestExpandResourceKuberouterNetworkingSpec(t *testing.T) {
 }
 
 func TestFlattenResourceKuberouterNetworkingSpecInto(t *testing.T) {
-	_default := map[string]interface{}{}
+	_default := map[string]interface{}{
+		"use_nf_tables_for_netpol": nil,
+		"external_ip_ranges":       func() []interface{} { return nil }(),
+		"load_balancer_ip_ranges":  func() []interface{} { return nil }(),
+	}
 	type args struct {
 		in kops.KuberouterNetworkingSpec
 	}
@@ -49,6 +57,39 @@ func TestFlattenResourceKuberouterNetworkingSpecInto(t *testing.T) {
 			name: "default",
 			args: args{
 				in: kops.KuberouterNetworkingSpec{},
+			},
+			want: _default,
+		},
+		{
+			name: "UseNFTablesForNetpol - default",
+			args: args{
+				in: func() kops.KuberouterNetworkingSpec {
+					subject := kops.KuberouterNetworkingSpec{}
+					subject.UseNFTablesForNetpol = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ExternalIpRanges - default",
+			args: args{
+				in: func() kops.KuberouterNetworkingSpec {
+					subject := kops.KuberouterNetworkingSpec{}
+					subject.ExternalIPRanges = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "LoadBalancerIpRanges - default",
+			args: args{
+				in: func() kops.KuberouterNetworkingSpec {
+					subject := kops.KuberouterNetworkingSpec{}
+					subject.LoadBalancerIPRanges = nil
+					return subject
+				}(),
 			},
 			want: _default,
 		},
@@ -65,7 +106,11 @@ func TestFlattenResourceKuberouterNetworkingSpecInto(t *testing.T) {
 }
 
 func TestFlattenResourceKuberouterNetworkingSpec(t *testing.T) {
-	_default := map[string]interface{}{}
+	_default := map[string]interface{}{
+		"use_nf_tables_for_netpol": nil,
+		"external_ip_ranges":       func() []interface{} { return nil }(),
+		"load_balancer_ip_ranges":  func() []interface{} { return nil }(),
+	}
 	type args struct {
 		in kops.KuberouterNetworkingSpec
 	}
@@ -78,6 +123,39 @@ func TestFlattenResourceKuberouterNetworkingSpec(t *testing.T) {
 			name: "default",
 			args: args{
 				in: kops.KuberouterNetworkingSpec{},
+			},
+			want: _default,
+		},
+		{
+			name: "UseNFTablesForNetpol - default",
+			args: args{
+				in: func() kops.KuberouterNetworkingSpec {
+					subject := kops.KuberouterNetworkingSpec{}
+					subject.UseNFTablesForNetpol = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "ExternalIpRanges - default",
+			args: args{
+				in: func() kops.KuberouterNetworkingSpec {
+					subject := kops.KuberouterNetworkingSpec{}
+					subject.ExternalIPRanges = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "LoadBalancerIpRanges - default",
+			args: args{
+				in: func() kops.KuberouterNetworkingSpec {
+					subject := kops.KuberouterNetworkingSpec{}
+					subject.LoadBalancerIPRanges = nil
+					return subject
+				}(),
 			},
 			want: _default,
 		},

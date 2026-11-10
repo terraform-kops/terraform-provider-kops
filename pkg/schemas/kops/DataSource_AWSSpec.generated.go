@@ -19,6 +19,7 @@ func DataSourceAWSSpec() *schema.Resource {
 			"pod_identity_webhook":           ComputedStruct(DataSourcePodIdentityWebhookSpec()),
 			"warm_pool":                      ComputedStruct(DataSourceWarmPoolSpec()),
 			"node_ip_families":               ComputedList(String()),
+			"use_ip_based_node_names":        ComputedBool(),
 			"disable_security_group_ingress": ComputedBool(),
 			"elb_security_group":             ComputedString(),
 			"nlb_security_group_mode":        ComputedString(),
@@ -138,6 +139,25 @@ func ExpandDataSourceAWSSpec(in map[string]interface{}) kops.AWSSpec {
 				return out
 			}(in)
 		}(in["node_ip_families"]),
+		UseIPBasedNodeNames: func(in interface{}) *bool {
+			if in == nil {
+				return nil
+			}
+			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
+				return nil
+			}
+			return func(in interface{}) *bool {
+				if in == nil {
+					return nil
+				}
+				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
+					return nil
+				}
+				return func(in bool) *bool {
+					return &in
+				}(bool(ExpandBool(in)))
+			}(in)
+		}(in["use_ip_based_node_names"]),
 		DisableSecurityGroupIngress: func(in interface{}) *bool {
 			if in == nil {
 				return nil
@@ -325,6 +345,16 @@ func FlattenDataSourceAWSSpecInto(in kops.AWSSpec, out map[string]interface{}) {
 			return out
 		}(in)
 	}(in.NodeIPFamilies)
+	out["use_ip_based_node_names"] = func(in *bool) interface{} {
+		return func(in *bool) interface{} {
+			if in == nil {
+				return nil
+			}
+			return func(in bool) interface{} {
+				return FlattenBool(bool(in))
+			}(*in)
+		}(in)
+	}(in.UseIPBasedNodeNames)
 	out["disable_security_group_ingress"] = func(in *bool) interface{} {
 		return func(in *bool) interface{} {
 			if in == nil {

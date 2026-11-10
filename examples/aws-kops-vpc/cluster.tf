@@ -13,7 +13,6 @@ resource "kops_cluster" "cluster" {
       additional_security_groups = []
       class                      = "Network"
       cross_zone_load_balancing  = true
-      idle_timeout_seconds       = 0
       type                       = "Public"
       use_for_internal_api       = true
     }

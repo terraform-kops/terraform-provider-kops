@@ -27,6 +27,7 @@ func TestExpandResourceAWSSpec(t *testing.T) {
 					"pod_identity_webhook":           nil,
 					"warm_pool":                      nil,
 					"node_ip_families":               func() []interface{} { return nil }(),
+					"use_ip_based_node_names":        nil,
 					"disable_security_group_ingress": nil,
 					"elb_security_group":             nil,
 					"nlb_security_group_mode":        nil,
@@ -56,6 +57,7 @@ func TestFlattenResourceAWSSpecInto(t *testing.T) {
 		"pod_identity_webhook":           nil,
 		"warm_pool":                      nil,
 		"node_ip_families":               func() []interface{} { return nil }(),
+		"use_ip_based_node_names":        nil,
 		"disable_security_group_ingress": nil,
 		"elb_security_group":             nil,
 		"nlb_security_group_mode":        nil,
@@ -139,6 +141,17 @@ func TestFlattenResourceAWSSpecInto(t *testing.T) {
 				in: func() kops.AWSSpec {
 					subject := kops.AWSSpec{}
 					subject.NodeIPFamilies = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "UseIpBasedNodeNames - default",
+			args: args{
+				in: func() kops.AWSSpec {
+					subject := kops.AWSSpec{}
+					subject.UseIPBasedNodeNames = nil
 					return subject
 				}(),
 			},
@@ -230,6 +243,7 @@ func TestFlattenResourceAWSSpec(t *testing.T) {
 		"pod_identity_webhook":           nil,
 		"warm_pool":                      nil,
 		"node_ip_families":               func() []interface{} { return nil }(),
+		"use_ip_based_node_names":        nil,
 		"disable_security_group_ingress": nil,
 		"elb_security_group":             nil,
 		"nlb_security_group_mode":        nil,
@@ -313,6 +327,17 @@ func TestFlattenResourceAWSSpec(t *testing.T) {
 				in: func() kops.AWSSpec {
 					subject := kops.AWSSpec{}
 					subject.NodeIPFamilies = nil
+					return subject
+				}(),
+			},
+			want: _default,
+		},
+		{
+			name: "UseIpBasedNodeNames - default",
+			args: args{
+				in: func() kops.AWSSpec {
+					subject := kops.AWSSpec{}
+					subject.UseIPBasedNodeNames = nil
 					return subject
 				}(),
 			},

@@ -231,7 +231,7 @@ func ClusterRollingUpdate(clientset simple.Clientset, clusterName string, option
 	allowAllPods := func(pod *v1.Pod) bool {
 		return true
 	}
-	clusterValidator, err := validation.NewClusterValidator(kc, cloud, list, allowAllInstanceGroups, allowAllPods, config, k8sClient)
+	clusterValidator, err := validation.NewClusterValidator(kc, cloud, list, allowAllInstanceGroups, allowAllPods, 0, config, k8sClient)
 	if err != nil {
 		return fmt.Errorf("cannot create cluster validator: %v", err)
 	}

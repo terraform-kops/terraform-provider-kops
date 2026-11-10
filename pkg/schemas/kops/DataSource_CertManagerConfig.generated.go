@@ -13,13 +13,15 @@ var _ = Schema
 func DataSourceCertManagerConfig() *schema.Resource {
 	res := &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"enabled":         ComputedBool(),
-			"managed":         ComputedBool(),
-			"image":           ComputedString(),
-			"default_issuer":  ComputedString(),
-			"nameservers":     ComputedList(String()),
-			"hosted_zone_ids": ComputedList(String()),
-			"feature_gates":   ComputedMap(Bool()),
+			"enabled":                   ComputedBool(),
+			"managed":                   ComputedBool(),
+			"image":                     ComputedString(),
+			"default_issuer":            ComputedString(),
+			"nameservers":               ComputedList(String()),
+			"hosted_zone_ids":           ComputedList(String()),
+			"feature_gates":             ComputedMap(Bool()),
+			"webhook_feature_gates":     ComputedMap(Bool()),
+			"ca_injector_feature_gates": ComputedMap(Bool()),
 		},
 	}
 
@@ -148,6 +150,40 @@ func ExpandDataSourceCertManagerConfig(in map[string]interface{}) kops.CertManag
 				return nil
 			}(in)
 		}(in["feature_gates"]),
+		WebhookFeatureGates: func(in interface{}) map[string]bool {
+			return func(in interface{}) map[string]bool {
+				if in == nil {
+					return nil
+				}
+				if in, ok := in.(map[string]interface{}); ok {
+					if len(in) > 0 {
+						out := map[string]bool{}
+						for key, in := range in {
+							out[key] = bool(ExpandBool(in))
+						}
+						return out
+					}
+				}
+				return nil
+			}(in)
+		}(in["webhook_feature_gates"]),
+		CAInjectorFeatureGates: func(in interface{}) map[string]bool {
+			return func(in interface{}) map[string]bool {
+				if in == nil {
+					return nil
+				}
+				if in, ok := in.(map[string]interface{}); ok {
+					if len(in) > 0 {
+						out := map[string]bool{}
+						for key, in := range in {
+							out[key] = bool(ExpandBool(in))
+						}
+						return out
+					}
+				}
+				return nil
+			}(in)
+		}(in["ca_injector_feature_gates"]),
 	}
 }
 
@@ -222,6 +258,30 @@ func FlattenDataSourceCertManagerConfigInto(in kops.CertManagerConfig, out map[s
 			return out
 		}(in)
 	}(in.FeatureGates)
+	out["webhook_feature_gates"] = func(in map[string]bool) interface{} {
+		return func(in map[string]bool) map[string]interface{} {
+			if in == nil {
+				return nil
+			}
+			out := map[string]interface{}{}
+			for key, in := range in {
+				out[key] = FlattenBool(bool(in))
+			}
+			return out
+		}(in)
+	}(in.WebhookFeatureGates)
+	out["ca_injector_feature_gates"] = func(in map[string]bool) interface{} {
+		return func(in map[string]bool) map[string]interface{} {
+			if in == nil {
+				return nil
+			}
+			out := map[string]interface{}{}
+			for key, in := range in {
+				out[key] = FlattenBool(bool(in))
+			}
+			return out
+		}(in)
+	}(in.CAInjectorFeatureGates)
 }
 
 func FlattenDataSourceCertManagerConfig(in kops.CertManagerConfig) map[string]interface{} {

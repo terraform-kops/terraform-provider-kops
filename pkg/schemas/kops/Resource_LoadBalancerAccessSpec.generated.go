@@ -15,7 +15,6 @@ func ResourceLoadBalancerAccessSpec() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"class":                      OptionalString(),
 			"type":                       RequiredString(),
-			"idle_timeout_seconds":       OptionalInt(),
 			"security_group_override":    OptionalString(),
 			"additional_security_groups": OptionalList(String()),
 			"use_for_internal_api":       OptionalBool(),
@@ -41,25 +40,6 @@ func ExpandResourceLoadBalancerAccessSpec(in map[string]interface{}) kops.LoadBa
 		Type: func(in interface{}) kops.LoadBalancerType {
 			return kops.LoadBalancerType(ExpandString(in))
 		}(in["type"]),
-		IdleTimeoutSeconds: func(in interface{}) *int64 {
-			if in == nil {
-				return nil
-			}
-			if reflect.DeepEqual(in, reflect.Zero(reflect.TypeOf(in)).Interface()) {
-				return nil
-			}
-			return func(in interface{}) *int64 {
-				if in == nil {
-					return nil
-				}
-				if _, ok := in.([]interface{}); ok && len(in.([]interface{})) == 0 {
-					return nil
-				}
-				return func(in int64) *int64 {
-					return &in
-				}(int64(ExpandInt(in)))
-			}(in)
-		}(in["idle_timeout_seconds"]),
 		SecurityGroupOverride: func(in interface{}) *string {
 			if in == nil {
 				return nil
@@ -180,16 +160,6 @@ func FlattenResourceLoadBalancerAccessSpecInto(in kops.LoadBalancerAccessSpec, o
 	out["type"] = func(in kops.LoadBalancerType) interface{} {
 		return FlattenString(string(in))
 	}(in.Type)
-	out["idle_timeout_seconds"] = func(in *int64) interface{} {
-		return func(in *int64) interface{} {
-			if in == nil {
-				return nil
-			}
-			return func(in int64) interface{} {
-				return FlattenInt(int(in))
-			}(*in)
-		}(in)
-	}(in.IdleTimeoutSeconds)
 	out["security_group_override"] = func(in *string) interface{} {
 		return func(in *string) interface{} {
 			if in == nil {

@@ -56,7 +56,7 @@ func makeValidator(clientset simple.Clientset, clusterName string, adminLifetime
 	allowAllPods := func(pod *v1.Pod) bool {
 		return true
 	}
-	validator, err := validation.NewClusterValidator(kc, cloud, list, allowAllInstanceGroups, allowAllPods, config, k8sClient)
+	validator, err := validation.NewClusterValidator(kc, cloud, list, allowAllInstanceGroups, allowAllPods, 0, config, k8sClient)
 	if err != nil {
 		return nil, fmt.Errorf("unexpected error creating validator: %v", err)
 	}

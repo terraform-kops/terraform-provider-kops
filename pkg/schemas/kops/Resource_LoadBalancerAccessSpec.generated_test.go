@@ -23,7 +23,6 @@ func TestExpandResourceLoadBalancerAccessSpec(t *testing.T) {
 				in: map[string]interface{}{
 					"class":                      "",
 					"type":                       "",
-					"idle_timeout_seconds":       nil,
 					"security_group_override":    nil,
 					"additional_security_groups": func() []interface{} { return nil }(),
 					"use_for_internal_api":       false,
@@ -51,7 +50,6 @@ func TestFlattenResourceLoadBalancerAccessSpecInto(t *testing.T) {
 	_default := map[string]interface{}{
 		"class":                      "",
 		"type":                       "",
-		"idle_timeout_seconds":       nil,
 		"security_group_override":    nil,
 		"additional_security_groups": func() []interface{} { return nil }(),
 		"use_for_internal_api":       false,
@@ -93,17 +91,6 @@ func TestFlattenResourceLoadBalancerAccessSpecInto(t *testing.T) {
 				in: func() kops.LoadBalancerAccessSpec {
 					subject := kops.LoadBalancerAccessSpec{}
 					subject.Type = ""
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "IdleTimeoutSeconds - default",
-			args: args{
-				in: func() kops.LoadBalancerAccessSpec {
-					subject := kops.LoadBalancerAccessSpec{}
-					subject.IdleTimeoutSeconds = nil
 					return subject
 				}(),
 			},
@@ -213,7 +200,6 @@ func TestFlattenResourceLoadBalancerAccessSpec(t *testing.T) {
 	_default := map[string]interface{}{
 		"class":                      "",
 		"type":                       "",
-		"idle_timeout_seconds":       nil,
 		"security_group_override":    nil,
 		"additional_security_groups": func() []interface{} { return nil }(),
 		"use_for_internal_api":       false,
@@ -255,17 +241,6 @@ func TestFlattenResourceLoadBalancerAccessSpec(t *testing.T) {
 				in: func() kops.LoadBalancerAccessSpec {
 					subject := kops.LoadBalancerAccessSpec{}
 					subject.Type = ""
-					return subject
-				}(),
-			},
-			want: _default,
-		},
-		{
-			name: "IdleTimeoutSeconds - default",
-			args: args{
-				in: func() kops.LoadBalancerAccessSpec {
-					subject := kops.LoadBalancerAccessSpec{}
-					subject.IdleTimeoutSeconds = nil
 					return subject
 				}(),
 			},
