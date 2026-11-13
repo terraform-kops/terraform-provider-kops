@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.37.1](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.37.0...v1.37.1) - 2026-11-13
+
+- chore(deps): bump github.com/aws/aws-sdk-go-v2/config from 1.33.16 to 1.33.17 in the aws-sdk group by @dependabot[bot] in https://github.com/terraform-kops/terraform-provider-kops/pull/533
+
 ## [v1.37.0](https://github.com/terraform-kops/terraform-provider-kops/compare/v1.36.3...v1.37.0) - 2026-11-10
 
 - feat: upgrade kOps to v1.37.0 and k8s.io to v0.37.2 by @argoyle in https://github.com/terraform-kops/terraform-provider-kops/pull/531
